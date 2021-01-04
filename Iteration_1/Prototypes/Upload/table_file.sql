@@ -1,0 +1,1 @@
+create table files( id int, name varchar(255), file_url varchar(255));
