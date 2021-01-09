@@ -16,10 +16,10 @@ leBouton.onclick = () => {
             divTexte.innerHTML = "<p>" + txt + "</p>";
             divBtnCarte.style.display = "block";
         });
-      } else {
+    } else {
         /* la géolocalisation n'est pas disponible */
         alert("Problem guy's");
-      }
+    }
 }
 
 laCarte.onclick = () => {
