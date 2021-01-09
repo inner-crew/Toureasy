@@ -14,7 +14,7 @@ CREATE TABLE `listemonument` (
  `description` VARCHAR(200) NOT NULL DEFAULT 'Description absente' ,
  `visibilite` SET('toutLeMonde','moiUniquement','UtilisateurAvecLien') NOT NULL DEFAULT 'moiUniquement' ,
  `dateCreation` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `idMembre` INT UNSIGNED NOT NULL ,
+ `idcreateur` INT UNSIGNED NOT NULL ,
  PRIMARY KEY (`idListe`)
 ) ENGINE = InnoDB;
 
@@ -26,8 +26,9 @@ CREATE TABLE `membre` (
  `email` VARCHAR(256) NULL DEFAULT NULL ,
  `dateNaissance` DATE NULL DEFAULT NULL ,
  `username` VARCHAR(30) NULL DEFAULT NULL ,
- `dateInscription` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `dateInscription` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `role` TINYINT UNSIGNED NOT NULL DEFAULT '1' ,
+ `password` VARCHAR(100) NOT NULL, 
  PRIMARY KEY (`idMembre`)
 ) ENGINE = InnoDB;
 
@@ -76,8 +77,8 @@ CREATE TABLE `contribution` (
  `contributeur` INT UNSIGNED NOT NULL ,
  `moderateurDemande` INT UNSIGNED NULL DEFAULT NULL ,
  `estNouveauMonument` BOOLEAN NOT NULL ,
- `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `statutContributon` ENUM('enAttenteDeTraitement','acceptée','refusée') NOT NULL ,
+ `date` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `statutContribution` ENUM('enAttenteDeTraitement','acceptée','refusée') NOT NULL ,
  `description` VARCHAR(400) NULL DEFAULT NULL COMMENT 'sert au contributeur à synthétiser et expliquer les modifications qu il a apportées.\r\nNULL dans le cas d un nouveau monument.' ,
  PRIMARY KEY (`idContribution`)
 ) ENGINE = InnoDB;
