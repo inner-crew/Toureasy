@@ -93,13 +93,13 @@ class Controller
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
         $description = filter_var($data['desc'], FILTER_SANITIZE_STRING);
 
-        //TODO : localisation du monument
-
         try {
             $monument = new Monument();
             $monument->nomMonum = $nom;
             $monument->descLongue = $description;
             $monument->estTemporaire = 1;
+            $monument->longitude = $_POST['long'];
+            $monument->latitude = $_POST['lat'];
             $monument->save();
         } catch (\Illuminate\Database\QueryException $e) {
             echo 'Erreur lors de la création du monument';

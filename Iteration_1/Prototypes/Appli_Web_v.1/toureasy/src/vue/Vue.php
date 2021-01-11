@@ -49,10 +49,25 @@ END;
         $html = <<<END
 <form method="post" enctype="multipart/form-data">
             <p>Nom du monument<span class="required">*</span> : <input type="text" name="nom" required/></p>
-            <input type="file" name="fichier"/> <br>
+            <input type="file" name="fichier"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
             <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
-            <p><input type="submit" value="Valider"></p>
+            <p><input type="submit" value="Valider" </p>
         </form>
+<script>
+
+    window.onload=function getPos(){
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(position => {
+                document.getElementsByName("lat")[0].value = position.coords.latitude;
+                document.getElementsByName("long")[0].value = position.coords.longitude;
+            });
+        } else {
+            document.getElementsByName("lat")[0].value="error";
+            document.getElementsByName("long")[0].value="error"; 
+        }
+    }
+    
+</script>
 END;
         return $html;
     }
