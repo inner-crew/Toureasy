@@ -1,6 +1,6 @@
 ALTER TABLE `membre` 
 	ADD UNIQUE membre_unique_username(`username`),
-	ADD UNIQUE membre_unique_username(`email`),
+	ADD UNIQUE membre_unique_email(`email`),
 	ADD INDEX  membre_index_email_password(`email`,`password`),
 	ADD INDEX  membre_index_username_password(`username`,`password`);
 
@@ -14,5 +14,5 @@ ALTER TABLE Contribution
 	
 ALTER TABLE ListeMonument
 	ADD INDEX listeMonument_unique_nom(nom),
-	ADD INDEX listeMonument_unique_createur(createur);
+	ADD INDEX listeMonument_unique_createur(idcreateur);
 	
