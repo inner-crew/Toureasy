@@ -1,3 +1,32 @@
 body {
-    font-family: "Arial"
+    font-family: "Arial";
+    text-align: center;
 }
+
+.logo{
+    text-align: center;
+}
+
+.logo img{
+    width: 100px;
+    height: auto;
+}
+
+.boutons-bottom{
+    text-align: right;
+}
+
+div{
+    text-align: center;
+}
+
+#photo{
+    width : 1000px;
+    height: auto;
+    text-align: center;
+}
+
+.boutons-centre{
+    text-align: center;
+}
+

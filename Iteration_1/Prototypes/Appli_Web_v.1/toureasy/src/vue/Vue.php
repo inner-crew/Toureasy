@@ -24,20 +24,44 @@ class Vue
     private function homeHtml(array $v): string
     {
         $html = <<<END
-
-        <section class="titre">
-            <h1>Toureasy</h1>
-        </section>
-        <section class="logo">
-            <img src="{$v['basepath']}/web/img/Logo_genial.png"/>
-        </section>
-        <section class="boutons-centre">
-            {$v['connexion']}
-            {$v['map']}
-        </section>
-        <footer class="boutons-bottom">
+        <body class="boutons-bottom">
             {$v['contact']}
             {$v['about-us']}
+        </body>
+        <header class="logo">
+            <img src="{$v['basepath']}/web/img/Logo_genial.png"/>
+            <h1>Toureasy</h1>
+        </header> 
+        <div class="fadein">
+	        <img id="photo" src="{$v['basepath']}/web/img/diapo1.jpg">
+	        <input type="hidden" id="lien" name="passvar"  value= "{$v['basepath']}/web/img/" />
+            <script>
+                var lien = document.getElementById("lien").value;
+                
+                window.addEventListener("load", ()=>{
+                    //sources[i] est le nom du fichier image de l'image numero i
+                    let sources = new Array('diapo1.jpg','diapo2.jpg','diapo3.jpg','diapo4.jpg');
+                
+                    let i=0; //indice de l'image courante
+                
+                    let img = document.getElementById("photo");
+                    img.addEventListener("click", () => {suivante()});
+                
+                //Affiche l'image suivant l'image courante
+                function suivante(){
+                    img.src=lien+sources[i];
+                    if(i==3)i=0;
+                    else i++;
+                }
+                
+                setInterval(() => {suivante(); }, 3000);
+                });
+                
+            </script>
+        </div>
+        <footer class="boutons-centre">
+            {$v['connexion']}
+            {$v['map']}
         </footer>
 
 END;
