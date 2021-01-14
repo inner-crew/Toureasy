@@ -64,6 +64,7 @@ class Vue
         </div>
         <footer class="boutons-centre">
             {$v['connexion']}
+            <br>
             {$v['map']}
         </footer>
 

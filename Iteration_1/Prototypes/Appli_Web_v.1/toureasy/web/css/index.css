@@ -27,9 +27,9 @@ body {
 }
 
 .cadre-diapo{
-    max-width:800px;
+    width:800px;
     min-height: 400px;
-    max-height: 600px;
+    height: 600px;
     text-align: center;
     padding-bottom: 30px;
     margin: 0 auto;
