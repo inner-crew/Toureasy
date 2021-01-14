@@ -32,32 +32,35 @@ class Vue
             <img src="{$v['basepath']}/web/img/Logo_genial.png"/>
             <h1>Toureasy</h1>
         </header> 
-        <div class="fadein">
-	        <img id="photo" src="{$v['basepath']}/web/img/diapo1.jpg">
-	        <input type="hidden" id="lien" name="passvar"  value= "{$v['basepath']}/web/img/" />
-            <script>
-                var lien = document.getElementById("lien").value;
-                
-                window.addEventListener("load", ()=>{
-                    //sources[i] est le nom du fichier image de l'image numero i
-                    let sources = new Array('diapo1.jpg','diapo2.jpg','diapo3.jpg','diapo4.jpg');
-                
-                    let i=0; //indice de l'image courante
-                
-                    let img = document.getElementById("photo");
-                    img.addEventListener("click", () => {suivante()});
-                
-                //Affiche l'image suivant l'image courante
-                function suivante(){
-                    img.src=lien+sources[i];
-                    if(i==3)i=0;
-                    else i++;
+        <div class = "cadre-diapo">
+	        <img class="diapo" src="{$v['basepath']}/web/img/diapo1.jpg" alt>
+	        <img class="diapo" src="{$v['basepath']}/web/img/diapo2.jpg" alt>
+            <img class="diapo" src="{$v['basepath']}/web/img/diapo3.jpg" alt>
+            <img class="diapo" src="{$v['basepath']}/web/img/diapo4.jpg" alt>
+            <button class="precedent" aria-label="précédent" onclick="boutons(-1)">❮</button>
+            <button class="suivant" aria-label="suivant" onclick="boutons(1)">❯</button>
+        </div> 
+        <script>
+            var diaporama = 1;
+            affichage(diaporama);
+                    
+            function boutons(n) {
+                affichage(diaporama += n);
+            }
+                    
+            function affichage(n) {
+                var i;
+                var diapoImg = document.getElementsByClassName("diapo");
+                if (n > diapoImg.length) {diaporama = 1}    
+                if (n < 1) {diaporama = diapoImg.length}
+                for (i = 0; i < diapoImg.length; i++) {
+                    diapoImg[i].style.opacity = "0";
                 }
-                
-                setInterval(() => {suivante(); }, 3000);
-                });
-                
-            </script>
+                diapoImg[diaporama-1].style.opacity = "1";    
+                indic[diaporama-1].className += " numeros";
+            } 
+
+        </script>
         </div>
         <footer class="boutons-centre">
             {$v['connexion']}
