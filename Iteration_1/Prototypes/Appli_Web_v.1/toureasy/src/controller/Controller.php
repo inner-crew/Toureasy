@@ -116,7 +116,7 @@ class Controller
             // ajout destination du fichier
             $file_dest = "web/img/".$file_name;
             // conditions de format du fichier
-            $extension_autorise= array('.jpg', '.jpeg', '.png', '.gif');
+            $extension_autorise= array('.jpg', '.png', '.gif', '.JPG', '.PNG');
 
             // si fichier corrélation avec conditions
             if(in_array($file_extension, $extension_autorise)){
