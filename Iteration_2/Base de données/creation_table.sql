@@ -39,7 +39,8 @@ CREATE TABLE `monument` (
  `descLongue` VARCHAR(2000) NULL DEFAULT NULL ,
  `longitude` DECIMAL(9,6) NULL DEFAULT NULL ,
  `latitude` DECIMAL(9,6) NULL DEFAULT NULL ,
- `estTemporaire` BOOLEAN NOT NULL DEFAULT FALSE , 
+ `estTemporaire` BOOLEAN NOT NULL DEFAULT FALSE ,
+ `estPrive` BOOLEAN NOT NULL DEFAULT FALSE ,
  PRIMARY KEY (`idMonument`)
 ) ENGINE = InnoDB;
 
@@ -55,6 +56,13 @@ CREATE TABLE `favoris` (
  `idMembre` INT UNSIGNED NOT NULL ,
  PRIMARY KEY (`idMonument`, `idMembre`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `auteurMonumentPrive` (
+ `idMonument` INT UNSIGNED NOT NULL ,
+ `idMembre` INT UNSIGNED NOT NULL ,
+ PRIMARY KEY (`idMonument`, `idMembre`)
+) ENGINE = InnoDB;
+
 
 CREATE TABLE `image` (
  `numeroImage` TINYINT UNSIGNED NULL DEFAULT NULL COMMENT 'Numéro de l\'image parmis les images illustrant le monument' ,

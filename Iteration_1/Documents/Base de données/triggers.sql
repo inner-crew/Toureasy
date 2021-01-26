@@ -1,7 +1,7 @@
 
 
  CREATE OR REPLACE TRIGGER trigger_contrib_moderateur
- BEFORE INSERT OR UPDATE ON contribution
+ AFTER UPDATE OF moderateurDemande ON contribution
  FOR EACH ROW
  WHEN (new.moderateurDemande > 0)
  DECLARE
