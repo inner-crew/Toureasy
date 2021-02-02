@@ -25,3 +25,26 @@
 	 
 
  END;
+ 
+ 
+ CREATE OR REPLACE TRIGGER trigger_monument_test 
+ BEFORE INSERT ON monument
+ FOR EACH ROW
+ BEGIN
+	SET new.descCourte = 42;
+ END;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
