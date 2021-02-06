@@ -155,7 +155,12 @@ class Controller
 
     public function displayMap(Request $rq, Response $rs, array $args): Response
     {
-        //TODO : implement method
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath()
+        ];
+        $v = new Vue(null);
+        $rs->getBody()->write($v->render($htmlvars, Vue::MAP));
+        return $rs;
     }
 
     public function displayContact(Request $rq, Response $rs, array $args): Response

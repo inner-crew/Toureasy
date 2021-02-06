@@ -17,6 +17,11 @@ class Vue
     const AJOUTER_MONUMENT = 2;
 
     /**
+     * constante correspondant à l'affichage de la carte
+     */
+    const MAP = 3;
+
+    /**
      * méthode affichant la page d'accueil de Toureasy
      * @param array $v variables contenant les liens des boutons présents sur la page
      * @return string code HTML de la page
@@ -100,6 +105,32 @@ END;
         return $html;
     }
 
+    private function affichageMap(array $v): string
+    {
+        $html = <<<END
+    <script src="{$v['basepath']}/web/carteSetting/js/API_MapBox/main_mapbox-gl.js"></script>                                       <!--Le js principal de la l'api mapBox-->
+    <script type="text/javascript" src="{$v['basepath']}/web/carteSetting/js/API_MapBox/soleil_suncalc.min.js"></script>            <!--Le script pour calculer la pos du soleil pour faire le ciel-->
+    <script src="{$v['basepath']}/web/carteSetting/js/API_MapBox/doubleMap_mapbox-gl-compare.js"></script>                          <!-- le script qui fait fonctionner le swap entre les 2 maps-->
+    <script src="{$v['basepath']}/web/carteSetting/js/API_MapBox/barreDeRecherche_mapbox-gl-geocoder.min.js"></script>              <!--le script de la recherche de lieu (geocoder)-->
+    <script src="{$v['basepath']}/web/carteSetting/js/index.js"></script>                                                           <!--le script de toureasy-->
+
+    <link href="{$v['basepath']}/web/carteSetting/css/main_mapbox-gl.css" rel="stylesheet"/>                                        <!--Le css principal de la l'api mapBox-->
+    <link href="{$v['basepath']}/web/carteSetting/css/index.css" rel="stylesheet"/>                                                 <!--Le css principal de la page web-->
+    <link rel="stylesheet" href="{$v['basepath']}/web/carteSetting/css/doubleMap_mapbox-gl-compare.css" type="text/css"/>           <!--le css qui gère la transition des 2 maps-->
+    <link rel="stylesheet" href="{$v['basepath']}/web/carteSetting/css/barreDeRecherche_mapbox-gl-geocoder.css" type="text/css"/>   <!--css de la recherche de lieu-->
+
+<div id="comparison-container">
+    <div id="before" class="map"></div>
+    <pre id="geoPos"></pre>
+    <div id="after" class="map"></div>
+</div>
+<input type= "image" id="btn" src="{$v['basepath']}/web/carteSetting/data/images/mark.png" width="100px" height="200px"/>
+
+<script src="{$v['basepath']}/web/carteSetting/js/index.js"></script>   <!--le script de toureasy (il est lourd)-->
+END;
+        return $html;
+    }
+
     /**
      * @param array $vars array de variables (htmlvars)
      * @param int $typeAffichage valeur correspondant à une constante de cette classe
@@ -117,6 +148,10 @@ END;
             // affichage de la page permettant d'ajouter un monument
             case Vue::AJOUTER_MONUMENT:
                 $content = $this->ajoutMonumentHtml();
+                break;
+                // affichage de la carte
+            case Vue::MAP:
+                $content = $this->affichageMap($vars);
                 break;
         }
         $html = <<<END

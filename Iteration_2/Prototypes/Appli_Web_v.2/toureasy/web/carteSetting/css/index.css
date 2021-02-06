@@ -1,0 +1,57 @@
+#geoPos {
+    display: block;
+    position: relative;
+    margin: 0px auto;
+    width: max-content;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    color: #000000;
+    background-color: rgba(32, 221, 118, .5);
+
+}
+
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+body * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+}
+#btn {
+    position: absolute;
+    font-family: 'Open Sans', sans-serif;
+    bottom: 0;
+    left: 0;
+}
+.marker {
+    background-image: url('../data/images/markOmbre.png');
+    background-size: cover;
+    width: 90px;
+    height: 85px;
+    cursor: pointer;
+}
+.mapboxgl-popup {
+    max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+}
