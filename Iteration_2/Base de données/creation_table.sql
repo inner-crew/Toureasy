@@ -28,7 +28,8 @@ CREATE TABLE `membre` (
  `username` VARCHAR(30) NULL DEFAULT NULL ,
  `dateInscription` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `role` TINYINT UNSIGNED NOT NULL DEFAULT '1' ,
- `password` VARCHAR(100) NOT NULL, 
+ `password` varchar(100) DEFAULT NULL,
+ `token` varchar(20) DEFAULT NULL,
  PRIMARY KEY (`idMembre`)
 ) ENGINE = InnoDB;
 

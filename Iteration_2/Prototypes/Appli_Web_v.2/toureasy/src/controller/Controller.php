@@ -3,7 +3,9 @@
 namespace toureasy\controller;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use toureasy\models\AuteurMonumentPrive;
 use toureasy\models\Image;
+use toureasy\models\Membre;
 use toureasy\models\Monument;
 use toureasy\vue\Vue;
 class Controller
@@ -39,12 +41,14 @@ class Controller
         $urlAPropos = $this->c->router->pathFor('about-us');
 
         // generation des balises HTML de boutons avec les liens correspondants
-        $htmlConnexion = <<<END
- <button onclick="location.href='$urlConnexion'">Connexion</button>
- END;
         $htmlMap = <<<END
- <button onclick="location.href='$urlAccederMap'">Accéder sans se connecter</button>
+ <button onclick="location.href='$urlAccederMap'">Accéder à Toureasy</button>
  END;
+        if (!isset($_COOKIE['token'])) {
+            $htmlMap = <<<END
+ <button onclick="location.href='$urlConnexion'">Accéder à Toureasy</button>
+ END;
+        }
         $htmlContact = <<<END
  <button onclick="location.href='$urlContact'">Nous contacter</button>
  END;
@@ -55,7 +59,6 @@ class Controller
         // ajoute ces variables à htmlvars afin de les transférer à la vue
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'connexion' => $htmlConnexion,
             'map' => $htmlMap,
             'contact' => $htmlContact,
             'about-us' => $htmlAboutUs
@@ -79,7 +82,14 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath()
         ];
         $v = new Vue(null);
-        $rs->getBody()->write($v->render($htmlvars, Vue::AJOUTER_MONUMENT));
+
+        if (!isset($_COOKIE['token'])) {
+            $htmlvars['url'] = $this->c->router->pathFor('connexion');
+            $htmlvars['message'] = "Vous devez vous connecter avant de pouvoir ajouter un monument";
+            $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        } else {
+            $rs->getBody()->write($v->render($htmlvars, Vue::AJOUTER_MONUMENT));
+        }
         return $rs;
     }
 
@@ -97,10 +107,24 @@ class Controller
             $monument = new Monument();
             $monument->nomMonum = $nom;
             $monument->descLongue = $description;
-            $monument->estTemporaire = 1;
             $monument->longitude = $_POST['long'];
             $monument->latitude = $_POST['lat'];
-            $monument->save();
+
+            if($data['visibilite'] === "private") {
+                $monument->estPrive = 1;
+                $monument->estTemporaire = 0;
+                $monument->save();
+
+                $auteurPrive = new AuteurMonumentPrive();
+                $auteurPrive->idMonument = $monument->idMonument;
+                $auteurPrive->idMembre = Membre::getIdBytoken($_COOKIE['token']);
+                $auteurPrive->save();
+            } else {
+                $monument->estPrive = 0;
+                $monument->estTemporaire = 1;
+                $monument->save();
+            }
+
         } catch (\Illuminate\Database\QueryException $e) {
             echo 'Erreur lors de la création du monument';
         }
@@ -145,7 +169,29 @@ class Controller
 
     public function displayConnexion(Request $rq, Response $rs, array $args): Response
     {
-        //TODO : implement method
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath()
+        ];
+        $v = new Vue(null);
+        $rs->getBody()->write($v->render($htmlvars, Vue::CONNEXION));
+        return $rs;
+    }
+
+    public function postConnexion(Request $rq, Response $rs, array $args)
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'url' => $this->c->router->pathFor('map', []),
+            'message' => "Connexion réussie"
+        ];
+        $data = $rq->getParsedBody();
+        $token = filter_var($data['token'], FILTER_SANITIZE_STRING);
+
+        setcookie('token', $token, time()+3600, "/S3B_S16_BRANCATTI_FRACHE_MOITRIER_ZAPP/");
+
+        $v = new Vue(null);
+        $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        return $rs;
     }
 
     public function displayInscription(Request $rq, Response $rs, array $args): Response

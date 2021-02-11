@@ -26,6 +26,11 @@ $app->get('/connexion[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayConnexion($rq,$rs,$args);
 })->setName('connexion');
 
+$app->post('/connexion[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postConnexion($rq,$rs,$args);
+});
+
 // page d'inscription de Toureasy
 $app->get('/inscription[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);

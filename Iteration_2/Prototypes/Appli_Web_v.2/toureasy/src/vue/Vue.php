@@ -7,6 +7,11 @@ class Vue
     private $data;
 
     /**
+     * constante correspondant à l'affichage d'un message de redirection
+     */
+    const MESSAGE = 0;
+
+    /**
      * constante correspondant à l'affichage de la page d'accueil
      */
     const HOME = 1;
@@ -20,6 +25,20 @@ class Vue
      * constante correspondant à l'affichage de la carte
      */
     const MAP = 3;
+
+    /**
+     * constante correspondant à l'affichage de la page de connexion
+     */
+    const CONNEXION = 4;
+
+    public function unMessage($vars): string
+    {
+        $html = <<<END
+<p class="message">{$vars['message']}</p>
+<button onclick="window.location.href='{$vars['url']}'">Ok</button>
+END;
+        return $html;
+    }
 
     /**
      * méthode affichant la page d'accueil de Toureasy
@@ -68,8 +87,6 @@ class Vue
         </script>
         </div>
         <footer class="boutons-centre">
-            {$v['connexion']}
-            <br>
             {$v['map']}
         </footer>
 
@@ -82,10 +99,17 @@ END;
         $html = <<<END
 <form method="post" enctype="multipart/form-data">
             <p>Nom du monument<span class="required">*</span> : <input type="text" name="nom" required/></p>
+            <div>
+                <input type="radio" id="private" name="visibilite" value="private" checked>
+                <label for="huey">Privé</label>
+                <input type="radio" id="public" name="visibilite" value="public">
+                <label for="dewey">Publique</label>
+            </div></br>
             <input type="file" name="fichier"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
             <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
+
             <p><input type="submit" value="Valider" </p>
-        </form>
+</form>
 <script>
 
     window.onload=function getPos(){
@@ -131,6 +155,16 @@ END;
         return $html;
     }
 
+    public function connexionHtml(): string
+    {
+        $html = <<<END
+<form method="post">
+    <p>J'ai un token : <input type="text" name="token" required/></p>
+</form>
+END;
+        return $html;
+    }
+
     /**
      * @param array $vars array de variables (htmlvars)
      * @param int $typeAffichage valeur correspondant à une constante de cette classe
@@ -139,8 +173,11 @@ END;
     public function render(array $vars, int $typeAffichage): string
     {
         $content = null;
-        switch ($typeAffichage)
-        {
+        switch ($typeAffichage) {
+            // affichage d'un message de redirection
+            case Vue::MESSAGE:
+                $content = $this->unMessage($vars);
+                break;
             // affichage de la page d'accueil de Toureasy
             case Vue::HOME:
                 $content = $this->homeHtml($vars);
@@ -149,9 +186,13 @@ END;
             case Vue::AJOUTER_MONUMENT:
                 $content = $this->ajoutMonumentHtml();
                 break;
-                // affichage de la carte
+            // affichage de la carte
             case Vue::MAP:
                 $content = $this->affichageMap($vars);
+                break;
+            // affichage de la page de connexion
+            case Vue::CONNEXION:
+                $content = $this->connexionHtml();
                 break;
         }
         $html = <<<END
