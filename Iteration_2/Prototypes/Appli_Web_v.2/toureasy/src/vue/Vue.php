@@ -48,15 +48,15 @@ END;
     private function homeHtml(array $v): string
     {
         $html = <<<END
-        <body class="boutons-bottom">
-            {$v['contact']}
-            {$v['about-us']}
-        </body>
-        <header class="logo">
+        <div class="boutons-top" id="top-rigth">
+            <button onclick="location.href='{$v['contact']}'">Nous Contacter</button>
+            <button onclick="location.href='{$v['about-us']}'">A propos</button>
+        </div>
+        <header class="logo" id="top">
             <img src="{$v['basepath']}/web/img/Logo_genial.png"/>
             <h1>Toureasy</h1>
         </header> 
-        <div class = "cadre-diapo">
+        <div class = "cadre-diapo" id="center">
 	        <img class="diapo" src="{$v['basepath']}/web/img/diapo1.jpg" alt>
 	        <img class="diapo" src="{$v['basepath']}/web/img/diapo2.jpg" alt>
             <img class="diapo" src="{$v['basepath']}/web/img/diapo3.jpg" alt>
@@ -86,8 +86,8 @@ END;
 
         </script>
         </div>
-        <footer class="boutons-centre">
-            {$v['map']}
+        <footer class="boutons-footer" id="button">
+            <button onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
         </footer>
 
 END;
@@ -97,7 +97,7 @@ END;
     private function ajoutMonumentHtml(): string
     {
         $html = <<<END
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id="add">
             <p>Nom du monument<span class="required">*</span> : <input type="text" name="nom" required/></p>
             <div>
                 <input type="radio" id="private" name="visibilite" value="private" checked>
@@ -106,13 +106,40 @@ END;
                 <label for="dewey">Publique</label>
             </div></br>
             <input type="file" name="fichier"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
-            <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
+            
+            <div>
+                <p>Description</p>
+                <div>
+                    <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>
+                    <input type="button" name="text" value="I" onclick="formatText('I')" checked>
+                    <input type="button" name="text" value="U" onclick="formatText('U')" checked>
+                    Taille : <input type="number" min="1" max="20" name="text" value="3" id="taille" onclick="formatText('T')"/>
+                    </p>
+                    <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
+                    <iframe name="frm" id="frm"></iframe>
+                </div>
+            </div>
+            
 
-            <p><input type="submit" value="Valider" </p>
+            <input type="button" onclick="submitForm()" value="Valider"
 </form>
 <script>
 
-    window.onload=function getPos(){
+    window.onload = function ()
+    {
+        getPos()
+        loadFrame()
+    };
+    
+    function submitForm() {
+        form = document.getElementById("add")
+        area = document.getElementById("area")
+        
+        area.value = window.frames['frm'].document.body.innerHTML.toString()
+        form.submit()
+    }
+    
+    function getPos(){
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(position => {
                 document.getElementsByName("lat")[0].value = position.coords.latitude;
@@ -121,6 +148,32 @@ END;
         } else {
             document.getElementsByName("lat")[0].value="error";
             document.getElementsByName("long")[0].value="error"; 
+        }
+    }
+    
+    function loadFrame() {
+        frame = document.getElementById("frm");
+        frame.contentDocument.designMode = "on"
+    }
+    
+    function formatText(bouton) {
+        frame = frm.document;
+        
+        switch (bouton) {
+            case 'B':
+                frame.execCommand('bold', false, null)
+                break;
+            case 'I':
+                frame.execCommand('italic', false, null)
+                break;
+            case 'U':
+                frame.execCommand('underline', false, null)
+                break;
+            case 'T':
+                taille = document.getElementById("taille").value;
+                frame.execCommand('fontSize', false, taille)
+                break;
+                        
         }
     }
     
@@ -159,7 +212,8 @@ END;
     {
         $html = <<<END
 <form method="post">
-    <p>J'ai un token : <input type="text" name="token" required/></p>
+    <p>J'ai un token : <input type="text" name="token"/><input type="submit" name="action" value="OK" /></p>
+    <input type="submit" name="action" value="Obtenir un token" />
 </form>
 END;
         return $html;

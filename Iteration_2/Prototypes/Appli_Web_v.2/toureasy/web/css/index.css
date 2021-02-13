@@ -1,85 +1,194 @@
-body {
-    font-family: "Arial";
-    text-align: center;
+@media (max-width: 1388px)
+
+{
+
+    body {
+        font-family: "Arial";
+        text-align: center;
+    }
+
+    #top-rigth>button {
+        min-height: 25px;
+        margin: 0;
+        border-radius: 3px;
+        border: 0;
+        line-height: 25px;
+        text-align: center;
+        font-size: 25px;
+    }
+
+    #top-rigth {
+        text-align: right;
+    }
+
+    .logo{
+        text-align: center;
+    }
+
+    .logo>img{
+        width: 200px;
+        height: auto;
+    }
+
+
+    .boutons-footer>button{
+        min-height: 60px;
+        margin: 0;
+        border-radius: 3px;
+        border: 0;
+        line-height: 60px;
+        text-align: center;
+        font-size: 60px;
+    }
+
+    .cadre-diapo{
+        width:800px;
+        min-height: 400px;
+        height: 600px;
+        text-align: center;
+        padding-bottom: 30px;
+        margin: 0 auto;
+    }
+
+    .diapo {
+        opacity: 0;
+        position: absolute;
+        left: 50%;
+        transform: translate3d(-50%,-50%,0);
+        top: 50%;
+        transition: opacity 1s;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .cadre-diapo>button{
+        border: none;
+        cursor: pointer;
+    }
+
+    .precedent,
+    .suivant{
+        color: silver;
+        transition: color .4s linear;
+        transform: translatey(-50%);
+        top: 50%;
+        padding: .5rem;
+        font-size: 2rem;
+        background: white;
+        position: absolute
+    }
+
+    .precedent{
+        left:0
+    }
+
+    .suivant{
+        right:0
+    }
+
+    .precedent:hover,
+    .suivant:hover{
+        color: black
+    }
+
+    .cadre-diapo{
+        max-width:800px;
+        min-height: 400px;
+        max-height: 600px;
+        position: relative
+    }
+
 }
 
-.logo{
-    text-align: center;
-}
+@media(min-width: 1388px) {
 
-.logo>img{
-    width: 100px;
-    height: auto;
-}
+    body {
+        font-family: "Arial";
+        text-align: center;
+    }
 
-.boutons-bottom{
-    text-align: right;
-}
+    .logo{
+        text-align: center;
+    }
 
-#photo{
-    width : 1000px;
-    height: auto;
-    text-align: center;
-}
+    .logo>img{
+        width: 100px;
+        height: auto;
+    }
 
-.boutons-centre{
-    text-align: center;
-}
+    .boutons-top{
+        text-align: right;
+    }
 
-.cadre-diapo{
-    width:800px;
-    min-height: 400px;
-    height: 600px;
-    text-align: center;
-    padding-bottom: 30px;
-    margin: 0 auto;
-}
+    #photo{
+        width : 1000px;
+        height: auto;
+        text-align: center;
+    }
 
-.diapo {
-    opacity: 0;
-    position: absolute;
-    left: 50%;
-    transform: translate3d(-50%,-50%,0);
-    top: 50%;
-    transition: opacity 1s;
-    width: 100%;
-    max-width: 600px;
-}
+    .boutons-centre{
+        text-align: center;
+    }
 
-.cadre-diapo>button{
-    border: none;
-    cursor: pointer;
-}
+    .cadre-diapo{
+        width:800px;
+        min-height: 400px;
+        height: 600px;
+        text-align: center;
+        padding-bottom: 30px;
+        margin: 0 auto;
+    }
 
-.precedent,
-.suivant{
-    color: silver;
-    transition: color .4s linear;
-    transform: translatey(-50%);
-    top: 50%;
-    padding: .5rem;
-    font-size: 2rem;
-    background: white;
-    position: absolute
-}
+    .diapo {
+        opacity: 0;
+        position: absolute;
+        left: 50%;
+        transform: translate3d(-50%,-50%,0);
+        top: 50%;
+        transition: opacity 1s;
+        width: 100%;
+        max-width: 600px;
+    }
 
-.precedent{
-    left:0
-}
+    .cadre-diapo>button{
+        border: none;
+        cursor: pointer;
+    }
 
-.suivant{
-    right:0
-}
+    .precedent,
+    .suivant{
+        color: silver;
+        transition: color .4s linear;
+        transform: translatey(-50%);
+        top: 50%;
+        padding: .5rem;
+        font-size: 2rem;
+        background: white;
+        position: absolute
+    }
 
-.precedent:hover,
-.suivant:hover{
-    color: black
-}
+    .precedent{
+        left:0
+    }
 
-.cadre-diapo{
-    max-width:800px;
-    min-height: 400px;
-    max-height: 600px;
-    position: relative
+    .suivant{
+        right:0
+    }
+
+    .precedent:hover,
+    .suivant:hover{
+        color: black
+    }
+
+    .cadre-diapo{
+        max-width:800px;
+        min-height: 400px;
+        max-height: 600px;
+        position: relative
+    }
+
+
+
+
 }
 

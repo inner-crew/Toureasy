@@ -40,28 +40,16 @@ class Controller
         // url redirigeant vers la page 'à propos'
         $urlAPropos = $this->c->router->pathFor('about-us');
 
-        // generation des balises HTML de boutons avec les liens correspondants
-        $htmlMap = <<<END
- <button onclick="location.href='$urlAccederMap'">Accéder à Toureasy</button>
- END;
         if (!isset($_COOKIE['token'])) {
-            $htmlMap = <<<END
- <button onclick="location.href='$urlConnexion'">Accéder à Toureasy</button>
- END;
+            $urlAccederMap = $urlConnexion;
         }
-        $htmlContact = <<<END
- <button onclick="location.href='$urlContact'">Nous contacter</button>
- END;
-        $htmlAboutUs = <<<END
- <button onclick="location.href='$urlAPropos'">A propos</button>
- END;
 
         // ajoute ces variables à htmlvars afin de les transférer à la vue
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'map' => $htmlMap,
-            'contact' => $htmlContact,
-            'about-us' => $htmlAboutUs
+            'map' => $urlAccederMap,
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
 
         $v = new Vue(null);
@@ -100,8 +88,8 @@ class Controller
         ];
 
         $data = $rq->getParsedBody();
-        $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
-        $description = filter_var($data['desc'], FILTER_SANITIZE_STRING);
+        $nom = filter_var($data['nom'], FILTER_SA);
+        $description = $data['desc'];
 
         try {
             $monument = new Monument();
@@ -185,11 +173,29 @@ class Controller
             'message' => "Connexion réussie"
         ];
         $data = $rq->getParsedBody();
-        $token = filter_var($data['token'], FILTER_SANITIZE_STRING);
+        $token = filter_var($data['action'], FILTER_SANITIZE_STRING);
+        $v = new Vue(null);
+
+        if ($token === "Obtenir un token") {
+            $token = bin2hex(random_bytes(5));
+            $htmlvars['message'] = "Votre token est : $token";
+            $membre = new Membre();
+            $membre->token = $token;
+            $membre->save();
+        } else {
+            $token = filter_var($data['token'], FILTER_SANITIZE_STRING);
+            try {
+                Membre::getIdBytoken($token);
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                $htmlvars['message'] = "Le token indiqué est inexistant";
+                $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
+                $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+                return $rs;
+            }
+        }
 
         setcookie('token', $token, time()+3600, "/S3B_S16_BRANCATTI_FRACHE_MOITRIER_ZAPP/");
 
-        $v = new Vue(null);
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
     }
