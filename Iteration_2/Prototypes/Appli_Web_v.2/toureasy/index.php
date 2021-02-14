@@ -43,6 +43,21 @@ $app->get('/map[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayMap($rq,$rs,$args);
 })->setName('map');
 
+$app->get('/mes-listes[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayMesListes($rq,$rs,$args);
+})->setName('mes-listes');
+
+$app->get('/mes-listes/{token}[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayDetailListe($rq,$rs,$args);
+})->setName('detail-liste');
+
+$app->get('/mes-listes/monumentPrivate/{token}[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayDetailMonument($rq,$rs,$args);
+})->setName('detail-monument');
+
 // page du formulaire d'ajout d'un monument
 $app->get('/ajouter-monument[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);

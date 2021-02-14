@@ -3,8 +3,11 @@
 namespace toureasy\controller;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use toureasy\models\AppartenanceListe;
 use toureasy\models\AuteurMonumentPrive;
+use toureasy\models\Contribution;
 use toureasy\models\Image;
+use toureasy\models\ListeMonument;
 use toureasy\models\Membre;
 use toureasy\models\Monument;
 use toureasy\vue\Vue;
@@ -105,7 +108,7 @@ class Controller
 
                 $auteurPrive = new AuteurMonumentPrive();
                 $auteurPrive->idMonument = $monument->idMonument;
-                $auteurPrive->idMembre = Membre::getIdBytoken($_COOKIE['token']);
+                $auteurPrive->idMembre = Membre::getIdBytoken($_COOKIE['token'])->idMembre;
                 $auteurPrive->save();
             } else {
                 $monument->estPrive = 0;
@@ -153,6 +156,96 @@ class Controller
 
         // TODO : creation vue pour affichage réussite de l'ajout (ajouter ':Response' à la déclaration de la méthode)
         echo 'Succès';
+    }
+
+    public function displayMesListes(Request $rq, Response $rs, array $args): Response
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath()
+        ];
+
+        $v = new Vue(null);
+
+        if (!isset($_COOKIE['token'])) {
+            $htmlvars['url'] = $this->c->router->pathFor('connexion');
+            $htmlvars['message'] = "Vous devez vous connecter avant de pouvoir ajouter un monument";
+            $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        } else {
+            $membre = null;
+
+            try {
+                $membre = Membre::getIdBytoken($_COOKIE['token']);
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                $htmlvars['message'] = "Le token indiqué est inexistant";
+                $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
+                $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+                return $rs;
+            }
+
+            $listOfListes = ListeMonument::getListesByIdCreator($membre->idMembre);
+            $tabListes = array();
+            foreach ($listOfListes as $liste) {
+                $url = $this->c->router->pathFor('detail-liste', ['token'=>$liste->token]);
+                array_push($tabListes, [$liste, $url]);
+            }
+            $htmlvars['listes'] = $tabListes;
+
+            $listOfPrivate = AuteurMonumentPrive::getMonumentByCreator($membre->idMembre);
+            $tabMonuments = array();
+            foreach ($listOfPrivate as $monument) {
+                $monument = Monument::getMonumentById($monument->idMonument);
+                $url = $this->c->router->pathFor('detail-monument', ['token'=>$monument->token]);
+                array_push($tabMonuments, [$monument, $url]);
+            }
+            $htmlvars['monumentsPrivate'] = $tabMonuments;
+
+
+            // TODO: MONUMENTS PUBLIC
+            $listOfPublic = Monument::getMonumentPublic();
+            $tabMonuments = array();
+            foreach ($listOfPrivate as $monument) {
+                $monument = Monument::getMonumentById($monument->idMonument);
+                $url = $this->c->router->pathFor('detail-monument', ['token'=>$monument->token]);
+                array_push($tabMonuments, [$monument, $url]);
+            }
+            $htmlvars['monumentsPrivate'] = $tabMonuments;
+
+            $rs->getBody()->write($v->render($htmlvars, Vue::VUE_ENSEMBLE));
+            return $rs;
+        }
+    }
+
+    public function displayDetailListe(Request $rq, Response $rs, array $args): Response
+    {
+        $liste = ListeMonument::getListeByToken($args['token']);
+        $v = new Vue([$liste]);
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath()
+        ];
+
+        $listeMonuments = AppartenanceListe::getMonumentByIdListe($liste->idListe);
+        $tabMonuments = array();
+        foreach ($listeMonuments as $monument) {
+            $monument = Monument::getMonumentById($monument->idMonument);
+            $url = $this->c->router->pathFor('detail-monument', ['token'=>$monument->token]);
+            array_push($tabMonuments, [$monument, $url]);
+        }
+        $htmlvars['objets'] = $tabMonuments;
+
+        $rs->getBody()->write($v->render($htmlvars, Vue::LISTE));
+        return $rs;
+    }
+
+    public function displayDetailMonument(Request $rq, Response $rs, array $args): Response
+    {
+        $monument = Monument::getMonumentByToken($args['token']);
+        $v = new Vue([$monument]);
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath()
+        ];
+
+        $rs->getBody()->write($v->render($htmlvars, Vue::MONUMENT));
+        return $rs;
     }
 
     public function displayConnexion(Request $rq, Response $rs, array $args): Response

@@ -1,6 +1,9 @@
 <?php
 
 namespace toureasy\vue;
+use toureasy\models\ListeMonument;
+use toureasy\models\Monument;
+
 class Vue
 {
 
@@ -30,6 +33,17 @@ class Vue
      * constante correspondant à l'affichage de la page de connexion
      */
     const CONNEXION = 4;
+
+    const VUE_ENSEMBLE = 5;
+
+    const LISTE = 6;
+
+    const MONUMENT = 7;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
 
     public function unMessage($vars): string
     {
@@ -219,6 +233,146 @@ END;
         return $html;
     }
 
+    public function vueEnsembleHtml($vars) {
+        $html = <<<END
+<section class="titre">
+            <h3 class="nom">Vos Listes</h3>
+            <p class="desc">Tableau regroupant toutes vos listes</p>
+        </section>
+END;
+
+        if (sizeOf($vars['listes'])>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table>
+                <tr>
+                    <th>Nom</th>
+                    <th>Date</th>
+                </tr>
+END;
+            for ($i = 0; $i < sizeOf($vars['listes']); $i++) {
+                $html .= $this->uneLigneListeHtml($vars['listes'][$i][0], $vars['basepath'], $vars['listes'][$i][1]);
+            }
+            $html .= <<<END
+                
+              </table>
+          </section>
+END;
+
+
+        } else {
+            $html .= "<p>Vous n'avez pas encore créé de liste</p>";
+        }
+
+        $html .= <<<END
+<section class="titre">
+            <h3 class="nom">Vos Monuments Privés</h3>
+            <p class="desc">Tableau regroupant tous vos monuments privés</p>
+        </section>
+END;
+
+
+        if (sizeOf($vars['monumentsPrivate'])>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table>
+                <tr>
+                    <th>Nom</th>
+                </tr>
+END;
+            for ($i = 0; $i < sizeOf($vars['monumentsPrivate']); $i++) {
+                $html .= $this->uneLigneMonumentPrivateHtml($vars['monumentsPrivate'][$i][0], $vars['basepath'], $vars['monumentsPrivate'][$i][1]);
+            }
+            $html .= <<<END
+                
+              </table>
+          </section>
+END;
+
+
+        } else {
+            $html .= "<p>Vous n'avez pas encore créé de monument privé</p>";
+        }
+
+        return $html;
+
+    }
+
+    private function uneLigneListeHtml(ListeMonument $liste, $basepath, $url): string
+    {
+        $html = <<<END
+                <tr>
+                    <td><a href="$url">$liste->nom</a></td>
+                    <td><p class="nom">$liste->dateCreation</p></td>
+                </tr>
+END;
+        return $html;
+    }
+
+    private function uneLigneMonumentPrivateHtml(Monument $liste, $basepath, $url): string
+    {
+        $html = <<<END
+                <tr>
+                    <td><a href="$url">$liste->nomMonum</a></td>
+                </tr>
+END;
+        return $html;
+    }
+
+    public function uneListeHtml(ListeMonument $liste, $vars) {
+        $html = <<<END
+<section class="titreListe">
+            <h3 class="nom">{$liste->nom}</h3>
+            <p class="desc">{$liste->description}</p>
+        </section>
+END;
+        if (sizeOf($vars['objets'])>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table>
+                <tr>
+                    <th>Nom</th>
+                </tr>
+END;
+            for ($i = 0; $i < sizeOf($vars['objets']); $i++) {
+                $html .= $this->unMonument($vars['objets'][$i][0], $vars['objets'][$i][1]);
+            }
+            $html .= <<<END
+                
+              </table>
+        </section>
+END;
+
+        } else {
+            $html .= "<p>Aucuns items dans cette liste</p>";
+        }
+        return $html;
+    }
+
+    private function unMonument(Monument $monument, $url): string {
+        $html = <<<END
+            
+                <tr>
+                    <td><a href="$url">$monument->nomMonum</a></td>
+                </tr>
+END;
+        return $html;
+    }
+
+    public function unMonumentHtml(Monument $monument, $url): string {
+        $html = <<<END
+            
+                <section class="infos">
+            <h3 class="nom">{$monument->nomMonum}</h3>
+            <p class="desc">{$monument->descLongue}</p>
+        </section>
+END;
+        return $html;
+    }
+
     /**
      * @param array $vars array de variables (htmlvars)
      * @param int $typeAffichage valeur correspondant à une constante de cette classe
@@ -247,6 +401,15 @@ END;
             // affichage de la page de connexion
             case Vue::CONNEXION:
                 $content = $this->connexionHtml();
+                break;
+            case Vue::VUE_ENSEMBLE:
+                $content = $this->vueEnsembleHtml($vars);
+                break;
+            case Vue::LISTE:
+                $content = $this->uneListeHtml($this->data[0], $vars);
+                break;
+            case Vue::MONUMENT:
+                $content = $this->unMonumentHtml($this->data[0], $vars);
                 break;
         }
         $html = <<<END

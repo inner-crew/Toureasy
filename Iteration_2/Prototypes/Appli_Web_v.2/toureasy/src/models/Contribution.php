@@ -14,4 +14,5 @@ class Contribution extends Model
     {
         return false;
     }
+
 }

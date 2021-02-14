@@ -14,4 +14,20 @@ class Monument extends Model
     {
         return false;
     }
+
+    public static function getMonumentById($id)
+    {
+        return Monument::query()->where('idMonument', '=', $id)->firstOrFail();
+    }
+
+    public static function getMonumentByToken($id)
+    {
+        return Monument::query()->where('token', '=', $id)->firstOrFail();
+    }
+
+    public static function getMonumentPublic()
+    {
+        return Monument::query()->where('estPrive', '=', 0)->get();
+    }
+
 }

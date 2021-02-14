@@ -5,10 +5,10 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Classe Contribution associée à la table 'contribution' de la base de donneés
  **/
-class AuteurMonumentPrive extends Model
+class AppartenanceListe extends Model
 {
-    protected $table = 'auteurmonumentprive';
-    protected $primaryKey = ['idMonument', 'idMembre'];
+    protected $table = 'appartenanceliste';
+    protected $primaryKey = ['idListe', 'idMonument'];
 
     public $incrementing = false;
 
@@ -17,8 +17,8 @@ class AuteurMonumentPrive extends Model
         return false;
     }
 
-    public static function getMonumentByCreator($id)
+    public static function getMonumentByIdListe($id)
     {
-        return AuteurMonumentPrive::query()->where('idMembre', '=', $id)->get();
+        return AppartenanceListe::query()->where('idListe', '=', $id)->get();
     }
 }

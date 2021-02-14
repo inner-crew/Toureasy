@@ -12,7 +12,7 @@ class Membre extends Model
 
     public static function getIdBytoken($token)
     {
-        return Membre::query()->where('token', '=', $token)->firstOrFail()->idMembre;
+        return Membre::query()->where('token', '=', $token)->firstOrFail();
     }
 
     public function usesTimestamps() : bool
