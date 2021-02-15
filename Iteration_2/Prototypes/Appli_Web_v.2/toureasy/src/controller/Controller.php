@@ -91,7 +91,7 @@ class Controller
         ];
 
         $data = $rq->getParsedBody();
-        $nom = filter_var($data['nom'], FILTER_SA);
+        $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
         $description = $data['desc'];
 
         try {
@@ -100,6 +100,7 @@ class Controller
             $monument->descLongue = $description;
             $monument->longitude = $_POST['long'];
             $monument->latitude = $_POST['lat'];
+            $monument->token = bin2hex(random_bytes(5));
 
             if($data['visibilite'] === "private") {
                 $monument->estPrive = 1;
@@ -114,6 +115,13 @@ class Controller
                 $monument->estPrive = 0;
                 $monument->estTemporaire = 1;
                 $monument->save();
+
+                $contribution = new Contribution();
+                $contribution->monumentTemporaire = $monument->idMonument;
+                $contribution->contributeur = Membre::getIdBytoken($_COOKIE['token'])->idMembre;
+                $contribution->estNouveauMonument = 1;
+                $contribution->statutContribution = "enAttenteDeTraitement";
+                $contribution->save();
             }
 
         } catch (\Illuminate\Database\QueryException $e) {
@@ -158,10 +166,48 @@ class Controller
         echo 'Succès';
     }
 
-    public function displayMesListes(Request $rq, Response $rs, array $args): Response
+    public function displayAjouterListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath()
+        ];
+        $v = new Vue(null);
+        $rs->getBody()->write($v->render($htmlvars, Vue::AJOUTER_LISTE));
+        return $rs;
+    }
+
+    public function postAjouterListe(Request $rq, Response $rs, array $args): Response
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'message' => "Succès",
+            'url' => $this->c->router->pathFor('mes-listes')
+        ];
+
+        $data = $rq->getParsedBody();
+        $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+        $description = filter_var($data['desc'], FILTER_SANITIZE_STRING);
+        $id = Membre::getIdBytoken($_COOKIE['token']);
+
+        $liste = new ListeMonument();
+        $liste->nom = $nom;
+        $liste->description = $description;
+        $liste->idCreateur = $id->idMembre;
+        $liste->token = bin2hex(random_bytes(5));
+        $liste->save();
+
+
+        $v = new Vue(null);
+        $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        return $rs;
+    }
+
+    public function displayMesListes(Request $rq, Response $rs, array $args): Response
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'createListe' => $this->c->router->pathFor('create-liste', []),
+            'createMonument' => $this->c->router->pathFor('ajoutMonument', [])
         ];
 
         $v = new Vue(null);
@@ -194,25 +240,25 @@ class Controller
             $tabMonuments = array();
             foreach ($listOfPrivate as $monument) {
                 $monument = Monument::getMonumentById($monument->idMonument);
-                $url = $this->c->router->pathFor('detail-monument', ['token'=>$monument->token]);
+                $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
                 array_push($tabMonuments, [$monument, $url]);
             }
             $htmlvars['monumentsPrivate'] = $tabMonuments;
 
-
-            // TODO: MONUMENTS PUBLIC
-            $listOfPublic = Monument::getMonumentPublic();
+            $listMonumentCreated = Contribution::getMonumentByIdCreator($membre->idMembre);
             $tabMonuments = array();
-            foreach ($listOfPrivate as $monument) {
-                $monument = Monument::getMonumentById($monument->idMonument);
-                $url = $this->c->router->pathFor('detail-monument', ['token'=>$monument->token]);
-                array_push($tabMonuments, [$monument, $url]);
+            foreach ($listMonumentCreated as $monument) {
+                $monument = Monument::getMonumentById($monument->monumentTemporaire);
+                if ($monument->estPrive == '0') {
+                    $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
+                    array_push($tabMonuments, [$monument, $url]);
+                }
             }
-            $htmlvars['monumentsPrivate'] = $tabMonuments;
+            $htmlvars['monumentsPublic'] = $tabMonuments;
 
             $rs->getBody()->write($v->render($htmlvars, Vue::VUE_ENSEMBLE));
-            return $rs;
         }
+        return $rs;
     }
 
     public function displayDetailListe(Request $rq, Response $rs, array $args): Response

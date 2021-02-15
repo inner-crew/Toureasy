@@ -40,6 +40,8 @@ class Vue
 
     const MONUMENT = 7;
 
+    const AJOUTER_LISTE = 8;
+
     public function __construct($data)
     {
         $this->data = $data;
@@ -238,6 +240,7 @@ END;
 <section class="titre">
             <h3 class="nom">Vos Listes</h3>
             <p class="desc">Tableau regroupant toutes vos listes</p>
+            <button onclick="location.href='{$vars['createListe']}'">Creer une liste</button>
         </section>
 END;
 
@@ -249,6 +252,7 @@ END;
                 <tr>
                     <th>Nom</th>
                     <th>Date</th>
+                    <th>Lien de partage</th>
                 </tr>
 END;
             for ($i = 0; $i < sizeOf($vars['listes']); $i++) {
@@ -262,13 +266,17 @@ END;
 
 
         } else {
-            $html .= "<p>Vous n'avez pas encore créé de liste</p>";
+            $html .= <<<END
+<p>Vous n'avez pas encore créé de liste </p>
+END;
+
         }
 
         $html .= <<<END
 <section class="titre">
             <h3 class="nom">Vos Monuments Privés</h3>
             <p class="desc">Tableau regroupant tous vos monuments privés</p>
+            <button onclick="location.href='{$vars['createMonument']}'">Creer un monument</button>
         </section>
 END;
 
@@ -280,6 +288,7 @@ END;
             <table>
                 <tr>
                     <th>Nom</th>
+                    <th>Lien de partage</th>
                 </tr>
 END;
             for ($i = 0; $i < sizeOf($vars['monumentsPrivate']); $i++) {
@@ -294,6 +303,39 @@ END;
 
         } else {
             $html .= "<p>Vous n'avez pas encore créé de monument privé</p>";
+        }
+
+        $html .= <<<END
+<section class="titre">
+            <h3 class="nom">Vos Monuments Publics</h3>
+            <p class="desc">Tableau regroupant tous vos monuments publics</p>
+            <button onclick="location.href='{$vars['createMonument']}'">Creer un monument</button>
+        </section>
+END;
+
+
+        if (sizeOf($vars['monumentsPublic'])>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table>
+                <tr>
+                    <th>Nom</th>
+                    <th>Lien de partage</th>
+                </tr>
+END;
+            for ($i = 0; $i < sizeOf($vars['monumentsPublic']); $i++) {
+                $html .= $this->uneLigneMonumentPrivateHtml($vars['monumentsPublic'][$i][0], $vars['basepath'], $vars['monumentsPublic'][$i][1]);
+            }
+            $html .= <<<END
+                
+              </table>
+          </section>
+END;
+
+
+        } else {
+            $html .= "<p>Vous n'avez pas encore créé de monument publics</p>";
         }
 
         return $html;
@@ -335,6 +377,7 @@ END;
             <table>
                 <tr>
                     <th>Nom</th>
+                    <th>Lien de partage</th>
                 </tr>
 END;
             for ($i = 0; $i < sizeOf($vars['objets']); $i++) {
@@ -369,6 +412,17 @@ END;
             <h3 class="nom">{$monument->nomMonum}</h3>
             <p class="desc">{$monument->descLongue}</p>
         </section>
+END;
+        return $html;
+    }
+
+    public function ajoutListeHtml() {
+        $html = <<<END
+        <form method="post" enctype="multipart/form-data">
+            <p>Nom<span class="required">*</span> : <input type="text" name="nom" required/></p>
+            <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
+            <p><input type="submit" value="OK"></p>
+        </form>
 END;
         return $html;
     }
@@ -410,6 +464,9 @@ END;
                 break;
             case Vue::MONUMENT:
                 $content = $this->unMonumentHtml($this->data[0], $vars);
+                break;
+            case Vue::AJOUTER_LISTE:
+                $content = $this->ajoutListeHtml();
                 break;
         }
         $html = <<<END

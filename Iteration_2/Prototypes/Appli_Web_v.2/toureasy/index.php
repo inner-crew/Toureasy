@@ -48,6 +48,16 @@ $app->get('/mes-listes[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayMesListes($rq,$rs,$args);
 })->setName('mes-listes');
 
+$app->get('/mes-listes/cree[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayAjouterListe($rq,$rs,$args);
+})->setName('create-liste');
+
+$app->post('/mes-listes/cree[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postAjouterListe($rq,$rs,$args);
+});
+
 $app->get('/mes-listes/{token}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayDetailListe($rq,$rs,$args);

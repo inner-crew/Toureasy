@@ -25,9 +25,4 @@ class Monument extends Model
         return Monument::query()->where('token', '=', $id)->firstOrFail();
     }
 
-    public static function getMonumentPublic()
-    {
-        return Monument::query()->where('estPrive', '=', 0)->get();
-    }
-
 }

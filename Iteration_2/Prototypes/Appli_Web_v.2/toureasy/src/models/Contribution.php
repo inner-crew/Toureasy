@@ -15,4 +15,9 @@ class Contribution extends Model
         return false;
     }
 
+    public static function getMonumentByIdCreator($id)
+    {
+        return Contribution::query()->where([['contributeur', '=', $id],['estNouveauMonument', '=', 1]])->get();
+    }
+
 }
