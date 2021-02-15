@@ -4,7 +4,7 @@ CREATE TABLE `role` (
  `nomRole` VARCHAR(30) NOT NULL ,
  `permModererContrib` BOOLEAN NOT NULL DEFAULT FALSE ,
  `permProposerContrib` BOOLEAN NOT NULL DEFAULT FALSE ,
- `permAdministration` BOOLEAN NOT NULL DEFAULT FALSE , 
+ `permAdministration` BOOLEAN NOT NULL DEFAULT FALSE ,
  PRIMARY KEY (`idRole`)
 ) ENGINE = InnoDB;
 
@@ -15,6 +15,7 @@ CREATE TABLE `listemonument` (
  `visibilite` SET('toutLeMonde','moiUniquement','UtilisateurAvecLien') NOT NULL DEFAULT 'moiUniquement' ,
  `dateCreation` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `idcreateur` INT UNSIGNED NOT NULL ,
+ `token` VARCHAR(20) DEFAULT NULL,
  PRIMARY KEY (`idListe`)
 ) ENGINE = InnoDB;
 
@@ -30,6 +31,7 @@ CREATE TABLE `membre` (
  `role` TINYINT UNSIGNED NOT NULL DEFAULT '1' ,
  `password` varchar(100) DEFAULT NULL,
  `token` varchar(20) DEFAULT NULL,
+ 
  PRIMARY KEY (`idMembre`)
 ) ENGINE = InnoDB;
 
@@ -42,6 +44,7 @@ CREATE TABLE `monument` (
  `latitude` DECIMAL(9,6) NULL DEFAULT NULL ,
  `estTemporaire` BOOLEAN NOT NULL DEFAULT FALSE ,
  `estPrive` BOOLEAN NOT NULL DEFAULT FALSE ,
+ `token` VARCHAR(20) DEFAULT NULL,
  PRIMARY KEY (`idMonument`)
 ) ENGINE = InnoDB;
 
