@@ -412,6 +412,7 @@ class Controller
         $membre->sexe = $sexe;
         $membre->dateNaissance = $naissance;
         $membre->email = $mail;
+        $membre->save();
 
         $v = new Vue(null);
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
