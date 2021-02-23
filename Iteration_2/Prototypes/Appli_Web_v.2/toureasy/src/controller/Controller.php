@@ -384,7 +384,7 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         } else {
             $m = Membre::getIdBytoken($_COOKIE['token']);
-            $v= new Vue($m);
+            $v= new Vue([$m]);
             $rs->getBody()->write($v->render($htmlvars, Vue::PROFIL));
         }
 

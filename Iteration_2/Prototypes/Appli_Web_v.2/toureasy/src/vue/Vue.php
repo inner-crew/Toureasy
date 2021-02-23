@@ -438,52 +438,77 @@ END;
     private function pageProfil(Membre $m, Array $v): string
     {
         $html = <<<END
-    <div class="bt-top">
-        <button>Contact</button>
-        <button>Propos</button>
-    </div>
-    <img src="Logo_genial.png" class="logo">
-    <h1> Tour Easy </h1>
-    <hr>
-    <h2> Mon espace perso </h2>
-      <div class="container">
-         <section class="section">
+    
+<div class="bt-top">
+    <button>Contact</button>
+    <button>Propos</button>
+</div>
+<img src="{$v['basepath']}/web/img/Logo_genial.png" class="logo">
+<h1> Tour Easy </h1>
+<hr>
+<h2> Mon espace perso </h2>
+<form method="post">
+    <div class="container">
+        <section class="section">
             <header>
                 <h3>Profil</h3>
-                <img src="avatar.png" class="avatar">
+                <img src="{$v['basepath']}/web/img/avatar.png" class="avatar">
             </header>
             <div class="content">
-             <h6>Prénom</h6>
-             <h6>Nom</h6>
-             <h6>Sexe</h6>
-             <h6>Date de naissance</h6>
-             <h6>Token</h6>
+                <h6>Prénom <input type="text" class="input-profil" readonly="readonly"></h6>
+                <h6>Nom <input type="text" class="input-profil" readonly="readonly"></h6>
+                <h6>Sexe <input type="text" class="input-profil" readonly="readonly"></h6>
+                <h6>Date de naissance <input type="text" class="input-profil" readonly="readonly"></h6>
+                <h6>Token <input type="text"></h6>
             </div>
-         </section>
-      </div>
-      <div class="container">
-       <section class="section">
-            <header>
-            <h3>Coordonnées</h3>
-            </header>
-            <div class="content">
-             <h6>Adresse e-mail</h6>
-            </div>
-         </section>
-      </div>
-      <div class="container">
-        <section class="section">
-                <header>
-                    <h3>Statistiques</h3>
-                </header>
-                <div class="content">
-                </div>
         </section>
-      </div>
-    <div class="bt-bottom">
-        <button>Modifier</button>
-        <button>Accéder à la carte</button>
     </div>
+    <div class="container">
+        <section class="section">
+            <header>
+                <h3>Coordonnées</h3>
+            </header>
+            <div class="content">
+                <h6>Adresse e-mail <input type="text" class="input-profil" readonly="readonly"></h6>
+            </div>
+        </section>
+    </div>
+</form>
+<div class="container">
+    <section class="section">
+        <header>
+            <h3>Statistiques</h3>
+        </header>
+        <div class="content">
+        </div>
+    </section>
+</div>
+<div class="bt-bottom">
+    <button id="bt-modif">Modifier</button>
+    <button>Accéder à la carte</button>
+</div>
+<script>
+    function modifie() {
+        let input = document.getElementsByClassName("input-profil")
+
+        for (let i = 0; i < input.length; i++) {
+            input[i].readOnly = false;
+        }
+
+        let container = document.querySelector('.bt-bottom');
+        container.innerHTML = ''
+
+        let valider = document.createElement('input')
+        valider.type = 'submit'
+        container.appendChild(valider)
+    }
+
+    let bt = document.getElementById("bt-modif")
+
+    bt.addEventListener('click', modifie);
+
+</script>
+
 END;
         return $html;
     }
