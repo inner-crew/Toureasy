@@ -2,6 +2,7 @@
 
 namespace toureasy\vue;
 use toureasy\models\ListeMonument;
+use toureasy\models\Membre;
 use toureasy\models\Monument;
 
 class Vue
@@ -41,6 +42,8 @@ class Vue
     const MONUMENT = 7;
 
     const AJOUTER_LISTE = 8;
+
+    const PROFIL = 9;
 
     public function __construct($data)
     {
@@ -428,6 +431,66 @@ END;
     }
 
     /**
+     * méthode affichant la page d'accueil de Toureasy
+     * @param array $v variables contenant le membre
+     * @return string code HTML de la page
+     */
+    private function pageProfil(Membre $m, Array $v): string
+    {
+        $html = <<<END
+    <div class="bt-top">
+        <button>Contact</button>
+        <button>Propos</button>
+    </div>
+    <img src="Logo_genial.png" class="logo">
+    <h1> Tour Easy </h1>
+    <hr>
+    <h2> Mon espace perso </h2>
+      <div class="container">
+         <section class="section">
+            <header>
+                <h3>Profil</h3>
+                <img src="avatar.png" class="avatar">
+            </header>
+            <div class="content">
+             <h6>Prénom</h6>
+             <h6>Nom</h6>
+             <h6>Sexe</h6>
+             <h6>Date de naissance</h6>
+             <h6>Token</h6>
+            </div>
+         </section>
+      </div>
+      <div class="container">
+       <section class="section">
+            <header>
+            <h3>Coordonnées</h3>
+            </header>
+            <div class="content">
+             <h6>Adresse e-mail</h6>
+            </div>
+         </section>
+      </div>
+      <div class="container">
+        <section class="section">
+                <header>
+                    <h3>Statistiques</h3>
+                </header>
+                <div class="content">
+                </div>
+        </section>
+      </div>
+    <div class="bt-bottom">
+        <button>Modifier</button>
+        <button>Accéder à la carte</button>
+    </div>
+END;
+        return $html;
+    }
+
+
+
+    /**
      * @param array $vars array de variables (htmlvars)
      * @param int $typeAffichage valeur correspondant à une constante de cette classe
      * @return string code HTML de la page
@@ -467,6 +530,9 @@ END;
                 break;
             case Vue::AJOUTER_LISTE:
                 $content = $this->ajoutListeHtml();
+                break;
+            case Vue::PROFIL:
+                $content = $this->pageProfil($this->data[0], $vars);
                 break;
         }
         $html = <<<END

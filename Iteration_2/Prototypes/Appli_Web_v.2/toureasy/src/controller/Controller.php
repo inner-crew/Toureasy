@@ -364,4 +364,29 @@ class Controller
         //TODO : implement method
     }
 
+    /**
+     * methode controller générant les liens des boutons de la page et appelle Vue pour afficher la page HTML
+     * @param Request $rq
+     * @param Response $rs
+     * @param array $args
+     * @return Response
+     */
+    public function displayProfil(Request $rq, Response $rs, array $args): Response
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath()
+        ];
+        $v = new Vue(null);
+
+        if (!isset($_COOKIE['token'])) {
+            $htmlvars['url'] = $this->c->router->pathFor('connexion');
+            $htmlvars['message'] = "Vous devez vous connecter pour accéder à votre profil";
+            $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        } else {
+            $rs->getBody()->write($v->render($htmlvars, Vue::PROFIL));
+        }
+
+        return $rs;
+    }
+
 }

@@ -91,4 +91,10 @@ $app->get('/about-us[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayAboutUs($rq,$rs,$args);
 })->setName('about-us');
 
+// page 'à propos' de Toureasy
+$app->get('/profil[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayProfil($rq,$rs,$args);
+})->setName('profil');
+
 $app->run();
