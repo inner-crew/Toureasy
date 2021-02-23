@@ -459,7 +459,7 @@ END;
                 <h6>Nom <input type="text" name="nom" class="input-profil" readonly="readonly" value="{$m->nom}"></h6>
                 <h6>Sexe <input type="text" name="sexe" class="input-profil" readonly="readonly" value="{$m->sexe}"></h6>
                 <h6>Date de naissance <input type="date" name="naissance" class="input-profil" readonly="readonly" value="{$m->dateNaissance}"></h6>
-                <h6>Token <input type="text" readonly="readonly" value="{$m->token} ></h6>
+                <h6>Token <input type="text" readonly="readonly" value="{$m->token}" ></h6>
             </div>
         </section>
     </div>
