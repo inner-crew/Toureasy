@@ -455,11 +455,11 @@ END;
                 <img src="{$v['basepath']}/web/img/avatar.png" class="avatar">
             </header>
             <div class="content">
-                <h6>Prénom <input type="text" class="input-profil" readonly="readonly"></h6>
-                <h6>Nom <input type="text" class="input-profil" readonly="readonly"></h6>
-                <h6>Sexe <input type="text" class="input-profil" readonly="readonly"></h6>
-                <h6>Date de naissance <input type="text" class="input-profil" readonly="readonly"></h6>
-                <h6>Token <input type="text"></h6>
+                <h6>Prénom <input type="text" name="prenom" class="input-profil" readonly="readonly" value="{$m->prenom}"></h6>
+                <h6>Nom <input type="text" name="nom" class="input-profil" readonly="readonly" value="{$m->nom}"></h6>
+                <h6>Sexe <input type="text" name="sexe" class="input-profil" readonly="readonly" value="{$m->sexe}"></h6>
+                <h6>Date de naissance <input type="date" name="naissance" class="input-profil" readonly="readonly" value="{$m->dateNaissance}"></h6>
+                <h6>Token <input type="text" readonly="readonly" value="{$m->token} ></h6>
             </div>
         </section>
     </div>
@@ -469,11 +469,10 @@ END;
                 <h3>Coordonnées</h3>
             </header>
             <div class="content">
-                <h6>Adresse e-mail <input type="text" class="input-profil" readonly="readonly"></h6>
+                <h6>Adresse e-mail <input type="text" name="mail" class="input-profil" readonly="readonly" value="{$m->email}"></h6>
             </div>
         </section>
     </div>
-</form>
 <div class="container">
     <section class="section">
         <header>
@@ -487,6 +486,7 @@ END;
     <button id="bt-modif">Modifier</button>
     <button>Accéder à la carte</button>
 </div>
+</form>
 <script>
     function modifie() {
         let input = document.getElementsByClassName("input-profil")

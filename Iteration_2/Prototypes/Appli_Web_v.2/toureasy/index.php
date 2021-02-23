@@ -97,4 +97,9 @@ $app->get('/profil[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayProfil($rq,$rs,$args);
 })->setName('profil');
 
+$app->post('/profil[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postProfil($rq,$rs,$args);
+});
+
 $app->run();

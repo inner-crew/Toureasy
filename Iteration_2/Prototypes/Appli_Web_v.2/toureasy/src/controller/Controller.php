@@ -391,4 +391,31 @@ class Controller
         return $rs;
     }
 
+    public function postProfil(Request $rq, Response $rs, array $args): Response
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'message' => "Succès",
+            'url' => $this->c->router->pathFor('profil')
+        ];
+
+        $data = $rq->getParsedBody();
+        $prenom = filter_var($data['prenom'], FILTER_SANITIZE_STRING);
+        $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+        $sexe = filter_var($data['sexe'], FILTER_SANITIZE_STRING);
+        $naissance = filter_var($data['naissance'], FILTER_SANITIZE_STRING);
+        $mail = filter_var($data['mail'], FILTER_SANITIZE_STRING);
+        $membre = Membre::getIdBytoken($_COOKIE['token']);
+
+        $membre->prenom = $prenom;
+        $membre->nom = $nom;
+        $membre->sexe = $sexe;
+        $membre->dateNaissance = $naissance;
+        $membre->email = $mail;
+
+        $v = new Vue(null);
+        $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        return $rs;
+    }
+
 }
