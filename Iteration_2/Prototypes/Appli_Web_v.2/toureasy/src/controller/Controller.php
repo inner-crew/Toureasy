@@ -238,38 +238,32 @@ class Controller
         } else {
             $membre = Membre::getMembreByToken($_COOKIE['token']);
 
-            $listOfListes = ListeMonument::getListesByIdCreator($membre->idMembre);
+            $listeDesListesUtilisateur = ListeMonument::getListesByIdCreator($membre->idMembre);
             $tabListes = array();
-            foreach ($listOfListes as $liste) {
+            foreach ($listeDesListesUtilisateur as $liste) {
                 $url = $this->c->router->pathFor('detail-liste', ['token'=>$liste->token]);
                 array_push($tabListes, [$liste, $url]);
             }
 
-            $listOfPrivate = AuteurMonumentPrive::getMonumentByCreator($membre->idMembre);
-            $tabMonuments = array();
-            foreach ($listOfPrivate as $monument) {
+            $listeMonumentsPrives = AuteurMonumentPrive::getMonumentByCreator($membre->idMembre);
+            $arrayMonumentsPrives = array();
+            foreach ($listeMonumentsPrives as $monument) {
                 $monument = Monument::getMonumentById($monument->idMonument);
                 $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
-                array_push($tabMonuments, [$monument, $url]);
+                array_push($arrayMonumentsPrives, [$monument, $url]);
             }
 
-            $listMonumentCreated = Contribution::getMonumentByIdCreator($membre->idMembre);
-            $tabMonumentsPrivate = array();
-            foreach ($listMonumentCreated as $monument) {
+            $listeMonumentsPublics = Contribution::getMonumentByIdCreator($membre->idMembre);
+            $arrayMonumentsPublics = array();
+            foreach ($listeMonumentsPublics as $monument) {
                 $monument = Monument::getMonumentById($monument->monumentTemporaire);
                 if ($monument->estPrive == '0') {
                     $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
-                    array_push($tabMonumentsPrivate, [$monument, $url]);
+                    array_push($arrayMonumentsPublics, [$monument, $url]);
                 }
             }
 
-            $objets = [
-                "listes" => $tabListes,
-                "MonumentsPrivate" => $tabMonumentsPrivate,
-                "MonumentsPublic" => $tabMonuments
-            ];
-
-            $v = new Vue([$objets]);
+            $v = new Vue([$tabListes, $arrayMonumentsPrives, $arrayMonumentsPublics]);
 
             $rs->getBody()->write($v->render($htmlvars, Vue::VUE_ENSEMBLE));
             return $rs;
@@ -279,20 +273,29 @@ class Controller
     public function displayDetailListe(Request $rq, Response $rs, array $args): Response
     {
         $liste = ListeMonument::getListeByToken($args['token']);
-        $v = new Vue([$liste]);
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath()
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
-            $listeMonuments = AppartenanceListe::getMonumentByIdListe($liste->idListe);
-            $tabMonuments = array();
-            foreach ($listeMonuments as $monument) {
+            $listeMonumentsDeCetteListe = AppartenanceListe::getMonumentByIdListe($liste->idListe);
+            $tabMonumentsDeCetteListe = array();
+            foreach ($listeMonumentsDeCetteListe as $monument) {
                 $monument = Monument::getMonumentById($monument->idMonument);
                 $url = $this->c->router->pathFor('detail-monument', ['token'=>$monument->token]);
-                array_push($tabMonuments, [$monument, $url]);
+                array_push($tabMonumentsDeCetteListe, [$monument, $url]);
             }
-            $htmlvars['objets'] = $tabMonuments;
+
+            $listeMonumentsDeLaListe1Dimension = array();
+            foreach ($listeMonumentsDeCetteListe as $monument) {
+                $monument = Monument::getMonumentById($monument->idMonument);
+                array_push($listeMonumentsDeLaListe1Dimension, $monument);
+            }
+
+            $tabTousMonuments = Membre::getTousLesMonumentsUtilisateurByToken($_COOKIE['token']);
+            $tabMonumentsPasDansCetteListe = array_diff($tabTousMonuments, $listeMonumentsDeLaListe1Dimension);
+
+            $v = new Vue([$liste, $tabMonumentsDeCetteListe, $tabMonumentsPasDansCetteListe]);
 
             $rs->getBody()->write($v->render($htmlvars, Vue::LISTE));
         } else {
@@ -306,8 +309,12 @@ class Controller
     {
         $monument = Monument::getMonumentByToken($args['token']);
         $v = new Vue([$monument]);
+
+        $image = Image::getImageUrlByIdMonument($monument->idMonument);
+
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            "urlImage" => $image->urlImage
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
@@ -442,6 +449,22 @@ class Controller
         return $rs;
     }
 
+    public function postAjouterMonumentListe(Request $rq, Response $rs, array $args): Response
+    {
+        $data = $rq->getParsedBody();
+        $idMonument = $data["monuments"];
+
+        $appartenanceListe = new AppartenanceListe();
+        $liste = ListeMonument::getListeByToken($args['token']);
+        $monument = Monument::getMonumentById($idMonument);
+
+        $appartenanceListe->idListe = $liste->idListe;
+        $appartenanceListe->idMonument = $monument->idMonument;
+        $appartenanceListe->save();
+
+        return $this->genererMessageAvecRedirection($rs, $rq, "Monument ajouté à la liste avec succès", 'detail-liste', ['token' => $args['token']]);
+    }
+
     private function verifierUtilisateurConnecte(): Bool
     {
         if (isset($_COOKIE['token'])) {
@@ -467,12 +490,12 @@ class Controller
         return $rs;
     }
 
-    private function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection) {
+    private function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection, $argsUrl = array()) {
         $v = new Vue(null);
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => $message,
-            'url' => $this->c->router->pathFor($nameRedirection, [])
+            'url' => $this->c->router->pathFor($nameRedirection, $argsUrl)
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;

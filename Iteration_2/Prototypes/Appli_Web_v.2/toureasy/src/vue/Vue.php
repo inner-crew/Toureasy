@@ -238,7 +238,7 @@ END;
         return $html;
     }
 
-    public function vueEnsembleHtml($datas, $vars) {
+    public function vueEnsembleHtml($arrayListeUtilisateur, $arrayMonumentsPrives, $arrayMonumentsPublics, $vars) {
         $basepath = $vars['basepath'];
         $html = <<<END
 <section class="titre">
@@ -248,7 +248,7 @@ END;
         </section>
 END;
 
-        if (sizeOf($datas['listes'])>0) {
+        if (sizeOf($arrayListeUtilisateur)>0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -259,8 +259,8 @@ END;
                     <th>Lien de partage</th>
                 </tr>
 END;
-            for ($i = 0; $i < sizeOf($datas['listes']); $i++) {
-                $html .= $this->uneLigneListeHtml($datas['listes'][$i][0], $basepath, $datas['listes'][$i][1]);
+            for ($i = 0; $i < sizeOf($arrayListeUtilisateur); $i++) {
+                $html .= $this->uneLigneListeHtml($arrayListeUtilisateur[$i][0], $basepath, $arrayListeUtilisateur[$i][1]);
             }
             $html .= <<<END
                 
@@ -285,7 +285,7 @@ END;
 END;
 
 
-        if (sizeOf($datas['MonumentsPrivate'])>0) {
+        if (sizeOf($arrayMonumentsPrives)>0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -295,8 +295,8 @@ END;
                     <th>Lien de partage</th>
                 </tr>
 END;
-            for ($i = 0; $i < sizeOf($datas['monumentsPrivate']); $i++) {
-                $html .= $this->uneLigneMonumentPrivateHtml($datas['monumentsPrivate'][$i][0], $basepath, $datas['monumentsPrivate'][$i][1]);
+            for ($i = 0; $i < sizeOf($arrayMonumentsPrives); $i++) {
+                $html .= $this->uneLigneMonumentPrivateHtml($arrayMonumentsPrives[$i][0], $basepath, $arrayMonumentsPrives[$i][1]);
             }
             $html .= <<<END
                 
@@ -318,7 +318,7 @@ END;
 END;
 
 
-        if (sizeOf($datas['MonumentsPublic'])>0) {
+        if (sizeOf($arrayMonumentsPublics)>0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -328,8 +328,8 @@ END;
                     <th>Lien de partage</th>
                 </tr>
 END;
-            for ($i = 0; $i < sizeOf($datas['MonumentsPublic']); $i++) {
-                $html .= $this->uneLigneMonumentPrivateHtml($datas['MonumentsPublic'][$i][0], $basepath, $datas['MonumentsPublic'][$i][1]);
+            for ($i = 0; $i < sizeOf($arrayMonumentsPublics); $i++) {
+                $html .= $this->uneLigneMonumentPrivateHtml($arrayMonumentsPublics[$i][0], $basepath, $arrayMonumentsPublics[$i][1]);
             }
             $html .= <<<END
                 
@@ -367,14 +367,16 @@ END;
         return $html;
     }
 
-    public function uneListeHtml(ListeMonument $liste, $vars) {
+    public function uneListeHtml(ListeMonument $liste, $monumentsDeCetteListe, $monumentsDeUtilisateur ,$vars): string
+    {
         $html = <<<END
 <section class="titreListe">
-            <h3 class="nom">{$liste->nom}</h3>
-            <p class="desc">{$liste->description}</p>
+            <h3 class="nom">Nom de la liste : {$liste->nom}</h3>
+            <p class="desc">Description : {$liste->description}</p>
         </section>
+        </br>
 END;
-        if (sizeOf($vars['objets'])>0) {
+        if (sizeOf($monumentsDeCetteListe)>0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -384,8 +386,8 @@ END;
                     <th>Lien de partage</th>
                 </tr>
 END;
-            for ($i = 0; $i < sizeOf($vars['objets']); $i++) {
-                $html .= $this->unMonument($vars['objets'][$i][0], $vars['objets'][$i][1]);
+            for ($i = 0; $i < sizeOf($monumentsDeCetteListe); $i++) {
+                $html .= $this->unMonument($monumentsDeCetteListe[$i][0], $monumentsDeCetteListe[$i][1]);
             }
             $html .= <<<END
                 
@@ -394,8 +396,22 @@ END;
 END;
 
         } else {
-            $html .= "<p>Aucuns items dans cette liste</p>";
+            $html .= "<p>Aucuns monuments dans cette liste</p></br>";
         }
+
+        if (sizeof($monumentsDeUtilisateur) > 0) {
+            $html .= <<<END
+<form method="post">
+<select name="monuments" id="monument-selected">
+    <option value="">--Choisissez un monument à ajouter--</option>
+END;
+
+            for ($i = 1; $i <= sizeof($monumentsDeUtilisateur); $i++) {
+                $html .= "<option value='{$monumentsDeUtilisateur[$i]->idMonument}'>{$monumentsDeUtilisateur[$i]->nomMonum}</option>";
+            }
+            $html .= "</select> <input type='submit' value='OK'></form>";
+        }
+
         return $html;
     }
 
@@ -409,26 +425,27 @@ END;
         return $html;
     }
 
-    public function unMonumentHtml(Monument $monument, $url): string {
+    public function unMonumentHtml(Monument $monument, $vars): string {
         $html = <<<END
             
                 <section class="infos">
-            <h3 class="nom">{$monument->nomMonum}</h3>
-            <p class="desc">{$monument->descLongue}</p>
+            <h3 class="nom">Nom : {$monument->nomMonum}</h3>
+            <p class="desc">Description : {$monument->descLongue}</p>
+            <img width="50%" src='{$vars['basepath']}/{$vars['urlImage']}'>
         </section>
 END;
         return $html;
     }
 
-    public function ajoutListeHtml() {
-        $html = <<<END
+    public function ajoutListeHtml(): string
+    {
+        return <<<END
         <form method="post" enctype="multipart/form-data">
             <p>Nom<span class="required">*</span> : <input type="text" name="nom" required/></p>
             <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
             <p><input type="submit" value="OK"></p>
         </form>
 END;
-        return $html;
     }
 
     /**
@@ -544,10 +561,10 @@ END;
                 $content = $this->connexionHtml();
                 break;
             case Vue::VUE_ENSEMBLE:
-                $content = $this->vueEnsembleHtml($this->data[0], $vars);
+                $content = $this->vueEnsembleHtml($this->data[0], $this->data[1], $this->data[2], $vars);
                 break;
             case Vue::LISTE:
-                $content = $this->uneListeHtml($this->data[0], $vars);
+                $content = $this->uneListeHtml($this->data[0], $this->data[1], $this->data[2], $vars);
                 break;
             case Vue::MONUMENT:
                 $content = $this->unMonumentHtml($this->data[0], $vars);

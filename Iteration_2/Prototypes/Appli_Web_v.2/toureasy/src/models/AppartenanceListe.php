@@ -21,4 +21,5 @@ class AppartenanceListe extends Model
     {
         return AppartenanceListe::query()->where('idListe', '=', $id)->get();
     }
+
 }

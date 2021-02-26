@@ -63,6 +63,11 @@ $app->get('/mes-listes/{token}[/]', function(Request $rq, Response $rs, array $a
     return $c->displayDetailListe($rq,$rs,$args);
 })->setName('detail-liste');
 
+$app->post('/mes-listes/{token}[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postAjouterMonumentListe($rq,$rs,$args);
+});
+
 $app->get('/mes-listes/monumentPrivate/{token}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayDetailMonument($rq,$rs,$args);

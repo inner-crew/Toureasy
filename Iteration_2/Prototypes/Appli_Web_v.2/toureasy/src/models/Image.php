@@ -15,4 +15,8 @@ class Image extends Model
     {
         return false;
     }
+
+    public static function getImageUrlByIdMonument($id) {
+        return Image::query()->where('idMonument', '=', $id)->firstOrFail();
+    }
 }
