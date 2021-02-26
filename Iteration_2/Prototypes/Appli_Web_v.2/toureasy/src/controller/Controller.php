@@ -1,6 +1,7 @@
 <?php
 
 namespace toureasy\controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use toureasy\models\AppartenanceListe;
@@ -43,7 +44,7 @@ class Controller
         // url redirigeant vers la page 'à propos'
         $urlAPropos = $this->c->router->pathFor('about-us');
 
-        if (!isset($_COOKIE['token'])) {
+        if (!$this->verifierUtilisateurConnecte()) {
             $urlAccederMap = $urlConnexion;
         }
 
@@ -74,10 +75,8 @@ class Controller
         ];
         $v = new Vue(null);
 
-        if (!isset($_COOKIE['token'])) {
-            $htmlvars['url'] = $this->c->router->pathFor('connexion');
-            $htmlvars['message'] = "Vous devez vous connecter avant de pouvoir ajouter un monument";
-            $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        if (!$this->verifierUtilisateurConnecte()) {
+            return $this->genererRedirectionPageConnexion($rs, $rq);
         } else {
             $rs->getBody()->write($v->render($htmlvars, Vue::AJOUTER_MONUMENT));
         }
@@ -90,12 +89,17 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath()
         ];
 
+        $v = new Vue(null);
+
         $data = $rq->getParsedBody();
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
         $description = $data['desc'];
 
         try {
+            $contribution = null;
+            $auteurPrive = null;
             $monument = new Monument();
+
             $monument->nomMonum = $nom;
             $monument->descLongue = $description;
             $monument->longitude = $_POST['long'];
@@ -109,7 +113,7 @@ class Controller
 
                 $auteurPrive = new AuteurMonumentPrive();
                 $auteurPrive->idMonument = $monument->idMonument;
-                $auteurPrive->idMembre = Membre::getIdBytoken($_COOKIE['token'])->idMembre;
+                $auteurPrive->idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
                 $auteurPrive->save();
             } else {
                 $monument->estPrive = 0;
@@ -118,14 +122,23 @@ class Controller
 
                 $contribution = new Contribution();
                 $contribution->monumentTemporaire = $monument->idMonument;
-                $contribution->contributeur = Membre::getIdBytoken($_COOKIE['token'])->idMembre;
+                $contribution->contributeur = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
                 $contribution->estNouveauMonument = 1;
                 $contribution->statutContribution = "enAttenteDeTraitement";
                 $contribution->save();
             }
 
-        } catch (\Illuminate\Database\QueryException $e) {
-            echo 'Erreur lors de la création du monument';
+        } catch (ModelNotFoundException $e) {
+            if ($contribution != null) {
+                $contribution->delete();
+            }
+            if ($auteurPrive != null) {
+                $auteurPrive->delete();
+            }
+            if ($monument != null) {
+                $monument->delete();
+            }
+            return $this->genererMessageAvecRedirection($rs, $rq,"Erreur lors de l'ajout du monument", "ajoutMonument");
         }
 
         // si une image est bien présente dans la variable
@@ -154,16 +167,15 @@ class Controller
                     $image->save();
                 } else {
                     $monument->delete();
-                    echo 'Une erreur est survenue lors du téléchargement de l\'image';
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "ajoutMonument");
                 }
             } else {
                 $monument->delete();
-                echo 'Seules les images sont acceptées';
+                return $this->genererMessageAvecRedirection($rs, $rq, 'Seules les images sont acceptées', "ajoutMonument");
             }
         }
 
-        // TODO : creation vue pour affichage réussite de l'ajout (ajouter ':Response' à la déclaration de la méthode)
-        echo 'Succès';
+        return $this->genererMessageAvecRedirection($rs, $rq,"Monument créé avec succès", "mes-listes");
     }
 
     public function displayAjouterListe(Request $rq, Response $rs, array $args): Response
@@ -172,8 +184,13 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath()
         ];
         $v = new Vue(null);
-        $rs->getBody()->write($v->render($htmlvars, Vue::AJOUTER_LISTE));
-        return $rs;
+
+        if ($this->verifierUtilisateurConnecte()) {
+            $rs->getBody()->write($v->render($htmlvars, Vue::AJOUTER_LISTE));
+            return $rs;
+        } else {
+            return $this->genererRedirectionPageConnexion($rs, $htmlvars);
+        }
     }
 
     public function postAjouterListe(Request $rq, Response $rs, array $args): Response
@@ -184,20 +201,26 @@ class Controller
             'url' => $this->c->router->pathFor('mes-listes')
         ];
 
+        $v = new Vue(null);
+
         $data = $rq->getParsedBody();
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
         $description = filter_var($data['desc'], FILTER_SANITIZE_STRING);
-        $id = Membre::getIdBytoken($_COOKIE['token']);
+        $id = Membre::getMembreByToken($_COOKIE['token']);
 
-        $liste = new ListeMonument();
-        $liste->nom = $nom;
-        $liste->description = $description;
-        $liste->idCreateur = $id->idMembre;
-        $liste->token = bin2hex(random_bytes(5));
-        $liste->save();
-
-
-        $v = new Vue(null);
+        try {
+            $liste = new ListeMonument();
+            $liste->nom = $nom;
+            $liste->description = $description;
+            $liste->idCreateur = $id->idMembre;
+            $liste->token = bin2hex(random_bytes(5));
+            $liste->save();
+        } catch (ModelNotFoundException $e) {
+            if ($liste != null) {
+                $liste->delete();
+            }
+            return $this->genererMessageAvecRedirection($rs, $htmlvars,"Erreur lors de la création de votre liste", "createListe");
+        }
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
     }
@@ -210,23 +233,10 @@ class Controller
             'createMonument' => $this->c->router->pathFor('ajoutMonument', [])
         ];
 
-        $v = new Vue(null);
-
-        if (!isset($_COOKIE['token'])) {
-            $htmlvars['url'] = $this->c->router->pathFor('connexion');
-            $htmlvars['message'] = "Vous devez vous connecter avant de pouvoir ajouter un monument";
-            $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        if (!$this->verifierUtilisateurConnecte()) {
+            return $this->genererRedirectionPageConnexion($rs, $rq);
         } else {
-            $membre = null;
-
-            try {
-                $membre = Membre::getIdBytoken($_COOKIE['token']);
-            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-                $htmlvars['message'] = "Le token indiqué est inexistant";
-                $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
-                $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
-                return $rs;
-            }
+            $membre = Membre::getMembreByToken($_COOKIE['token']);
 
             $listOfListes = ListeMonument::getListesByIdCreator($membre->idMembre);
             $tabListes = array();
@@ -234,7 +244,6 @@ class Controller
                 $url = $this->c->router->pathFor('detail-liste', ['token'=>$liste->token]);
                 array_push($tabListes, [$liste, $url]);
             }
-            $htmlvars['listes'] = $tabListes;
 
             $listOfPrivate = AuteurMonumentPrive::getMonumentByCreator($membre->idMembre);
             $tabMonuments = array();
@@ -243,22 +252,28 @@ class Controller
                 $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
                 array_push($tabMonuments, [$monument, $url]);
             }
-            $htmlvars['monumentsPrivate'] = $tabMonuments;
 
             $listMonumentCreated = Contribution::getMonumentByIdCreator($membre->idMembre);
-            $tabMonuments = array();
+            $tabMonumentsPrivate = array();
             foreach ($listMonumentCreated as $monument) {
                 $monument = Monument::getMonumentById($monument->monumentTemporaire);
                 if ($monument->estPrive == '0') {
                     $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
-                    array_push($tabMonuments, [$monument, $url]);
+                    array_push($tabMonumentsPrivate, [$monument, $url]);
                 }
             }
-            $htmlvars['monumentsPublic'] = $tabMonuments;
+
+            $objets = [
+                "listes" => $tabListes,
+                "MonumentsPrivate" => $tabMonumentsPrivate,
+                "MonumentsPublic" => $tabMonuments
+            ];
+
+            $v = new Vue([$objets]);
 
             $rs->getBody()->write($v->render($htmlvars, Vue::VUE_ENSEMBLE));
+            return $rs;
         }
-        return $rs;
     }
 
     public function displayDetailListe(Request $rq, Response $rs, array $args): Response
@@ -269,16 +284,21 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath()
         ];
 
-        $listeMonuments = AppartenanceListe::getMonumentByIdListe($liste->idListe);
-        $tabMonuments = array();
-        foreach ($listeMonuments as $monument) {
-            $monument = Monument::getMonumentById($monument->idMonument);
-            $url = $this->c->router->pathFor('detail-monument', ['token'=>$monument->token]);
-            array_push($tabMonuments, [$monument, $url]);
-        }
-        $htmlvars['objets'] = $tabMonuments;
+        if ($this->verifierUtilisateurConnecte()) {
+            $listeMonuments = AppartenanceListe::getMonumentByIdListe($liste->idListe);
+            $tabMonuments = array();
+            foreach ($listeMonuments as $monument) {
+                $monument = Monument::getMonumentById($monument->idMonument);
+                $url = $this->c->router->pathFor('detail-monument', ['token'=>$monument->token]);
+                array_push($tabMonuments, [$monument, $url]);
+            }
+            $htmlvars['objets'] = $tabMonuments;
 
-        $rs->getBody()->write($v->render($htmlvars, Vue::LISTE));
+            $rs->getBody()->write($v->render($htmlvars, Vue::LISTE));
+        } else {
+            return $this->genererRedirectionPageConnexion($rs, $rq);
+        }
+
         return $rs;
     }
 
@@ -290,7 +310,12 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath()
         ];
 
-        $rs->getBody()->write($v->render($htmlvars, Vue::MONUMENT));
+        if ($this->verifierUtilisateurConnecte()) {
+            $rs->getBody()->write($v->render($htmlvars, Vue::MONUMENT));
+        } else {
+            return $this->genererRedirectionPageConnexion($rs, $rq);
+        }
+
         return $rs;
     }
 
@@ -324,7 +349,7 @@ class Controller
         } else {
             $token = filter_var($data['token'], FILTER_SANITIZE_STRING);
             try {
-                Membre::getIdBytoken($token);
+                Membre::getMembreByToken($token);
             } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
                 $htmlvars['message'] = "Le token indiqué est inexistant";
                 $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
@@ -378,12 +403,10 @@ class Controller
         ];
         $v = new Vue(null);
 
-        if (!isset($_COOKIE['token'])) {
-            $htmlvars['url'] = $this->c->router->pathFor('connexion');
-            $htmlvars['message'] = "Vous devez vous connecter pour accéder à votre profil";
-            $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        if (!$this->verifierUtilisateurConnecte()) {
+            return $this->genererRedirectionPageConnexion($rs, $rq);
         } else {
-            $m = Membre::getIdBytoken($_COOKIE['token']);
+            $m = Membre::getMembreByToken($_COOKIE['token']);
             $v= new Vue([$m]);
             $rs->getBody()->write($v->render($htmlvars, Vue::PROFIL));
         }
@@ -405,7 +428,7 @@ class Controller
         $sexe = filter_var($data['sexe'], FILTER_SANITIZE_STRING);
         $naissance = filter_var($data['naissance'], FILTER_SANITIZE_STRING);
         $mail = filter_var($data['mail'], FILTER_SANITIZE_STRING);
-        $membre = Membre::getIdBytoken($_COOKIE['token']);
+        $membre = Membre::getMembreByToken($_COOKIE['token']);
 
         $membre->prenom = $prenom;
         $membre->nom = $nom;
@@ -415,6 +438,42 @@ class Controller
         $membre->save();
 
         $v = new Vue(null);
+        $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        return $rs;
+    }
+
+    private function verifierUtilisateurConnecte(): Bool
+    {
+        if (isset($_COOKIE['token'])) {
+            try {
+                $membre = Membre::getMembreByToken($_COOKIE['token']);
+                return true;
+            } catch (ModelNotFoundException $e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private function genererRedirectionPageConnexion($rs, $rq) {
+        $v = new Vue(null);
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'message' => "Vous devez vous connecter pour accéder à cette page",
+            'url' => $this->c->router->pathFor('connexion', [])
+        ];
+        $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+        return $rs;
+    }
+
+    private function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection) {
+        $v = new Vue(null);
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'message' => $message,
+            'url' => $this->c->router->pathFor($nameRedirection, [])
+        ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
     }

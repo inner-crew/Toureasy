@@ -10,7 +10,7 @@ class Membre extends Model
     protected $table = 'membre';
     protected $primaryKey = 'idMembre';
 
-    public static function getIdBytoken($token)
+    public static function getMembreByToken($token)
     {
         return Membre::query()->where('token', '=', $token)->firstOrFail();
     }

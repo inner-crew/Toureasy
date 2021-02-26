@@ -56,7 +56,7 @@ $app->get('/mes-listes/cree[/]', function(Request $rq, Response $rs, array $args
 $app->post('/mes-listes/cree[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->postAjouterListe($rq,$rs,$args);
-});
+})->setName("createListe");
 
 $app->get('/mes-listes/{token}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);

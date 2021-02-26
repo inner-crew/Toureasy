@@ -238,7 +238,8 @@ END;
         return $html;
     }
 
-    public function vueEnsembleHtml($vars) {
+    public function vueEnsembleHtml($datas, $vars) {
+        $basepath = $vars['basepath'];
         $html = <<<END
 <section class="titre">
             <h3 class="nom">Vos Listes</h3>
@@ -247,7 +248,7 @@ END;
         </section>
 END;
 
-        if (sizeOf($vars['listes'])>0) {
+        if (sizeOf($datas['listes'])>0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -258,8 +259,8 @@ END;
                     <th>Lien de partage</th>
                 </tr>
 END;
-            for ($i = 0; $i < sizeOf($vars['listes']); $i++) {
-                $html .= $this->uneLigneListeHtml($vars['listes'][$i][0], $vars['basepath'], $vars['listes'][$i][1]);
+            for ($i = 0; $i < sizeOf($datas['listes']); $i++) {
+                $html .= $this->uneLigneListeHtml($datas['listes'][$i][0], $basepath, $datas['listes'][$i][1]);
             }
             $html .= <<<END
                 
@@ -284,7 +285,7 @@ END;
 END;
 
 
-        if (sizeOf($vars['monumentsPrivate'])>0) {
+        if (sizeOf($datas['MonumentsPrivate'])>0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -294,8 +295,8 @@ END;
                     <th>Lien de partage</th>
                 </tr>
 END;
-            for ($i = 0; $i < sizeOf($vars['monumentsPrivate']); $i++) {
-                $html .= $this->uneLigneMonumentPrivateHtml($vars['monumentsPrivate'][$i][0], $vars['basepath'], $vars['monumentsPrivate'][$i][1]);
+            for ($i = 0; $i < sizeOf($datas['monumentsPrivate']); $i++) {
+                $html .= $this->uneLigneMonumentPrivateHtml($datas['monumentsPrivate'][$i][0], $basepath, $datas['monumentsPrivate'][$i][1]);
             }
             $html .= <<<END
                 
@@ -317,7 +318,7 @@ END;
 END;
 
 
-        if (sizeOf($vars['monumentsPublic'])>0) {
+        if (sizeOf($datas['MonumentsPublic'])>0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -327,8 +328,8 @@ END;
                     <th>Lien de partage</th>
                 </tr>
 END;
-            for ($i = 0; $i < sizeOf($vars['monumentsPublic']); $i++) {
-                $html .= $this->uneLigneMonumentPrivateHtml($vars['monumentsPublic'][$i][0], $vars['basepath'], $vars['monumentsPublic'][$i][1]);
+            for ($i = 0; $i < sizeOf($datas['MonumentsPublic']); $i++) {
+                $html .= $this->uneLigneMonumentPrivateHtml($datas['MonumentsPublic'][$i][0], $basepath, $datas['MonumentsPublic'][$i][1]);
             }
             $html .= <<<END
                 
@@ -513,8 +514,6 @@ END;
         return $html;
     }
 
-
-
     /**
      * @param array $vars array de variables (htmlvars)
      * @param int $typeAffichage valeur correspondant à une constante de cette classe
@@ -545,7 +544,7 @@ END;
                 $content = $this->connexionHtml();
                 break;
             case Vue::VUE_ENSEMBLE:
-                $content = $this->vueEnsembleHtml($vars);
+                $content = $this->vueEnsembleHtml($this->data[0], $vars);
                 break;
             case Vue::LISTE:
                 $content = $this->uneListeHtml($this->data[0], $vars);
