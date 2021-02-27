@@ -406,8 +406,8 @@ END;
     <option value="">--Choisissez un monument à ajouter--</option>
 END;
 
-            for ($i = 1; $i <= sizeof($monumentsDeUtilisateur); $i++) {
-                $html .= "<option value='{$monumentsDeUtilisateur[$i]->idMonument}'>{$monumentsDeUtilisateur[$i]->nomMonum}</option>";
+            foreach ($monumentsDeUtilisateur as $monument) {
+                $html .= "<option value='{$monument->idMonument}'>{$monument->nomMonum}</option>";
             }
             $html .= "</select> <input type='submit' value='OK'></form>";
         }
