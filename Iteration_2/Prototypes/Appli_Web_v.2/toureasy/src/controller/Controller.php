@@ -488,7 +488,6 @@ class Controller
 
     private function verifierUtilisateurConnecte(): Bool
     {
-        return true;
         if (isset($_COOKIE['token'])) {
             try {
                 $membre = Membre::getMembreByToken($_COOKIE['token']);
