@@ -128,6 +128,27 @@ class Controller
                 $contribution->save();
             }
 
+            $strJsonFileContents = file_get_contents("../../web/carteSetting/data/tmp/monumentsDeLaDataBase.json");
+            $jsonMonuemnts = json_decode($strJsonFileContents, true);
+
+            array_push($jsonMonuemnts['features'], array (
+                "type" => "Feature",
+                "geometry" => array (
+                    "type" => "Point",
+                    "coordinates" => array($monument->longitude, $monument->latitude)
+                ),
+                "properties" => array (
+                    "title" => $monument->nomMonum,
+                    "description" => $monument->descLongue
+                )
+            ));
+
+            $nvJson = json_encode($jsonMonuemnts);
+            $bytes = file_put_contents("../../web/carteSetting/data/tmp/monumentsDeLaDataBase.json", $nvJson);
+
+            if ($bytes >= 0) echo "Ajout json ok";
+            else echo "Ajout json not ok";
+
         } catch (ModelNotFoundException $e) {
             if ($contribution != null) {
                 $contribution->delete();
