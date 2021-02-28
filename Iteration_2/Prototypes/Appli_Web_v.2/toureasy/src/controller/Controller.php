@@ -386,7 +386,7 @@ class Controller
             }
         }
 
-        setcookie('token', $token, time()+3600, "/S3B_S16_BRANCATTI_FRACHE_MOITRIER_ZAPP/");
+        setcookie('token', $token, time()+3600, "/");
 
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
