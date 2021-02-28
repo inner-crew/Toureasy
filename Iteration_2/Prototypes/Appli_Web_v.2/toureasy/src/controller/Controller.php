@@ -144,7 +144,7 @@ class Controller
             ));
 
             $nvJson = json_encode($jsonMonuemnts);
-            $bytes = file_put_contents("../../web/carteSetting/data/tmp/monumentsDeLaDataBase.json", $nvJson);
+            $bytes = file_put_contents("./web/carteSetting/data/tmp/monumentsDeLaDataBase.json", $nvJson);
 
             if ($bytes >= 0) echo "Ajout json ok";
             else echo "Ajout json not ok";
