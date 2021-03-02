@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AuteurMonumentPrive extends Model
 {
     protected $table = 'auteurmonumentprive';
-    protected $primaryKey = ['idMonument', 'idMembre'];
+    protected $primaryKey = 'idMonument';
 
     public $incrementing = false;
 

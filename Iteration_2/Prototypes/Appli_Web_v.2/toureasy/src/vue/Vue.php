@@ -10,29 +10,14 @@ class Vue
 
     private $data;
 
-    /**
-     * constante correspondant à l'affichage d'un message de redirection
-     */
     const MESSAGE = 0;
 
-    /**
-     * constante correspondant à l'affichage de la page d'accueil
-     */
     const HOME = 1;
 
-    /**
-     * constante correspondant à l'affichage du formulaire d'ajout d'un monument
-     */
     const AJOUTER_MONUMENT = 2;
 
-    /**
-     * constante correspondant à l'affichage de la carte
-     */
     const MAP = 3;
 
-    /**
-     * constante correspondant à l'affichage de la page de connexion
-     */
     const CONNEXION = 4;
 
     const VUE_ENSEMBLE = 5;
@@ -44,6 +29,8 @@ class Vue
     const AJOUTER_LISTE = 8;
 
     const PROFIL = 9;
+
+    const MODIFIER_MONUMENT = 10;
 
     public function __construct($data)
     {
@@ -59,11 +46,6 @@ END;
         return $html;
     }
 
-    /**
-     * méthode affichant la page d'accueil de Toureasy
-     * @param array $v variables contenant les liens des boutons présents sur la page
-     * @return string code HTML de la page
-     */
     private function homeHtml(array $v): string
     {
         $html = <<<END
@@ -113,94 +95,6 @@ END;
         return $html;
     }
 
-    private function ajoutMonumentHtml(): string
-    {
-        $html = <<<END
-<form method="post" enctype="multipart/form-data" id="add">
-            <p>Nom du monument<span class="required">*</span> : <input type="text" name="nom" required/></p>
-            <div>
-                <input type="radio" id="private" name="visibilite" value="private" checked>
-                <label for="huey">Privé</label>
-                <input type="radio" id="public" name="visibilite" value="public">
-                <label for="dewey">Publique</label>
-            </div></br>
-            <input type="file" name="fichier"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
-            
-            <div>
-                <p>Description</p>
-                <div>
-                    <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>
-                    <input type="button" name="text" value="I" onclick="formatText('I')" checked>
-                    <input type="button" name="text" value="U" onclick="formatText('U')" checked>
-                    Taille : <input type="number" min="1" max="20" name="text" value="3" id="taille" onclick="formatText('T')"/>
-                    </p>
-                    <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
-                    <iframe name="frm" id="frm"></iframe>
-                </div>
-            </div>
-            
-
-            <input type="button" onclick="submitForm()" value="Valider"
-</form>
-<script>
-
-    window.onload = function ()
-    {
-        getPos()
-        loadFrame()
-    };
-    
-    function submitForm() {
-        form = document.getElementById("add")
-        area = document.getElementById("area")
-        
-        area.value = window.frames['frm'].document.body.innerHTML.toString()
-        form.submit()
-    }
-    
-    function getPos(){
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(position => {
-                document.getElementsByName("lat")[0].value = position.coords.latitude;
-                document.getElementsByName("long")[0].value = position.coords.longitude;
-            });
-        } else {
-            document.getElementsByName("lat")[0].value="error";
-            document.getElementsByName("long")[0].value="error"; 
-        }
-    }
-    
-    function loadFrame() {
-        frame = document.getElementById("frm");
-        frame.contentDocument.designMode = "on"
-    }
-    
-    function formatText(bouton) {
-        frame = frm.document;
-        
-        switch (bouton) {
-            case 'B':
-                frame.execCommand('bold', false, null)
-                break;
-            case 'I':
-                frame.execCommand('italic', false, null)
-                break;
-            case 'U':
-                frame.execCommand('underline', false, null)
-                break;
-            case 'T':
-                taille = document.getElementById("taille").value;
-                frame.execCommand('fontSize', false, taille)
-                break;
-                        
-        }
-    }
-    
-</script>
-END;
-        return $html;
-    }
-
     private function affichageMap(array $v): string
     {
         $html = <<<END
@@ -238,221 +132,6 @@ END;
         return $html;
     }
 
-    public function vueEnsembleHtml($arrayListeUtilisateur, $arrayMonumentsPrives, $arrayMonumentsPublics, $vars) {
-        $basepath = $vars['basepath'];
-        $html = <<<END
-<section class="titre">
-            <h3 class="nom">Vos Listes</h3>
-            <p class="desc">Tableau regroupant toutes vos listes</p>
-            <button onclick="location.href='{$vars['createListe']}'">Creer une liste</button>
-        </section>
-END;
-
-        if (sizeOf($arrayListeUtilisateur)>0) {
-            $html .= <<<END
-                
-        <section class="tableau">
-            <table>
-                <tr>
-                    <th>Nom</th>
-                    <th>Date</th>
-                    <th>Lien de partage</th>
-                </tr>
-END;
-            for ($i = 0; $i < sizeOf($arrayListeUtilisateur); $i++) {
-                $html .= $this->uneLigneListeHtml($arrayListeUtilisateur[$i][0], $basepath, $arrayListeUtilisateur[$i][1]);
-            }
-            $html .= <<<END
-                
-              </table>
-          </section>
-END;
-
-
-        } else {
-            $html .= <<<END
-<p>Vous n'avez pas encore créé de liste </p>
-END;
-
-        }
-
-        $html .= <<<END
-<section class="titre">
-            <h3 class="nom">Vos Monuments Privés</h3>
-            <p class="desc">Tableau regroupant tous vos monuments privés</p>
-            <button onclick="location.href='{$vars['createMonument']}'">Creer un monument</button>
-        </section>
-END;
-
-
-        if (sizeOf($arrayMonumentsPrives)>0) {
-            $html .= <<<END
-                
-        <section class="tableau">
-            <table>
-                <tr>
-                    <th>Nom</th>
-                    <th>Lien de partage</th>
-                </tr>
-END;
-            for ($i = 0; $i < sizeOf($arrayMonumentsPrives); $i++) {
-                $html .= $this->uneLigneMonumentPrivateHtml($arrayMonumentsPrives[$i][0], $basepath, $arrayMonumentsPrives[$i][1]);
-            }
-            $html .= <<<END
-                
-              </table>
-          </section>
-END;
-
-
-        } else {
-            $html .= "<p>Vous n'avez pas encore créé de monument privé</p>";
-        }
-
-        $html .= <<<END
-<section class="titre">
-            <h3 class="nom">Vos Monuments Publics</h3>
-            <p class="desc">Tableau regroupant tous vos monuments publics</p>
-            <button onclick="location.href='{$vars['createMonument']}'">Creer un monument</button>
-        </section>
-END;
-
-
-        if (sizeOf($arrayMonumentsPublics)>0) {
-            $html .= <<<END
-                
-        <section class="tableau">
-            <table>
-                <tr>
-                    <th>Nom</th>
-                    <th>Lien de partage</th>
-                </tr>
-END;
-            for ($i = 0; $i < sizeOf($arrayMonumentsPublics); $i++) {
-                $html .= $this->uneLigneMonumentPrivateHtml($arrayMonumentsPublics[$i][0], $basepath, $arrayMonumentsPublics[$i][1]);
-            }
-            $html .= <<<END
-                
-              </table>
-          </section>
-END;
-
-
-        } else {
-            $html .= "<p>Vous n'avez pas encore créé de monument publics</p>";
-        }
-
-        return $html;
-
-    }
-
-    private function uneLigneListeHtml(ListeMonument $liste, $basepath, $url): string
-    {
-        $html = <<<END
-                <tr>
-                    <td><a href="$url">$liste->nom</a></td>
-                    <td><p class="nom">$liste->dateCreation</p></td>
-                </tr>
-END;
-        return $html;
-    }
-
-    private function uneLigneMonumentPrivateHtml(Monument $liste, $basepath, $url): string
-    {
-        $html = <<<END
-                <tr>
-                    <td><a href="$url">$liste->nomMonum</a></td>
-                </tr>
-END;
-        return $html;
-    }
-
-    public function uneListeHtml(ListeMonument $liste, $monumentsDeCetteListe, $monumentsDeUtilisateur ,$vars): string
-    {
-        $html = <<<END
-<section class="titreListe">
-            <h3 class="nom">Nom de la liste : {$liste->nom}</h3>
-            <p class="desc">Description : {$liste->description}</p>
-        </section>
-        </br>
-END;
-        if (sizeOf($monumentsDeCetteListe)>0) {
-            $html .= <<<END
-                
-        <section class="tableau">
-            <table>
-                <tr>
-                    <th>Nom</th>
-                    <th>Lien de partage</th>
-                </tr>
-END;
-            for ($i = 0; $i < sizeOf($monumentsDeCetteListe); $i++) {
-                $html .= $this->unMonument($monumentsDeCetteListe[$i][0], $monumentsDeCetteListe[$i][1]);
-            }
-            $html .= <<<END
-                
-              </table>
-        </section>
-END;
-
-        } else {
-            $html .= "<p>Aucuns monuments dans cette liste</p></br>";
-        }
-
-        if (sizeof($monumentsDeUtilisateur) > 0) {
-            $html .= <<<END
-<form method="post">
-<select name="monuments" id="monument-selected">
-    <option value="">--Choisissez un monument à ajouter--</option>
-END;
-
-            foreach ($monumentsDeUtilisateur as $monument) {
-                $html .= "<option value='{$monument->idMonument}'>{$monument->nomMonum}</option>";
-            }
-            $html .= "</select> <input type='submit' value='OK'></form>";
-        }
-
-        return $html;
-    }
-
-    private function unMonument(Monument $monument, $url): string {
-        $html = <<<END
-            
-                <tr>
-                    <td><a href="$url">$monument->nomMonum</a></td>
-                </tr>
-END;
-        return $html;
-    }
-
-    public function unMonumentHtml(Monument $monument, $vars): string {
-        $html = <<<END
-            
-                <section class="infos">
-            <h3 class="nom">Nom : {$monument->nomMonum}</h3>
-            <p class="desc">Description : {$monument->descLongue}</p>
-            <img width="50%" src='{$vars['basepath']}/{$vars['urlImage']}'>
-        </section>
-END;
-        return $html;
-    }
-
-    public function ajoutListeHtml(): string
-    {
-        return <<<END
-        <form method="post" enctype="multipart/form-data">
-            <p>Nom<span class="required">*</span> : <input type="text" name="nom" required/></p>
-            <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
-            <p><input type="submit" value="OK"></p>
-        </form>
-END;
-    }
-
-    /**
-     * méthode affichant la page d'accueil de Toureasy
-     * @param array $v variables contenant le membre
-     * @return string code HTML de la page
-     */
     private function pageProfil(Membre $m, Array $v): string
     {
         $html = <<<END
@@ -531,37 +210,306 @@ END;
         return $html;
     }
 
-    /**
-     * @param array $vars array de variables (htmlvars)
-     * @param int $typeAffichage valeur correspondant à une constante de cette classe
-     * @return string code HTML de la page
-     */
+    public function monEspace($arrayListeUtilisateur, $arrayMonumentsPrives, $arrayMonumentsPublics, $vars) {
+        $basepath = $vars['basepath'];
+        $html = <<<END
+<section class="titre">
+            <h3 class="nom">Vos Listes</h3>
+            <p class="desc">Tableau regroupant toutes vos listes</p>
+            <button onclick="location.href='{$vars['createListe']}'">Creer une liste</button>
+        </section>
+END;
+
+        if (sizeOf($arrayListeUtilisateur)>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table>
+                <tr>
+                    <th>Nom</th>
+                    <th>Date</th>
+                    <th>Lien de partage</th>
+                </tr>
+END;
+            for ($i = 0; $i < sizeOf($arrayListeUtilisateur); $i++) {
+                $html .= $this->uneLigneListeMonEspace($arrayListeUtilisateur[$i][0], $basepath, $arrayListeUtilisateur[$i][1]);
+            }
+            $html .= <<<END
+                
+              </table>
+          </section>
+END;
+
+
+        } else {
+            $html .= <<<END
+<p>Vous n'avez pas encore créé de liste </p>
+END;
+
+        }
+
+        $html .= <<<END
+<section class="titre">
+            <h3 class="nom">Vos Monuments Privés</h3>
+            <p class="desc">Tableau regroupant tous vos monuments privés</p>
+            <button onclick="location.href='{$vars['createMonument']}'">Creer un monument</button>
+        </section>
+END;
+
+
+        if (sizeOf($arrayMonumentsPrives)>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table>
+                <tr>
+                    <th>Nom</th>
+                    <th>Lien de partage</th>
+                </tr>
+END;
+            for ($i = 0; $i < sizeOf($arrayMonumentsPrives); $i++) {
+                $html .= $this->uneLigneMonumentMonEspace($arrayMonumentsPrives[$i][0], $basepath, $arrayMonumentsPrives[$i][1]);
+            }
+            $html .= <<<END
+                
+              </table>
+          </section>
+END;
+
+
+        } else {
+            $html .= "<p>Vous n'avez pas encore créé de monument privé</p>";
+        }
+
+        $html .= <<<END
+<section class="titre">
+            <h3 class="nom">Vos Monuments Publics</h3>
+            <p class="desc">Tableau regroupant tous vos monuments publics</p>
+            <button onclick="location.href='{$vars['createMonument']}'">Creer un monument</button>
+        </section>
+END;
+
+
+        if (sizeOf($arrayMonumentsPublics)>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table>
+                <tr>
+                    <th>Nom</th>
+                    <th>Lien de partage</th>
+                </tr>
+END;
+            for ($i = 0; $i < sizeOf($arrayMonumentsPublics); $i++) {
+                $html .= $this->uneLigneMonumentMonEspace($arrayMonumentsPublics[$i][0], $basepath, $arrayMonumentsPublics[$i][1]);
+            }
+            $html .= <<<END
+                
+              </table>
+          </section>
+END;
+
+
+        } else {
+            $html .= "<p>Vous n'avez pas encore créé de monument publics</p>";
+        }
+
+        return $html;
+
+    }
+
+    private function uneLigneListeMonEspace(ListeMonument $liste, $basepath, $url): string
+    {
+        $html = <<<END
+                <tr>
+                    <td><a href="$url">$liste->nom</a></td>
+                    <td><p class="nom">$liste->dateCreation</p></td>
+                </tr>
+END;
+        return $html;
+    }
+
+    private function uneLigneMonumentMonEspace(Monument $liste, $basepath, $url): string
+    {
+        $html = <<<END
+                <tr>
+                    <td><a href="$url">$liste->nomMonum</a></td>
+                </tr>
+END;
+        return $html;
+    }
+
+    public function uneListeHtml(ListeMonument $liste, $monumentsDeCetteListe, $monumentsDeUtilisateur ,$vars): string
+    {
+        $html = <<<END
+<section class="titreListe">
+            <h3 class="nom">Nom de la liste : {$liste->nom}</h3>
+            <p class="desc">Description : {$liste->description}</p>
+        </section>
+        </br>
+END;
+        if (sizeOf($monumentsDeCetteListe)>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table>
+                <tr>
+                    <th>Nom</th>
+                    <th>Lien de partage</th>
+                </tr>
+END;
+            for ($i = 0; $i < sizeOf($monumentsDeCetteListe); $i++) {
+                $html .= $this->uneLigneMonumentListe($monumentsDeCetteListe[$i][0], $monumentsDeCetteListe[$i][1]);
+            }
+            $html .= <<<END
+                
+              </table>
+        </section>
+END;
+
+        } else {
+            $html .= "<p>Aucuns monuments dans cette liste</p></br>";
+        }
+
+        if (sizeof($monumentsDeUtilisateur) > 0) {
+            $html .= <<<END
+<form method="post">
+<select name="monuments" id="monument-selected">
+    <option value="">--Choisissez un monument à ajouter--</option>
+END;
+
+            foreach ($monumentsDeUtilisateur as $monument) {
+                $html .= "<option value='{$monument->idMonument}'>{$monument->nomMonum}</option>";
+            }
+            $html .= "</select> <input type='submit' value='OK'></form>";
+        }
+
+        return $html;
+    }
+
+    private function uneLigneMonumentListe(Monument $monument, $url): string {
+        $html = <<<END
+            
+                <tr>
+                    <td><a href="$url">$monument->nomMonum</a></td>
+                    <td></td>
+                </tr>
+END;
+        return $html;
+    }
+
+    public function unMonumentHtml(Monument $monument, $vars): string {
+        $html = <<<END
+        <section class="infos">
+            <h3 class="nom">Nom : {$monument->nomMonum}</h3>
+            <p class="desc">Description : {$monument->descLongue}</p>
+            <img width="50%" src='{$vars['basepath']}/{$vars['urlImage']}'>
+        </section>
+        <div><button onclick="window.location.href='{$vars['modifierMonument']}'">Modifier</button></div>
+END;
+        return $html;
+    }
+
+    public function modifierUnMonument(Monument $monument, $vars): string
+    {
+        return <<<END
+<form method="post" id="add">
+    <p>Nom du monument : <input name="nom" value="{$monument->nomMonum}"></p>
+    <div>
+                <p>Description</p>
+                <div>
+                    <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>
+                    <input type="button" name="text" value="I" onclick="formatText('I')" checked>
+                    <input type="button" name="text" value="U" onclick="formatText('U')" checked>
+                    Taille : <input type="number" min="1" max="20" name="text" value="3" id="taille" onclick="formatText('T')"/>
+                    </p>
+                    <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
+                    <iframe name="frm" id="frm"></iframe>
+                    <input type="hidden" name="descr" value="{$monument->descLongue}"/>
+                </div>
+            </div>
+            <input type="button" onclick="submitForm()" value="Valider">
+</form>
+<script src="{$vars['basepath']}/web/js/textEditor.js"></script>
+<script>
+
+window.onload = function ()
+{
+    document.getElementById('frm').contentDocument.body.innerHTML = document.getElementsByName("descr")[0].value;
+    document.getElementById('frm').contentDocument.designMode = "on"
+};
+    
+</script>
+END;
+
+    }
+
+    private function ajoutMonumentHtml($vars): string
+    {
+        $html = <<<END
+<form method="post" enctype="multipart/form-data" id="add">
+            <p>Nom du monument<span class="required">*</span> : <input type="text" name="nom" required/></p>
+            <div>
+                <input type="radio" id="private" name="visibilite" value="private" checked>
+                <label for="huey">Privé</label>
+                <input type="radio" id="public" name="visibilite" value="public">
+                <label for="dewey">Publique</label>
+            </div></br>
+            <input type="file" name="fichier"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
+            
+            <div>
+                <p>Description</p>
+                <div>
+                    <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>
+                    <input type="button" name="text" value="I" onclick="formatText('I')" checked>
+                    <input type="button" name="text" value="U" onclick="formatText('U')" checked>
+                    Taille : <input type="number" min="1" max="20" name="text" value="3" id="taille" onclick="formatText('T')"/>
+                    </p>
+                    <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
+                    <iframe name="frm" id="frm"></iframe>
+                </div>
+            </div>
+            
+
+            <input type="button" onclick="submitForm()" value="Valider">
+</form>
+<script src="{$vars['basepath']}/web/js/textEditor.js"></script>
+END;
+        return $html;
+    }
+
+    public function ajoutListeHtml(): string
+    {
+        return <<<END
+        <form method="post" enctype="multipart/form-data">
+            <p>Nom<span class="required">*</span> : <input type="text" name="nom" required/></p>
+            <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
+            <p><input type="submit" value="OK"></p>
+        </form>
+END;
+    }
+
     public function render(array $vars, int $typeAffichage): string
     {
         $content = null;
         switch ($typeAffichage) {
-            // affichage d'un message de redirection
             case Vue::MESSAGE:
                 $content = $this->unMessage($vars);
                 break;
-            // affichage de la page d'accueil de Toureasy
             case Vue::HOME:
                 $content = $this->homeHtml($vars);
                 break;
-            // affichage de la page permettant d'ajouter un monument
             case Vue::AJOUTER_MONUMENT:
-                $content = $this->ajoutMonumentHtml();
+                $content = $this->ajoutMonumentHtml($vars);
                 break;
-            // affichage de la carte
             case Vue::MAP:
                 $content = $this->affichageMap($vars);
                 break;
-            // affichage de la page de connexion
             case Vue::CONNEXION:
                 $content = $this->connexionHtml();
                 break;
             case Vue::VUE_ENSEMBLE:
-                $content = $this->vueEnsembleHtml($this->data[0], $this->data[1], $this->data[2], $vars);
+                $content = $this->monEspace($this->data[0], $this->data[1], $this->data[2], $vars);
                 break;
             case Vue::LISTE:
                 $content = $this->uneListeHtml($this->data[0], $this->data[1], $this->data[2], $vars);
@@ -575,6 +523,8 @@ END;
             case Vue::PROFIL:
                 $content = $this->pageProfil($this->data[0], $vars);
                 break;
+            case Vue::MODIFIER_MONUMENT:
+                $content = $this->modifierUnMonument($this->data[0], $vars);
         }
         $html = <<<END
 <!DOCTYPE html>

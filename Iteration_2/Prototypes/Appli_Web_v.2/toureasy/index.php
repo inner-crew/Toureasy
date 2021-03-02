@@ -14,11 +14,15 @@ $app = new App($c);
 
 Eloquent::start(__DIR__ . '/src/conf/conf.ini');
 
+
+
 // page d'accueil de Toureasy
 $app->get('/', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayHome($rq,$rs,$args);
 })->setName('home');
+
+
 
 // page de connexion de Toureasy
 $app->get('/connexion[/]', function(Request $rq, Response $rs, array $args) {
@@ -31,11 +35,7 @@ $app->post('/connexion[/]', function(Request $rq, Response $rs, array $args) {
     return $c->postConnexion($rq,$rs,$args);
 });
 
-// page d'inscription de Toureasy
-$app->get('/inscription[/]', function(Request $rq, Response $rs, array $args) {
-    $c = new Controller($this);
-    return $c->displayInscription($rq,$rs,$args);
-})->setName('inscription');
+
 
 // page de navigation sur la carte
 $app->get('/map[/]', function(Request $rq, Response $rs, array $args) {
@@ -43,35 +43,49 @@ $app->get('/map[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayMap($rq,$rs,$args);
 })->setName('map');
 
-$app->get('/mes-listes[/]', function(Request $rq, Response $rs, array $args) {
+
+
+$app->get('/mon-espace[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
-    return $c->displayMesListes($rq,$rs,$args);
+    return $c->displayMonEspace($rq,$rs,$args);
 })->setName('mes-listes');
 
-$app->get('/mes-listes/cree[/]', function(Request $rq, Response $rs, array $args) {
+$app->get('/mon-espace/cree[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayAjouterListe($rq,$rs,$args);
 })->setName('create-liste');
 
-$app->post('/mes-listes/cree[/]', function(Request $rq, Response $rs, array $args) {
+$app->post('/mon-espace/cree[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->postAjouterListe($rq,$rs,$args);
 })->setName("createListe");
 
-$app->get('/mes-listes/{token}[/]', function(Request $rq, Response $rs, array $args) {
+$app->get('/mon-espace/{token}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayDetailListe($rq,$rs,$args);
 })->setName('detail-liste');
 
-$app->post('/mes-listes/{token}[/]', function(Request $rq, Response $rs, array $args) {
+$app->post('/mon-espace/{token}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->postAjouterMonumentListe($rq,$rs,$args);
 });
 
-$app->get('/mes-listes/monumentPrivate/{token}[/]', function(Request $rq, Response $rs, array $args) {
+$app->get('/mon-espace/monument/{token}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayDetailMonument($rq,$rs,$args);
 })->setName('detail-monument');
+
+$app->get('/mon-espace/monument/{token}/modifier[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayModifierMonument($rq,$rs,$args);
+})->setName('modifierMonument');
+
+$app->post('/mon-espace/monument/{token}/modifier[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postModifierMonument($rq,$rs,$args);
+});
+
+
 
 // page du formulaire d'ajout d'un monument
 $app->get('/ajouter-monument[/]', function(Request $rq, Response $rs, array $args) {
@@ -83,6 +97,21 @@ $app->post('/ajouter-monument[/]', function(Request $rq, Response $rs, array $ar
     $c = new Controller($this);
     return $c->postAjouterMonument($rq,$rs,$args);
 });
+
+
+
+// page 'à propos' de Toureasy
+$app->get('/profil[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayProfil($rq,$rs,$args);
+})->setName('profil');
+
+$app->post('/profil[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postProfil($rq,$rs,$args);
+});
+
+
 
 // page de contact
 $app->get('/contact[/]', function(Request $rq, Response $rs, array $args) {
@@ -96,15 +125,6 @@ $app->get('/about-us[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayAboutUs($rq,$rs,$args);
 })->setName('about-us');
 
-// page 'à propos' de Toureasy
-$app->get('/profil[/]', function(Request $rq, Response $rs, array $args) {
-    $c = new Controller($this);
-    return $c->displayProfil($rq,$rs,$args);
-})->setName('profil');
 
-$app->post('/profil[/]', function(Request $rq, Response $rs, array $args) {
-    $c = new Controller($this);
-    return $c->postProfil($rq,$rs,$args);
-});
 
 $app->run();
