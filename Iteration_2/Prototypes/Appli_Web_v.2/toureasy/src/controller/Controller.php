@@ -17,10 +17,6 @@ class Controller
 
     private $c = null;
 
-    /**
-     * Controller constructor
-     * @param null $c
-     */
     public function __construct($c)
     {
         $this->c = $c;
@@ -293,28 +289,43 @@ class Controller
 
         // si une image est bien présente dans la variable
         if(!empty($_FILES)){
-            // récupération du nom du fichier
-            $file_name = $_FILES['fichier']['name'];
-            // récupération de l'extension du fichier
-            $file_extension = strrchr($file_name,".");
-            // stockage temporaire du fichier
-            $file_tmp_name = $_FILES['fichier']['tmp_name'];
-            // ajout destination du fichier
-            $file_dest = "web/img/".$file_name;
-            // conditions de format du fichier
-            $extension_autorise= array('.jpg', '.png', '.JPG', '.PNG');
+            $total = count($_FILES['fichier']['name']);
+            for ($i=0 ; $i < $total ; $i++ ) {
 
-            // si fichier corrélation avec conditions
-            if(in_array($file_extension, $extension_autorise)){
-                if(move_uploaded_file($file_tmp_name, $file_dest)){
-                    $image = new Image();
+                // récupération du nom du fichier
+                $file_name = $_FILES['fichier']['name'][$i];
+                // récupération de l'extension du fichier
+                $file_extension = strrchr($file_name,".");
+                // stockage temporaire du fichier
+                $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
+                // ajout destination du fichier
+                $file_dest = "web/img/".$file_name;
+                // conditions de format du fichier
+                $extension_autorise= array('.jpg', '.png', '.JPG', '.PNG');
 
-                    // TODO : changer l'attribution de numeroImage quand le trigger sera fait
-                    $image->numeroImage = 1;
+                // si fichier corrélation avec conditions
+                if(in_array($file_extension, $extension_autorise)){
+                    if(move_uploaded_file($file_tmp_name, $file_dest)){
+                        $image = new Image();
 
-                    $image->idMonument = $monument->idMonument;
-                    $image->urlImage = $file_dest;
-                    $image->save();
+                        // TODO : changer l'attribution de numeroImage quand le trigger sera fait
+                        $image->numeroImage = rand(5, 15);
+
+                        $image->idMonument = $monument->idMonument;
+                        $image->urlImage = $file_dest;
+                        $image->save();
+                    } else {
+                        if ($contribution != null) {
+                            $contribution->delete();
+                        }
+                        if ($auteurPrive != null) {
+                            $auteurPrive->delete();
+                        }
+                        if ($monument != null) {
+                            $monument->delete();
+                        }
+                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "ajoutMonument");
+                    }
                 } else {
                     if ($contribution != null) {
                         $contribution->delete();
@@ -325,19 +336,8 @@ class Controller
                     if ($monument != null) {
                         $monument->delete();
                     }
-                    return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "ajoutMonument");
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument");
                 }
-            } else {
-                if ($contribution != null) {
-                    $contribution->delete();
-                }
-                if ($auteurPrive != null) {
-                    $auteurPrive->delete();
-                }
-                if ($monument != null) {
-                    $monument->delete();
-                }
-                return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument");
             }
         } else {
             if ($contribution != null) {
@@ -440,13 +440,12 @@ class Controller
     public function displayDetailMonument(Request $rq, Response $rs, array $args): Response
     {
         $monument = Monument::getMonumentByToken($args['token']);
-        $v = new Vue([$monument]);
+        $images = Image::getImageUrlByIdMonument($monument->idMonument);
 
-        $image = Image::getImageUrlByIdMonument($monument->idMonument);
+        $v = new Vue([$monument, $images]);
 
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            "urlImage" => $image->urlImage,
             "modifierMonument" => $this->c->router->pathFor('modifierMonument', ["token" => $args['token']])
         ];
 
@@ -462,10 +461,11 @@ class Controller
     public function displayModifierMonument(Request $rq, Response $rs, array $args): Response
     {
         $monument = Monument::getMonumentByToken($args['token']);
+        $image = Image::getImageUrlByIdMonument($monument->idMonument);
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath()
         ];
-        $v = new Vue([$monument]);
+        $v = new Vue([$monument, $image]);
 
         $rs->getBody()->write($v->render($htmlvars, Vue::MODIFIER_MONUMENT));
         return $rs;

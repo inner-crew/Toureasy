@@ -1,6 +1,7 @@
 <?php
 
 namespace toureasy\vue;
+use toureasy\models\Image;
 use toureasy\models\ListeMonument;
 use toureasy\models\Membre;
 use toureasy\models\Monument;
@@ -398,25 +399,33 @@ END;
         return $html;
     }
 
-    public function unMonumentHtml(Monument $monument, $vars): string {
+    public function unMonumentHtml(Monument $monument, array $images, $vars): string {
         $html = <<<END
         <section class="infos">
             <h3 class="nom">Nom : {$monument->nomMonum}</h3>
             <p class="desc">Description : {$monument->descLongue}</p>
-            <img width="50%" src='{$vars['basepath']}/{$vars['urlImage']}'>
-        </section>
+END;
+
+        foreach ($images as $img) {
+            $html .= "<img width='50%' src='{$vars['basepath']}/{$img['urlImage']}'>";
+        }
+
+        $html .= <<<END
+</section>
         <div><button onclick="window.location.href='{$vars['modifierMonument']}'">Modifier</button></div>
 END;
+
         return $html;
     }
 
-    public function modifierUnMonument(Monument $monument, $vars): string
+    public function modifierUnMonument(Monument $monument, Image $img, $vars): string
     {
         return <<<END
-<form method="post" id="add">
+<form method="post" enctype="multipart/form-data" id="add">
     <p>Nom du monument : <input name="nom" value="{$monument->nomMonum}"></p>
     <div>
                 <p>Description</p>
+                <input  type="file" value="c:\\t.txt" name="fichier"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
                 <div>
                     <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>
                     <input type="button" name="text" value="I" onclick="formatText('I')" checked>
@@ -455,7 +464,7 @@ END;
                 <input type="radio" id="public" name="visibilite" value="public">
                 <label for="dewey">Publique</label>
             </div></br>
-            <input type="file" name="fichier"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
+            <input type="file" multiple="multiple" name="fichier[]"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
             
             <div>
                 <p>Description</p>
@@ -515,7 +524,7 @@ END;
                 $content = $this->uneListeHtml($this->data[0], $this->data[1], $this->data[2], $vars);
                 break;
             case Vue::MONUMENT:
-                $content = $this->unMonumentHtml($this->data[0], $vars);
+                $content = $this->unMonumentHtml($this->data[0], $this->data[1], $vars);
                 break;
             case Vue::AJOUTER_LISTE:
                 $content = $this->ajoutListeHtml();
@@ -524,7 +533,7 @@ END;
                 $content = $this->pageProfil($this->data[0], $vars);
                 break;
             case Vue::MODIFIER_MONUMENT:
-                $content = $this->modifierUnMonument($this->data[0], $vars);
+                $content = $this->modifierUnMonument($this->data[0], $this->data[1], $vars);
         }
         $html = <<<END
 <!DOCTYPE html>
