@@ -1,5 +1,26 @@
+ 
+DELIMITER |
+CREATE OR REPLACE TRIGGER `trigger_amis_ajoutOrdre` 
+BEFORE INSERT ON `amis` 
+FOR EACH ROW 
+BEGIN
+	DECLARE tmp INTEGER;
+	IF NEW.amis1 >= NEW.amis2 
+	THEN 
+		SET tmp := NEW.amis1;
+		SET NEW.amis1 = NEW.amis2;
+		SET NEW.amis2 = tmp;
+	END IF;
+	IF NEW.amis1 = NEW.amis2
+	THEN
+		signal sqlstate '45000' set message_text = 'On ne peut être amis avec soit-même (ce serait triste)';
+	END IF;
+	
+END |
+DELIMITER ;
 
 
+-- PAS AU POINT
  CREATE OR REPLACE TRIGGER trigger_contrib_moderateur
  BEFORE INSERT OR UPDATE ON contribution
  FOR EACH ROW
@@ -11,7 +32,7 @@
      SELECT ROLE 
 	 INTO V_ROLE_MODO
 	 FROM MEMBRE
-	 WHERE IdMembre = :NEW.ModerateurDemande;
+	 WHERE IdMembre = NEW.ModerateurDemande;
 	 
 	 SELECT permModererContrib 
 	 INTO V_PERM_Moderer 
@@ -25,21 +46,7 @@
 	 
 
  END;
- 
- 
- CREATE OR REPLACE TRIGGER trigger_monument_test 
- BEFORE INSERT ON monument
- FOR EACH ROW
- BEGIN
-	SET new.descCourte = 42;
- END;
- 
- 
- 
- 
- 
- 
- 
+
  
  
  
