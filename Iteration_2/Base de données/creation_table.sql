@@ -102,4 +102,9 @@ CREATE TABLE `appartenanceliste` (
  PRIMARY KEY (`idListe`, `idMonument`)
 ) ENGINE = InnoDB;
 
+CREATE TABLE `amis` (
+ `amis1` INT UNSIGNED NOT NULL COMMENT 'on convient arbitrairement que amis1 est celui qui a l id le plus petit',
+ `amis2` INT UNSIGNED NOT NULL ,
+ PRIMARY KEY (`amis1`, `amis2`)
+) ENGINE = InnoDB;
 

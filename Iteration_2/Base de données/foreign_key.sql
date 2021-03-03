@@ -80,4 +80,19 @@ ALTER TABLE contribution
 ALTER TABLE listeMonument
     ADD CONSTRAINT fk_listeMonument_idMembre
 	FOREIGN KEY (idCreateur)
-    REFERENCES membre(idMembre);		
+    REFERENCES membre(idMembre);
+
+ALTER TABLE amis
+    ADD CONSTRAINT fk_amis_membre1
+    FOREIGN KEY (amis1)
+    REFERENCES membre(idMembre);
+
+ALTER TABLE amis
+    ADD CONSTRAINT fk_amis_membre2
+    FOREIGN KEY (amis2)
+    REFERENCES membre(idMembre);
+
+
+
+
+	
