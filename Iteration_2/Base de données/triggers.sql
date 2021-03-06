@@ -58,6 +58,41 @@ END |
 DELIMITER ;
  
  
+DELIMITER |
+CREATE OR REPLACE TRIGGER `trigger_images_ajoutNumero` 
+BEFORE INSERT ON `image` 
+FOR EACH ROW 
+BEGIN
+	DECLARE maxNumero INTEGER;
+	
+	IF NEW.numeroImage IS NOT NULL
+	THEN
+		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de ne rien renseigner';
+	END IF;
+	
+	SELECT max(numeroImage)+1 INTO maxNumero 
+	from Image
+	where idMonument = NEW.idMonument;
+	
+	SET NEW.numeroImage := maxNumero;
+	
+END |
+DELIMITER ;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  INSERT INTO `contribution` (`idContribution`, `monumentTemporaire`, `monumentAModifier`, `contributeur`, `moderateurDemande`, `estNouveauMonument`, `date`, `statutContribution`, `description`) VALUES (NULL, '2', NULL, '1', '1', '1', now(), 'acceptée', NULL);
