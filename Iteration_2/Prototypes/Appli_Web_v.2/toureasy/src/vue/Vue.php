@@ -116,6 +116,10 @@ END;
     <div id="after" class="map"></div>
 </div>
 <input type= "image" id="btn" src="{$v['basepath']}/web/carteSetting/data/images/mark.png" width="100px" height="200px"/>
+<select id="monumentAfficher">
+  <option value="publique" selected>Monuments certifiés</option>
+  <option value="mesMonuments">Vos contribution</option>
+</select>
 
 <script src="{$v['basepath']}/web/carteSetting/js/index.js"></script>   <!--le script de toureasy (il est lourd)-->
 END;
