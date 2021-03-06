@@ -5,6 +5,12 @@ window.onload = function ()
     document.getElementById("file-input").addEventListener("change", function() {
         readURL(this);
     })
+    let cross = document.getElementsByClassName("cross");
+    for (let i = 0; i < cross.length; i++) {
+        cross[i].addEventListener("click", function() {
+            removeImage(this);
+        })
+    }
 };
 
 var arrayFiles = []
@@ -30,5 +36,11 @@ function readURL(input) {
         }
         reader.readAsDataURL(input.files[i]);
     }
+}
+
+function removeImage(img) {
+    cell = img.parentNode.parentNode
+    cell.style.display = "none"
+    document.getElementById("delete").value += cell.lastChild.previousElementSibling['id']+"-"
 }
 

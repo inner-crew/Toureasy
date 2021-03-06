@@ -19,4 +19,8 @@ class Image extends Model
     public static function getImageUrlByIdMonument($id) {
         return Image::query()->where('idMonument', '=', $id)->get()->toArray();
     }
+
+    public static function supprimerImageById($idImage, $idMonument) {
+        Image::query()->where([['numeroImage', '=', $idImage], ['idMonument', '=', $idMonument]])->delete();
+    }
 }

@@ -412,7 +412,11 @@ END;
         if (sizeof($images) > 0) {
             $html .= "<div class='wrapper' id='galerie'>";
             foreach ($images as $img) {
-                $html .= "<div class='cell'><img src='{$vars['basepath']}/{$img['urlImage']}'></div>";
+                $html .= <<<END
+<div class='cell'>
+    <img src='{$vars['basepath']}/{$img['urlImage']}'>
+</div>
+END;
             }
             $html .= "</div>";
         }
@@ -430,12 +434,19 @@ END;
     {
         $html = <<<END
 <form method="post" enctype="multipart/form-data" id="add">
+    <input type="hidden" id="delete" name="delete"/>
     <p>Nom du monument : <input name="nom" value="{$monument->nomMonum}"></p>
 END;
-        if (sizeof($arrayImg) > 0) {
             $html .= "<div class='wrapper' id='galerie'>";
             foreach ($arrayImg as $img) {
-                $html .= "<div class='cell'><img src='{$vars['basepath']}/{$img['urlImage']}'></div>";
+                $html .= <<<END
+<div class='cell'>
+    <div id="content">
+        <img src="{$vars['basepath']}/web/img/cross.png" class="cross"/>
+    </div>
+    <img id="{$img['numeroImage']}" src='{$vars['basepath']}/{$img['urlImage']}'>
+</div>
+END;
             }
             $html .= <<<END
 <div class="image-upload cell">
@@ -446,9 +457,8 @@ END;
 </div>
 </div>
 END;
-        }
         $html .= <<<END
-                <input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
+                <br>
                 <p>Description</p>
                 <div>
                     <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>

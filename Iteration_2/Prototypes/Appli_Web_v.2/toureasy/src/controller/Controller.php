@@ -522,7 +522,17 @@ class Controller
         $monument->descLongue = $description;
         $monument->nomMonum = $nom;
 
-        if(!empty($_FILES)){
+        $arrayImageDelete = explode("-",$data['delete']);
+
+        $idMonument = Monument::getMonumentByToken($args['token'])->idMonument;
+
+        foreach ($arrayImageDelete as $idImage) {
+            if ($idImage != "") {
+                Image::supprimerImageById($idImage, $idMonument);
+            }
+        }
+
+        if(!empty($_FILES) && $_FILES['fichier']['name'][0] != ""){
             $total = count($_FILES['fichier']['name']);
             for ($i=0 ; $i < $total ; $i++ ) {
 
@@ -543,16 +553,16 @@ class Controller
                         $image = new Image();
 
                         // TODO : changer l'attribution de numeroImage quand le trigger sera fait
-                        $image->numeroImage = rand(5, 15);
+                        $image->numeroImage = rand(5, 1000);
 
                         $image->idMonument = $monument->idMonument;
                         $image->urlImage = $file_dest;
                         $image->save();
                     } else {
-                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "ajoutMonument");
+                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "modifierMonument", ['token'=>$args['token']]);
                     }
                 } else {
-                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument");
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "modifierMonument", ['token'=>$args['token']]);
                 }
             }
         }

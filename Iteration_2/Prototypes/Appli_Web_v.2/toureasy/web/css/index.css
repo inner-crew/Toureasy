@@ -25,6 +25,19 @@ body {
     object-fit: cover;
 }
 
+#content {
+    position: relative;
+}
+#content img {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.cross {
+    width: 50px;
+}
+
 #top-rigth > button {
     min-height: 25px;
     margin: 0;
