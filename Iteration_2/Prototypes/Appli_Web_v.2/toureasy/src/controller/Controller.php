@@ -521,6 +521,41 @@ class Controller
 
         $monument->descLongue = $description;
         $monument->nomMonum = $nom;
+
+        if(!empty($_FILES)){
+            $total = count($_FILES['fichier']['name']);
+            for ($i=0 ; $i < $total ; $i++ ) {
+
+                // récupération du nom du fichier
+                $file_name = $_FILES['fichier']['name'][$i];
+                // récupération de l'extension du fichier
+                $file_extension = strrchr($file_name,".");
+                // stockage temporaire du fichier
+                $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
+                // ajout destination du fichier
+                $file_dest = "web/img/".$file_name;
+                // conditions de format du fichier
+                $extension_autorise= array('.jpg', '.png', '.JPG', '.PNG');
+
+                // si fichier corrélation avec conditions
+                if(in_array($file_extension, $extension_autorise)){
+                    if(move_uploaded_file($file_tmp_name, $file_dest)){
+                        $image = new Image();
+
+                        // TODO : changer l'attribution de numeroImage quand le trigger sera fait
+                        $image->numeroImage = rand(5, 15);
+
+                        $image->idMonument = $monument->idMonument;
+                        $image->urlImage = $file_dest;
+                        $image->save();
+                    } else {
+                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "ajoutMonument");
+                    }
+                } else {
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument");
+                }
+            }
+        }
         $monument->save();
 
         return $this->genererMessageAvecRedirection($rs,$rq,"Monument modifié","detail-monument",["token" => $args['token']]);

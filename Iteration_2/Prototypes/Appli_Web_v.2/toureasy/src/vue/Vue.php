@@ -409,10 +409,14 @@ END;
             <h3 class="nom">Nom : {$monument->nomMonum}</h3>
             <p class="desc">Description : {$monument->descLongue}</p>
 END;
-
-        foreach ($images as $img) {
-            $html .= "<img width='50%' src='{$vars['basepath']}/{$img['urlImage']}'>";
+        if (sizeof($images) > 0) {
+            $html .= "<div class='wrapper' id='galerie'>";
+            foreach ($images as $img) {
+                $html .= "<div class='cell'><img src='{$vars['basepath']}/{$img['urlImage']}'></div>";
+            }
+            $html .= "</div>";
         }
+
 
         $html .= <<<END
 </section>
@@ -422,14 +426,30 @@ END;
         return $html;
     }
 
-    public function modifierUnMonument(Monument $monument, Image $img, $vars): string
+    public function modifierUnMonument(Monument $monument, array $arrayImg, $vars): string
     {
-        return <<<END
+        $html = <<<END
 <form method="post" enctype="multipart/form-data" id="add">
     <p>Nom du monument : <input name="nom" value="{$monument->nomMonum}"></p>
-    <div>
+END;
+        if (sizeof($arrayImg) > 0) {
+            $html .= "<div class='wrapper' id='galerie'>";
+            foreach ($arrayImg as $img) {
+                $html .= "<div class='cell'><img src='{$vars['basepath']}/{$img['urlImage']}'></div>";
+            }
+            $html .= <<<END
+<div class="image-upload cell">
+  <label for="file-input">
+    <img src="{$vars['basepath']}/web/img/addImage.png"/>
+  </label>
+  <input id="file-input" type="file" multiple="multiple" name="fichier[]"/>
+</div>
+</div>
+END;
+        }
+        $html .= <<<END
+                <input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
                 <p>Description</p>
-                <input  type="file" value="c:\\t.txt" name="fichier"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
                 <div>
                     <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>
                     <input type="button" name="text" value="I" onclick="formatText('I')" checked>
@@ -440,20 +460,13 @@ END;
                     <iframe name="frm" id="frm"></iframe>
                     <input type="hidden" name="descr" value="{$monument->descLongue}"/>
                 </div>
-            </div>
             <input type="button" onclick="submitForm()" value="Valider">
 </form>
 <script src="{$vars['basepath']}/web/js/textEditor.js"></script>
-<script>
-
-window.onload = function ()
-{
-    document.getElementById('frm').contentDocument.body.innerHTML = document.getElementsByName("descr")[0].value;
-    document.getElementById('frm').contentDocument.designMode = "on"
-};
-    
-</script>
+<script src="{$vars['basepath']}/web/js/modifierMonument.js"></script>
 END;
+
+        return $html;
 
     }
 
