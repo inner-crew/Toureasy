@@ -37,7 +37,13 @@ body * {
 #btn {
     position: absolute;
     font-family: 'Open Sans', sans-serif;
-    bottom: 0;
+    bottom: 50px;
+    left: 20px;
+}
+#monumentAfficher {
+    position: absolute;
+    font-family: 'Open Sans', sans-serif;
+    bottom: 30px;
     left: 0;
 }
 .marker {

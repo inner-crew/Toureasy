@@ -131,7 +131,59 @@ function afficherCoord(){
 
 
 // add markers to map
-fetch("../web/carteSetting/data/tmp/monumentsDeLaDataBase.json")
+function getMonumentFromAJsonFile(nom) {
+    let path;
+    if (nom === "monumentPublique") path = `../web/carteSetting/data/${nom}.json`;
+    else path = `../web/carteSetting/data/tmp/${nom}.json`;
+    return fetch(path)
+        .then(response => response.json())
+        .then(data => {
+            return data.features;
+        });
+}
+
+var mark;
+function afficherMonument(nom) {
+    getMonumentFromAJsonFile(nom).then(json => {
+        if (typeof json !== 'undefined') {
+            json.forEach(function(marker) {
+                // create a HTML element for each feature
+                var el = document.createElement('div');
+                el.className = 'marker';
+
+                // make a marker for each feature and add to the map
+                mark = new mapboxgl.Marker(el)
+                    .setLngLat(marker.geometry.coordinates)
+                    .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+                        .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+                    .addTo(beforeMap);
+            });
+        } else {
+            console.log("La liste des monuments est undefined, normalement impossible");
+        }
+    });
+}
+afficherMonument("monumentPublique");
+
+var selectBox = document.getElementById("monumentAfficher");
+selectBox.onchange = (e) => {
+    console.log("Wow ça change : " + e.target.value);
+    mark.remove();
+    switch (e.target.value) {
+        case ('publique') :
+            afficherMonument("monumentPublique");
+            break;
+        case('mesMonuments') :
+            afficherMonument()
+    }
+}
+
+
+
+
+
+
+/*fetch("../web/carteSetting/data/monumentPublique.json")
     .then(response => response.json())
     .then(data => {
         data.features.forEach(function(marker) {
@@ -147,4 +199,4 @@ fetch("../web/carteSetting/data/tmp/monumentsDeLaDataBase.json")
                     .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
                 .addTo(beforeMap);
         });
-    });
+    });*/

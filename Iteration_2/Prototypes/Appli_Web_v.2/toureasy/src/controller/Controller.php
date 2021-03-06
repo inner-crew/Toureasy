@@ -152,38 +152,53 @@ class Controller
         if (!$this->verifierUtilisateurConnecte()) {
             return $this->genererRedirectionPageConnexion($rs, $rq);
         } else {
-            $membre = Membre::getMembreByToken($_COOKIE['token']);
+            $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
 
-            $listeDesListesUtilisateur = ListeMonument::getListesByIdCreator($membre->idMembre);
-            $tabListes = array();
-            foreach ($listeDesListesUtilisateur as $liste) {
-                $url = $this->c->router->pathFor('detail-liste', ['token'=>$liste->token]);
-                array_push($tabListes, [$liste, $url]);
-            }
-
-            $listeMonumentsPrives = AuteurMonumentPrive::getMonumentByCreator($membre->idMembre);
-            $arrayMonumentsPrives = array();
-            foreach ($listeMonumentsPrives as $monument) {
-                $monument = Monument::getMonumentById($monument->idMonument);
-                $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
-                array_push($arrayMonumentsPrives, [$monument, $url]);
-            }
-
-            $listeMonumentsPublics = Contribution::getMonumentByIdCreator($membre->idMembre);
-            $arrayMonumentsPublics = array();
-            foreach ($listeMonumentsPublics as $monument) {
-                $monument = Monument::getMonumentById($monument->monumentTemporaire);
-                if ($monument->estPrive == '0') {
-                    $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
-                    array_push($arrayMonumentsPublics, [$monument, $url]);
-                }
-            }
-
-            $v = new Vue([$tabListes, $arrayMonumentsPrives, $arrayMonumentsPublics]);
+            $v = new Vue([$this->getListeDunUser($idMembre), $this->getMonumentPriveDunUser($idMembre), $this->getMonumentPubliqueDunUser($idMembre)]);
 
             $rs->getBody()->write($v->render($htmlvars, Vue::VUE_ENSEMBLE));
             return $rs;
         }
+    }
+
+    private function getMonumentPubliqueDunUser($idMembre, bool $avoirUrl = true): Array {
+        $listeMonumentsPublics = Contribution::getMonumentByIdCreator($idMembre);
+        $arrayMonumentsPublics = array();
+        foreach ($listeMonumentsPublics as $monument) {
+            $monument = Monument::getMonumentById($monument->monumentTemporaire);
+            if ($monument->estPrive == '0') {
+                if ($avoirUrl) {
+                    $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
+                    array_push($arrayMonumentsPublics, [$monument, $url]);
+                } else  array_push($arrayMonumentsPublics, $monument);
+            }
+        }
+        return $arrayMonumentsPublics;
+    }
+
+    private function getMonumentPriveDunUser($idMembre, bool $avoirUrl = true): Array {
+        $listeMonumentsPrives = AuteurMonumentPrive::getMonumentByCreator($idMembre);
+        $arrayMonumentsPrives = array();
+        foreach ($listeMonumentsPrives as $monument) {
+            $monument = Monument::getMonumentById($monument->idMonument);
+            if ($avoirUrl) {
+                $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
+                array_push($arrayMonumentsPrives, [$monument, $url]);
+            } else array_push($arrayMonumentsPrives, $monument);
+        }
+        return $arrayMonumentsPrives;
+    }
+
+    private function getListeDunUser($idMembre, bool $avoirUrl = true): Array {
+        $listeDesListesUtilisateur = ListeMonument::getListesByIdCreator($idMembre);
+        $tabListes = array();
+        foreach ($listeDesListesUtilisateur as $liste) {
+            if ($avoirUrl) {
+                $url = $this->c->router->pathFor('detail-liste', ['token'=>$liste->token]);
+                array_push($tabListes, [$liste, $url]);
+            } else array_push($tabListes, $liste);
+        }
+        return $tabListes;
     }
 
     public function displayMap(Request $rq, Response $rs, array $args): Response
@@ -191,6 +206,20 @@ class Controller
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath()
         ];
+        $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
+
+        $tableauDesContributionsDunUser = array();
+        $arrayListesMonuments = array();
+        $tmpListesDunUser = $this->getListeDunUser($idMembre, false);
+        foreach ($tmpListesDunUser as $uneListe) {
+            array_push($arrayListesMonuments, [$uneListe, AppartenanceListe::getMonumentByIdListe($uneListe->idListe)->toArray()]);
+        }
+        array_push($tableauDesContributionsDunUser, ["listes" => $arrayListesMonuments]);
+        array_push($tableauDesContributionsDunUser, ["monumentsPrives" => $this->getMonumentPriveDunUser($idMembre, false)]);
+        array_push($tableauDesContributionsDunUser, ["monumentsPubliques" => $this->getMonumentPubliqueDunUser($idMembre, false)]);
+        $leJson = json_encode($tableauDesContributionsDunUser);
+        file_put_contents("./web/carteSetting/data/tmp/{$_COOKIE['token']}.json", $leJson);
+
         $v = new Vue(null);
         $rs->getBody()->write($v->render($htmlvars, Vue::MAP));
         return $rs;
@@ -256,23 +285,25 @@ class Controller
                 $contribution->save();
             }
 
-            $strJsonFileContents = file_get_contents("./web/carteSetting/data/tmp/monumentsDeLaDataBase.json");
-            $jsonMonuemnts = json_decode($strJsonFileContents, true);
+            if ($monument->estPrive == 0) {
+                $strJsonFileContents = file_get_contents("./web/carteSetting/data/monumentPublique.json");
+                $jsonMonuemnts = json_decode($strJsonFileContents, true);
 
-            array_push($jsonMonuemnts['features'], array (
-                "type" => "Feature",
-                "geometry" => array (
-                    "type" => "Point",
-                    "coordinates" => array($monument->longitude, $monument->latitude)
-                ),
-                "properties" => array (
-                    "title" => $monument->nomMonum,
-                    "description" => $monument->descLongue
-                )
-            ));
+                array_push($jsonMonuemnts['features'], array (
+                    "type" => "Feature",
+                    "geometry" => array (
+                        "type" => "Point",
+                        "coordinates" => array($monument->longitude, $monument->latitude)
+                    ),
+                    "properties" => array (
+                        "title" => $monument->nomMonum,
+                        "description" => $monument->descLongue
+                    )
+                ));
 
-            $nvJson = json_encode($jsonMonuemnts);
-            $bytes = file_put_contents("./web/carteSetting/data/tmp/monumentsDeLaDataBase.json", $nvJson);
+                $nvJson = json_encode($jsonMonuemnts);
+                $bytes = file_put_contents("./web/carteSetting/data/monumentPublique.json", $nvJson);
+            }
 
         } catch (ModelNotFoundException $e) {
             if ($contribution != null) {
@@ -490,6 +521,41 @@ class Controller
 
         $monument->descLongue = $description;
         $monument->nomMonum = $nom;
+
+        if(!empty($_FILES)){
+            $total = count($_FILES['fichier']['name']);
+            for ($i=0 ; $i < $total ; $i++ ) {
+
+                // récupération du nom du fichier
+                $file_name = $_FILES['fichier']['name'][$i];
+                // récupération de l'extension du fichier
+                $file_extension = strrchr($file_name,".");
+                // stockage temporaire du fichier
+                $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
+                // ajout destination du fichier
+                $file_dest = "web/img/".$file_name;
+                // conditions de format du fichier
+                $extension_autorise= array('.jpg', '.png', '.JPG', '.PNG');
+
+                // si fichier corrélation avec conditions
+                if(in_array($file_extension, $extension_autorise)){
+                    if(move_uploaded_file($file_tmp_name, $file_dest)){
+                        $image = new Image();
+
+                        // TODO : changer l'attribution de numeroImage quand le trigger sera fait
+                        $image->numeroImage = rand(5, 15);
+
+                        $image->idMonument = $monument->idMonument;
+                        $image->urlImage = $file_dest;
+                        $image->save();
+                    } else {
+                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "ajoutMonument");
+                    }
+                } else {
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument");
+                }
+            }
+        }
         $monument->save();
 
         return $this->genererMessageAvecRedirection($rs,$rq,"Monument modifié","detail-monument",["token" => $args['token']]);
