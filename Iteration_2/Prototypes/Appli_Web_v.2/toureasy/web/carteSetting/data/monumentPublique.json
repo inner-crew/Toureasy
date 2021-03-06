@@ -1,19 +1,5 @@
 {
   "type": "FeatureCollection",
   "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          "6.960302",
-          "49.193893"
-        ]
-      },
-      "properties": {
-        "title": "Chez moi",
-        "description": "Petite description sur ma <font size=\"7\"><b>maison<\/b><\/font><br>"
-      }
-    }
   ]
 }
