@@ -131,7 +131,7 @@ DELIMITER ;
  
  
  
- INSERT INTO `contribution` (`idContribution`, `monumentTemporaire`, `monumentAModifier`, `contributeur`, `moderateurDemande`, `estNouveauMonument`, `date`, `statutContribution`, `description`) VALUES (NULL, '2', NULL, '1', '1', '1', now(), 'acceptée', NULL);
+ -- INSERT INTO `contribution` (`idContribution`, `monumentTemporaire`, `monumentAModifier`, `contributeur`, `moderateurDemande`, `estNouveauMonument`, `date`, `statutContribution`, `description`) VALUES (NULL, '2', NULL, '1', '1', '1', now(), 'acceptée', NULL);
  
  
  

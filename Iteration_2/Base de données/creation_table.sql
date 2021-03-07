@@ -19,6 +19,15 @@ CREATE TABLE `listemonument` (
  PRIMARY KEY (`idListe`)
 ) ENGINE = InnoDB;
 
+CREATE TABLE `demandeAmi` (
+ `idDemandeAmi` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+ `idDemandeur`  INT UNSIGNED NOT NULL ,
+ `dateExpiration` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `token` VARCHAR(20) DEFAULT NULL,
+ `disponible` BOOLEAN NOT NULL DEFAULT TRUE ,
+ PRIMARY KEY (`idDemandeAmi`)
+) ENGINE = InnoDB;
+
 CREATE TABLE `membre` (
  `idMembre` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
  `nom` VARCHAR(30) NULL DEFAULT NULL ,
@@ -31,6 +40,7 @@ CREATE TABLE `membre` (
  `role` TINYINT UNSIGNED NOT NULL DEFAULT '1' ,
  `password` varchar(100) DEFAULT NULL,
  `token` varchar(20) DEFAULT NULL,
+
  
  PRIMARY KEY (`idMembre`)
 ) ENGINE = InnoDB;

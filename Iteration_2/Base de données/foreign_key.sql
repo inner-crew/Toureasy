@@ -28,6 +28,11 @@ ALTER TABLE visite
     REFERENCES membre(idMembre);
 
 
+ALTER TABLE demandeAmi
+    ADD CONSTRAINT fk_demandeAmi_demandeur
+    FOREIGN KEY (idDemandeur)
+    REFERENCES membre(idMembre);
+
 
 ALTER TABLE source
     ADD CONSTRAINT fk_source_monument
