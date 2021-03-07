@@ -208,16 +208,16 @@ class Controller
         ];
         $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
 
-        $tableauDesContributionsDunUser = array();
         $arrayListesMonuments = array();
-        $tmpListesDunUser = $this->getListeDunUser($idMembre, false);
-        foreach ($tmpListesDunUser as $uneListe) {
-            array_push($arrayListesMonuments, [$uneListe, AppartenanceListe::getMonumentByIdListe($uneListe->idListe)->toArray()]);
+        foreach ($this->getListeDunUser($idMembre, false) as $uneListe) {
+            array_push($arrayListesMonuments, ["liste" => $uneListe, "assosiation" => AppartenanceListe::getMonumentByIdListe($uneListe->idListe)->toArray()]);
         }
-        array_push($tableauDesContributionsDunUser, ["listes" => $arrayListesMonuments]);
-        array_push($tableauDesContributionsDunUser, ["monumentsPrives" => $this->getMonumentPriveDunUser($idMembre, false)]);
-        array_push($tableauDesContributionsDunUser, ["monumentsPubliques" => $this->getMonumentPubliqueDunUser($idMembre, false)]);
-        $leJson = json_encode($tableauDesContributionsDunUser);
+        $res = array("Listes" => $arrayListesMonuments,
+            "monumentsPrives" => $this->getMonumentPriveDunUser($idMembre, false),
+            "monumentsPubliques" => $this->getMonumentPubliqueDunUser($idMembre, false)
+        );
+
+        $leJson = json_encode($res);
         file_put_contents("./web/carteSetting/data/tmp/{$_COOKIE['token']}.json", $leJson);
 
         $v = new Vue(null);

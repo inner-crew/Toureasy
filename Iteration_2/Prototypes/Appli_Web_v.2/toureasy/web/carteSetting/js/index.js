@@ -130,73 +130,130 @@ function afficherCoord(){
 }
 
 
-// add markers to map
-function getMonumentFromAJsonFile(nom) {
+//Revoir une promesse d'un fichier json
+function getJsonFile(nom) {
     let path;
     if (nom === "monumentPublique") path = `../web/carteSetting/data/${nom}.json`;
     else path = `../web/carteSetting/data/tmp/${nom}.json`;
     return fetch(path)
         .then(response => response.json())
         .then(data => {
-            return data.features;
+            return data;
         });
 }
 
-var mark;
-function afficherMonument(nom) {
-    getMonumentFromAJsonFile(nom).then(json => {
-        if (typeof json !== 'undefined') {
-            json.forEach(function(marker) {
-                // create a HTML element for each feature
-                var el = document.createElement('div');
-                el.className = 'marker';
+//convertir un json de monuments de la database pour la rendre compatible avec l'API MapBox
+function convertirMonumentsEnFeature(jsonDeMonuments) {
+    let res = {
+        features: []
+    };
+    jsonDeMonuments.forEach(unMonument => {
+        res.features.push({
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    unMonument.longitude,
+                    unMonument.latitude
+                ]
+            },
+            "properties": {
+                "title": unMonument.nomMonum,
+                "description": unMonument.descLongue
+            }
+        })
+    });
+    return res;
+}
 
-                // make a marker for each feature and add to the map
-                mark = new mapboxgl.Marker(el)
-                    .setLngLat(marker.geometry.coordinates)
-                    .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-                        .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
-                    .addTo(beforeMap);
-            });
-        } else {
-            console.log("La liste des monuments est undefined, normalement impossible");
-        }
+//Affiche les monuments à partir d'un fichier json
+var mark = [];
+function afficherMonument(json) {
+    json.features.forEach(function (marker) {
+        // create a HTML element for each feature
+        var el = document.createElement('div');
+        el.className = 'marker';
+
+        // make a marker for each feature and add to the map
+        mark.push(new mapboxgl.Marker(el)
+            .setLngLat(marker.geometry.coordinates)
+            .setPopup(new mapboxgl.Popup({offset: 25}) // add popups
+                .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+            .addTo(beforeMap));
     });
 }
-afficherMonument("monumentPublique");
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 
 var selectBox = document.getElementById("monumentAfficher");
+function ajouterLesListesALHTML() {
+    getJsonFile(getCookie("token")).then(json => {
+        json.Listes.forEach(uneListe => {
+            selectBox.innerHTML += `<option value="${uneListe.liste.idListe}">${uneListe.liste.nom}</option>`;
+        });
+    });
+}
+ajouterLesListesALHTML();
+
 selectBox.onchange = (e) => {
-    console.log("Wow ça change : " + e.target.value);
-    mark.remove();
+    if (mark != null) mark.forEach(unMark => unMark.remove());
     switch (e.target.value) {
         case ('publique') :
-            afficherMonument("monumentPublique");
+            getJsonFile("monumentPublique").then(json => {
+                afficherMonument(json);
+            });
             break;
         case('mesMonuments') :
-            afficherMonument()
+            getJsonFile(getCookie("token")).then(json => {
+                let tmp = convertirMonumentsEnFeature(json.monumentsPrives);
+                let tmp2 = convertirMonumentsEnFeature(json.monumentsPubliques);
+                tmp2.features.forEach(unFeature => {
+                    tmp.features.push(unFeature);
+                })
+                afficherMonument(tmp);
+            });
+            break;
+        default :
+            let idDeLaListe = e.target.value;
+            getJsonFile(getCookie("token")).then(json => {
+                var lesMonuments = [];
+                var listesDesIdMonuments = [];
+                json.Listes.forEach(uneListe => {
+                    if (uneListe.liste.idListe.toString() === idDeLaListe.toString()) {
+                        uneListe.assosiation.forEach(uneAssociation => {
+                            listesDesIdMonuments.push(uneAssociation.idMonument);
+                        });
+                    }
+                });
+                let ttLesMonuments = json.monumentsPrives;
+                json.monumentsPubliques.forEach(unMonument => {
+                    ttLesMonuments.push(unMonument);
+                });
+                ttLesMonuments.forEach(unMonument => {
+                    listesDesIdMonuments.forEach(unId => {
+                        if (unId === unMonument.idMonument) lesMonuments.push(unMonument);
+                    });
+                });
+                afficherMonument(convertirMonumentsEnFeature(lesMonuments));
+            });
+            break;
     }
 }
 
-
-
-
-
-
-/*fetch("../web/carteSetting/data/monumentPublique.json")
-    .then(response => response.json())
-    .then(data => {
-        data.features.forEach(function(marker) {
-
-            // create a HTML element for each feature
-            var el = document.createElement('div');
-            el.className = 'marker';
-
-            // make a marker for each feature and add to the map
-            new mapboxgl.Marker(el)
-                .setLngLat(marker.geometry.coordinates)
-                .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-                    .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
-                .addTo(beforeMap);
-        });
-    });*/
+getJsonFile("monumentPublique").then(json => {
+    afficherMonument(json);
+});
