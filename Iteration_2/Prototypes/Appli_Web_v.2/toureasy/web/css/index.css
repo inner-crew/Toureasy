@@ -1,6 +1,12 @@
+html{
+    font-family: verdana, sans-serif;
+    background-color: #eee;
+}
+
 body {
-    font-family: "Arial";
-    text-align: center;
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 0px;
 }
 
 .wrapper {
@@ -52,15 +58,28 @@ body {
     text-align: right;
 }
 
-.logo {
+.logo-home {
     text-align: center;
 }
 
-.logo > img {
-    width: 200px;
+.logo-home > img {
+    width: 100px;
     height: auto;
 }
 
+.logo{
+    height: 100px;
+    width: auto;
+    margin-left: 0;
+    margin-right: auto;
+    display: flex;
+    position: absolute;
+    top: 0px;
+}
+
+.boutons-footer{
+    text-align: center;
+}
 
 .boutons-footer > button {
     min-height: 60px;
@@ -68,7 +87,6 @@ body {
     border-radius: 3px;
     border: 0;
     line-height: 60px;
-    text-align: center;
     font-size: 60px;
 }
 
@@ -86,10 +104,10 @@ body {
     position: absolute;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
-    top: 50%;
+    top: 40%;
     transition: opacity 1s;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
 }
 
 .cadre-diapo > button {
@@ -102,7 +120,7 @@ body {
     color: silver;
     transition: color .4s linear;
     transform: translatey(-50%);
-    top: 50%;
+    top: 40%;
     padding: .5rem;
     font-size: 2rem;
     background: white;
@@ -127,4 +145,96 @@ body {
     min-height: 400px;
     max-height: 600px;
     position: relative
+}
+
+.logo{
+    height: 100px;
+    width: auto;
+    margin-left: 0;
+    margin-right: auto;
+    display: flex;
+    position: absolute;
+    top: 0px;
+}
+
+.avatar{
+    height: 100px;
+    width: auto;
+    position: absolute;
+    right: 12%;
+    top: 25%;
+}
+
+.bt-bottom{
+    text-align: center;
+}
+
+.bt-bottom>button{
+    min-height: 25px;
+    margin: 0;
+    border-radius: 3px;
+    border: 0;
+    line-height: 25px;
+    font-size: 25px;
+}
+
+.bt-bottom>input{
+    min-height: 25px;
+    margin: 0;
+    border-radius: 3px;
+    border: 0;
+    line-height: 25px;
+    font-size: 25px;
+}
+
+h1{
+    text-align: center;
+}
+
+h2{
+    text-align: center;
+}
+
+header{
+    padding : 2px;
+    margin-top: 10px;
+}
+
+section{
+    margin: 2%;
+    border-radius: 5px;
+    background-color: White;
+    width: 45%;
+}
+
+.content {
+
+    box-sizing: border-box;
+    border-radius: 5px;
+    text-align: justify;
+}
+
+.container {
+    padding: 1px 0px 10px 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.section{
+    border: 2px solid black;
+    margin: 0 auto;
+    width: 80%;
+}
+
+img{
+    width: 80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.image{
+    max-width: 150px;
+    max-height: 150px;
+    float: left;
 }

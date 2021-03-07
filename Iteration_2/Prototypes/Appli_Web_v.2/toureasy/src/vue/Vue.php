@@ -54,10 +54,11 @@ END;
             <button onclick="location.href='{$v['contact']}'">Nous Contacter</button>
             <button onclick="location.href='{$v['about-us']}'">A propos</button>
         </div>
-        <header class="logo" id="top">
+        <header class="logo-home" id="top">
             <img src="{$v['basepath']}/web/img/Logo_genial.png"/>
             <h1>Toureasy</h1>
         </header> 
+        <hr>
         <div class = "cadre-diapo" id="center">
 	        <img class="diapo" src="{$v['basepath']}/web/img/diapo1.jpg" alt>
 	        <img class="diapo" src="{$v['basepath']}/web/img/diapo2.jpg" alt>
@@ -65,7 +66,7 @@ END;
             <img class="diapo" src="{$v['basepath']}/web/img/diapo4.jpg" alt>
             <button class="precedent" aria-label="précédent" onclick="boutons(-1)">❮</button>
             <button class="suivant" aria-label="suivant" onclick="boutons(1)">❯</button>
-        </div> 
+        </div>
         <script>
             var diaporama = 1;
             affichage(diaporama);
@@ -88,7 +89,7 @@ END;
 
         </script>
         </div>
-        <footer class="boutons-footer" id="button">
+        <footer class="boutons-footer" id="boutton">
             <button onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
         </footer>
 
@@ -141,7 +142,7 @@ END;
     {
         $html = <<<END
     
-<div class="bt-top">
+<div class="boutons-top" id="top-rigth">
     <button>Contact</button>
     <button>Propos</button>
 </div>
