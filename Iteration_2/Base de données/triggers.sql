@@ -65,9 +65,9 @@ FOR EACH ROW
 BEGIN
 	DECLARE maxNumero INTEGER;
 	
-	IF NEW.numeroImage IS NOT NULL
+	IF NEW.numeroImage != 0
 	THEN
-		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de ne rien renseigner';
+		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de lui donner la valeur 0 à l insertion';
 	END IF;
 	
 	SELECT max(numeroImage)+1 INTO maxNumero 
@@ -101,9 +101,9 @@ FOR EACH ROW
 BEGIN
 	DECLARE maxNumero INTEGER;
 	
-	IF NEW.numeroSource IS NOT NULL
+	IF NEW.numeroSource != 0
 	THEN
-		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de ne rien renseigner';
+		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de lui donner la valeur 0 à l insertion';
 	END IF;
 	
 	SELECT max(numeroSource)+1 INTO maxNumero 
