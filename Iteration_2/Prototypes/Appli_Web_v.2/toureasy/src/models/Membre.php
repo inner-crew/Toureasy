@@ -15,6 +15,11 @@ class Membre extends Model
         return Membre::query()->where('token', '=', $token)->firstOrFail();
     }
 
+    public static function getMembreById($id) : Membre
+    {
+        return Membre::query()->where('idMembre', '=', $id)->firstOrFail();
+    }
+
     public static function getTousLesMonumentsUtilisateurByToken($token)
     {
         $res = array();

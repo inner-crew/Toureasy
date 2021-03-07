@@ -4,9 +4,11 @@ namespace toureasy\controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use toureasy\models\Amis;
 use toureasy\models\AppartenanceListe;
 use toureasy\models\AuteurMonumentPrive;
 use toureasy\models\Contribution;
+use toureasy\models\DemandeAmi;
 use toureasy\models\Image;
 use toureasy\models\ListeMonument;
 use toureasy\models\Membre;
@@ -632,6 +634,45 @@ class Controller
     public function displayAboutUs(Request $rq, Response $rs, array $args): Response
     {
         //TODO : implement method
+    }
+
+    public function displayDemandeAmi(Request $rq, Response $rs, array $args): Response
+    {
+        $v = new Vue(null);
+
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+        ];
+
+        //TODO : implement method
+
+        $rs->getBody()->write($v->render($htmlvars, Vue::DEMANDE_AMI));
+        return $rs;
+
+    }
+
+    public function postDemandeAmi(Request $rq, Response $rs, array $args): Response
+    {
+        //TODO : implement method
+    }
+
+
+    public function displayTest(Request $rq, Response $rs, array $args): Response
+    {
+        $v = new Vue(null);
+
+        $req1 = Amis::getAllAmisByIdMembre(2);
+        $req2 = DemandeAmi::getDemandeurByIdDemande(1);
+
+
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'r1' => $req1,
+            'r2' => $req2,
+        ];
+        $rs->getBody()->write($v->render($htmlvars, Vue::TEST));
+        return $rs;
+
     }
 
 }

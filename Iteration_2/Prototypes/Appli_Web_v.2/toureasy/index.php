@@ -127,4 +127,25 @@ $app->get('/about-us[/]', function(Request $rq, Response $rs, array $args) {
 
 
 
+// page de reception de demande d'ami
+$app->get('/recevoir-demande-ami/{token}[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayDemandeAmi($rq,$rs,$args);
+})->setName('reception-demande-ami');
+
+$app->post('/recevoir-demande-ami/{token}[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postDemandeAmi($rq,$rs,$args);
+});
+
+
+
+//page test pour... tester ^^
+$app->get('/test', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayTest($rq,$rs,$args);
+})->setName('test');
+
+
+
 $app->run();

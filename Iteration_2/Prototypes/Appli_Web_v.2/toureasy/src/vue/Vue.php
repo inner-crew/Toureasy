@@ -33,6 +33,10 @@ class Vue
 
     const MODIFIER_MONUMENT = 10;
 
+    const TEST = 11;
+
+    const DEMANDE_AMI = 12;
+
     public function __construct($data)
     {
         $this->data = $data;
@@ -515,7 +519,7 @@ END;
         return $html;
     }
 
-    public function ajoutListeHtml(): string
+    public function ajoutListeHtml($vars): string
     {
         return <<<END
         <form method="post" enctype="multipart/form-data">
@@ -523,6 +527,23 @@ END;
             <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
             <p><input type="submit" value="OK"></p>
         </form>
+END;
+    }
+
+    public function pageDemandeAmi($vars): string
+    {
+        return <<<END
+<h1>Demande D'ami !</h1>
+END;
+
+        //TODO
+    }
+    public function pageTest($vars): string
+    {
+        return <<<END
+        <h1>TEST</h1>
+        <p>Amis::getAllAmisByIdMembre(2) : {$vars['r1']}</p>
+        <p>DemandeAmi::getDemandeurByIdDemande(1) : {$vars['r2']} </p>
 END;
     }
 
@@ -562,7 +583,16 @@ END;
                 break;
             case Vue::MODIFIER_MONUMENT:
                 $content = $this->modifierUnMonument($this->data[0], $this->data[1], $vars);
+                break;
+            case Vue::TEST:
+                $content = $this->pageTest($vars);
+                break;
+            case Vue::DEMANDE_AMI:
+                $content = $this->pageDemandeAmi($vars);
+                break;
         }
+
+
         $html = <<<END
 <!DOCTYPE html>
 <html>
@@ -575,6 +605,7 @@ END;
     </body>
 </html>
 END;
+
         return $html;
     }
 
