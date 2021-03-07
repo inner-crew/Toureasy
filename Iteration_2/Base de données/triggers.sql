@@ -69,13 +69,18 @@ BEGIN
 	THEN
 		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de lui donner la valeur 0 à l insertion';
 	END IF;
-	
+
+
 	SELECT max(numeroImage)+1 INTO maxNumero 
 	from Image
 	where idMonument = NEW.idMonument;
-	
-	SET NEW.numeroImage := maxNumero;
-	
+
+	IF maxNumero IS NULL
+	THEN
+	    SET NEW.numeroImage := 1;
+	ELSE
+	    SET NEW.numeroImage := maxNumero;
+	END IF;
 END |
 DELIMITER ;
  
@@ -109,9 +114,14 @@ BEGIN
 	SELECT max(numeroSource)+1 INTO maxNumero 
 	from Source
 	where idMonument = NEW.idMonument;
-	
-	SET NEW.numeroSource := maxNumero;
-	
+
+	IF maxNumero IS NULL
+	THEN
+	    SET NEW.numeroSource := 1;
+	ELSE
+	    SET NEW.numeroSource := maxNumero;
+	END IF;
+
 END |
 DELIMITER ;
 
