@@ -107,7 +107,7 @@ BEGIN
 	END IF;
 	
 	SELECT max(numeroSource)+1 INTO maxNumero 
-	from Image
+	from Source
 	where idMonument = NEW.idMonument;
 	
 	SET NEW.numeroSource := maxNumero;
