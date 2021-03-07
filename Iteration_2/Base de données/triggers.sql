@@ -79,16 +79,42 @@ BEGIN
 END |
 DELIMITER ;
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+-- CALL p_Image_decalageNumero(deleted_monumentID, deleted_numeroImage);
+
+DELIMITER |
+CREATE OR REPLACE PROCEDURE p_Image_decalageNumero(IN old_idMonument INT, IN old_numeroImage TINYINT )
+BEGIN
+	-- éxecuter la ligne suivante 
+	-- CALL p_Image_decalageNumero(deleted_monumentID, deleted_numeroImage);
+    UPDATE Image
+	SET numeroImage = numeroImage -1
+	WHERE idMonument = old_idMonument AND numeroImage > old_numeroImage;	
+END | 
+DELIMITER ; 
+
+
+DELIMITER |
+CREATE OR REPLACE TRIGGER `trigger_Source_ajoutNumero` 
+BEFORE INSERT ON `source` 
+FOR EACH ROW 
+BEGIN
+	DECLARE maxNumero INTEGER;
+	
+	IF NEW.numeroSource IS NOT NULL
+	THEN
+		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de ne rien renseigner';
+	END IF;
+	
+	SELECT max(numeroSource)+1 INTO maxNumero 
+	from Image
+	where idMonument = NEW.idMonument;
+	
+	SET NEW.numeroSource := maxNumero;
+	
+END |
+DELIMITER ;
+
  
  
  
