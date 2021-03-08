@@ -70,6 +70,16 @@ $app->post('/mon-espace/{token}[/]', function(Request $rq, Response $rs, array $
     return $c->postAjouterMonumentListe($rq,$rs,$args);
 });
 
+$app->get('/mon-espace/{token}/modifier[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayModifierListe($rq,$rs,$args);
+})->setName('modifierListe');
+
+$app->post('/mon-espace/{token}/modifier[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postModifierListe($rq,$rs,$args);
+})->setName('modifierListe');
+
 $app->get('/mon-espace/monument/{token}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayDetailMonument($rq,$rs,$args);

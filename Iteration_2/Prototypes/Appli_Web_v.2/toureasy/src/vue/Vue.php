@@ -37,6 +37,8 @@ class Vue
 
     const DEMANDE_AMI = 12;
 
+    const MODIFIER_LISTE = 13;
+
     public function __construct($data)
     {
         $this->data = $data;
@@ -356,6 +358,7 @@ END;
             <h3 class="nom">Nom de la liste : {$liste->nom}</h3>
             <p class="desc">Description : {$liste->description}</p>
         </section>
+        <div><button onclick="window.location.href='{$vars['modifierListe']}'">Modifier</button></div>
         </br>
 END;
         if (sizeOf($monumentsDeCetteListe)>0) {
@@ -393,7 +396,6 @@ END;
             }
             $html .= "</select> <input type='submit' value='OK'></form>";
         }
-
         return $html;
     }
 
@@ -404,6 +406,19 @@ END;
                     <td><a href="$url">$monument->nomMonum</a></td>
                     <td></td>
                 </tr>
+END;
+        return $html;
+    }
+
+    private function modifierUneListe(ListeMonument $liste): string {
+        $html = <<<END
+                <section class="titre">
+                    <form method="post">
+                        <p>Nom : <input type="text" name="nom" value="{$liste->nom}" /></p>
+                        <p>Description :<input type="text" name="desc" value="{$liste->description}" /></p>
+                        <input type="submit" value="Valider" />
+                    </form>
+                </section>
 END;
         return $html;
     }
@@ -576,13 +591,16 @@ END;
                 $content = $this->unMonumentHtml($this->data[0], $this->data[1], $vars);
                 break;
             case Vue::AJOUTER_LISTE:
-                $content = $this->ajoutListeHtml();
+                $content = $this->ajoutListeHtml($vars);
                 break;
             case Vue::PROFIL:
                 $content = $this->pageProfil($this->data[0], $vars);
                 break;
             case Vue::MODIFIER_MONUMENT:
                 $content = $this->modifierUnMonument($this->data[0], $this->data[1], $vars);
+                break;
+            case Vue::MODIFIER_LISTE:
+                $content = $this->modifierUneListe($this->data[0]);
                 break;
             case Vue::TEST:
                 $content = $this->pageTest($vars);

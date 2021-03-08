@@ -244,12 +244,6 @@ class Controller
 
     public function postAjouterMonument(Request $rq, Response $rs, array $args)
     {
-        $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
-        ];
-
-        $v = new Vue(null);
-
         $data = $rq->getParsedBody();
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
         $description = $data['desc'];
@@ -340,10 +334,7 @@ class Controller
                 if(in_array($file_extension, $extension_autorise)){
                     if(move_uploaded_file($file_tmp_name, $file_dest)){
                         $image = new Image();
-
-                        // TODO : changer l'attribution de numeroImage quand le trigger sera fait
-                        $image->numeroImage = rand(5, 15);
-
+                        $image->numeroImage = 0;
                         $image->idMonument = $monument->idMonument;
                         $image->urlImage = $file_dest;
                         $image->save();
@@ -439,7 +430,8 @@ class Controller
     {
         $liste = ListeMonument::getListeByToken($args['token']);
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            'modifierListe' => $this->c->router->pathFor('modifierListe', ["token" => $args['token']])
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
@@ -468,6 +460,37 @@ class Controller
         }
 
         return $rs;
+    }
+
+    public function displayModifierListe(Request $rq, Response $rs, array $args): Response
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath()
+        ];
+
+        $liste = ListeMonument::getListeByToken($args['token']);
+
+        $v = new Vue([$liste]);
+        $rs->getBody()->write($v->render($htmlvars, Vue::MODIFIER_LISTE));
+        return $rs;
+    }
+
+    public function postModifierListe(Request $rq, Response $rs, array $args): Response
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath()
+        ];
+
+        $data = $rq->getParsedBody();
+        $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+        $description = filter_var($data['desc'], FILTER_SANITIZE_STRING);
+
+        $liste = ListeMonument::getListeByToken($args['token']);
+        $liste->nom = $nom;
+        $liste->description = $description;
+        $liste->save();
+
+        return $this->genererMessageAvecRedirection($rs,$rq,"Liste modifiée avec succès", "mes-listes");
     }
 
     public function displayDetailMonument(Request $rq, Response $rs, array $args): Response
