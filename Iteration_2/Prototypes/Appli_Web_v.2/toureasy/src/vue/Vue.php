@@ -164,11 +164,11 @@ END;
                 <img src="{$v['basepath']}/web/img/avatar.png" class="avatar">
             </header>
             <div class="content">
-                <h6>Prénom <input type="text" name="prenom" class="input-profil" readonly="readonly" value="{$m->prenom}"></h6>
-                <h6>Nom <input type="text" name="nom" class="input-profil" readonly="readonly" value="{$m->nom}"></h6>
-                <h6>Sexe <input type="text" name="sexe" class="input-profil" readonly="readonly" value="{$m->sexe}"></h6>
-                <h6>Date de naissance <input type="date" name="naissance" class="input-profil" readonly="readonly" value="{$m->dateNaissance}"></h6>
-                <h6>Token <input type="text" readonly="readonly" value="{$m->token}" ></h6>
+                <h5>Prénom <br><input type="text" name="prenom" class="input-profil" readonly="readonly" value="{$m->prenom}"></h5>
+                <h5>Nom <br><input type="text" name="nom" class="input-profil" readonly="readonly" value="{$m->nom}"></h5>
+                <h5>Sexe <br><input type="text" name="sexe" class="input-profil" readonly="readonly" value="{$m->sexe}"></h5>
+                <h5>Date de naissance <br><input type="date" name="naissance" class="input-profil" readonly="readonly" value="{$m->dateNaissance}"></h5>
+                <h5>Token <br><input type="text" readonly="readonly" class="input-token" value="{$m->token}" ></h5>
             </div>
         </section>
     </div>
@@ -178,7 +178,7 @@ END;
                 <h3>Coordonnées</h3>
             </header>
             <div class="content">
-                <h6>Adresse e-mail <input type="text" name="mail" class="input-profil" readonly="readonly" value="{$m->email}"></h6>
+                <h5>Adresse e-mail <br><input type="text" name="mail" class="input-profil" readonly="readonly" value="{$m->email}"></h5>
             </div>
         </section>
     </div>
