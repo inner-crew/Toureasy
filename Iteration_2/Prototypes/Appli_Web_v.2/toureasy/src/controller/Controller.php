@@ -578,7 +578,7 @@ class Controller
                         $image = new Image();
 
                         // TODO : changer l'attribution de numeroImage quand le trigger sera fait
-                        $image->numeroImage = rand(5, 1000);
+                        $image->numeroImage = 0;
 
                         $image->idMonument = $monument->idMonument;
                         $image->urlImage = $file_dest;
