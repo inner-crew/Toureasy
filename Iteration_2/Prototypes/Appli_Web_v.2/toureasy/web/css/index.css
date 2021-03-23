@@ -160,9 +160,7 @@ body {
 .avatar{
     height: 100px;
     width: auto;
-    position: absolute;
-    right: 12%;
-    top: 25%;
+    position: relative;
 }
 
 .bt-bottom{
@@ -208,7 +206,6 @@ section{
 }
 
 .content {
-
     box-sizing: border-box;
     border-radius: 5px;
     text-align: justify;
@@ -226,6 +223,15 @@ section{
     width: 80%;
 }
 
+h3{
+    font-size: 250%;
+    margin-left: 20px;
+}
+h5 {
+    font-size: 120%;
+    margin-left: 10px;
+}
+
 img{
     width: 80%;
     display: block;
@@ -237,4 +243,14 @@ img{
     max-width: 150px;
     max-height: 150px;
     float: left;
+}
+
+.input-profil{
+    margin-left: 10px;
+    margin-top: 2px;
+}
+
+.input-token{
+    margin-left: 10px;
+    margin-top: 2px;
 }
