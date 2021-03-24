@@ -71,10 +71,17 @@ class Controller
 
     public function postConnexion(Request $rq, Response $rs, array $args)
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'url' => $this->c->router->pathFor('map', []),
-            'message' => "Connexion réussie"
+            'message' => "Connexion réussie",
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
+
         ];
         $data = $rq->getParsedBody();
         $token = filter_var($data['action'], FILTER_SANITIZE_STRING);
@@ -106,8 +113,15 @@ class Controller
 
     public function displayProfil(Request $rq, Response $rs, array $args): Response
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
         $v = new Vue(null);
 
@@ -636,10 +650,16 @@ class Controller
 
     private function genererRedirectionPageConnexion($rs, $rq) {
         $v = new Vue(null);
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Vous devez vous connecter pour accéder à cette page",
-            'url' => $this->c->router->pathFor('connexion', [])
+            'url' => $this->c->router->pathFor('connexion', []),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
@@ -647,10 +667,16 @@ class Controller
 
     private function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection, $argsUrl = array()) {
         $v = new Vue(null);
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => $message,
-            'url' => $this->c->router->pathFor($nameRedirection, $argsUrl)
+            'url' => $this->c->router->pathFor($nameRedirection, $argsUrl),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;

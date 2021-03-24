@@ -53,9 +53,18 @@ class Vue
         </div>
         <h1 id="name">Toureasy</h1>
     </header>
-    <div class="message">
-        <h1>{$vars['message']}</h1>
-        <button onclick="window.location.href='{$vars['url']}'">Ok</button>
+    <div class="container">
+    <div>
+            <ul id="menu">
+                <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
+                <li><a href='{$vars['about-us']}'">A propos</a></li>
+            </ul> 
+        </div>
+        <div class="message">
+            <h1>{$vars['message']}</h1>
+            <button onclick="window.location.href='{$vars['url']}'">Ok</button>
+        </div>
+        
     </div>
 
 END;
@@ -199,14 +208,21 @@ END;
     {
         $html = <<<END
 
-<header>
-    <div id="logo-small">
-        <img src="{$v['basepath']}/web/img/Logo_genial.png"/>
-    </div>       
+ <header>
+        <div class="menu-btn">
+            <div class="menu-btn__burger"></div>
+        </div>
+        <h1 id="name">Toureasy</h1>
 </header>
 
+<div class="container">
+<div>
+            <ul id="menu">
+                <li><a href='{$v['contact']}'">Nous Contacter</a></li>
+                <li><a href='{$v['about-us']}'">A propos</a></li>
+            </ul> 
+        </div>
 <h3> Mon Profil </h3>
-
 <div id="formProfil">
     <form method="post">
         <div class="container">
@@ -234,6 +250,8 @@ END;
     </div>
     </form>
 </div>
+</div>
+
 
 <script>
     function modifie() {
@@ -265,6 +283,13 @@ END;
     public function monEspace($arrayListeUtilisateur, $arrayMonumentsPrives, $arrayMonumentsPublics, $vars) {
         $basepath = $vars['basepath'];
         $html = <<<END
+ <header>
+        <div class="menu-btn">
+            <div class="menu-btn__burger"></div>
+        </div>
+        <h1 id="name">Toureasy</h1>
+</header>
+<div class="container">
 <section class="titre">
             <h3 class="nom">Vos Listes</h3>
             <p class="desc">Tableau regroupant toutes vos listes</p>
@@ -358,12 +383,12 @@ END;
             $html .= <<<END
                 
               </table>
-          </section>
+          </section></div>
 END;
 
 
         } else {
-            $html .= "<p>Vous n'avez pas encore créé de monument publics</p>";
+            $html .= "<p>Vous n'avez pas encore créé de monument publics</p></div>";
         }
 
         return $html;
