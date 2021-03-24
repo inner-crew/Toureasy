@@ -140,10 +140,13 @@ END;
     <link rel="stylesheet" href="{$v['basepath']}/web/carteSetting/css/barreDeRecherche_mapbox-gl-geocoder.css" type="text/css"/>   <!--css de la recherche de lieu-->
 
 <div id="comparison-container">
-    <div id="before" class="map"></div>
-    <pre id="geoPos"></pre>
-    <div id="after" class="map"></div>
+    
 </div>
+<label class="switch">
+  <input id="3dSwitch" type="checkbox">
+  <span class="slider"></span>
+</label>
+<p id="txt3D">3D On/Off</p>
 <input type= "image" id="btn" src="{$v['basepath']}/web/carteSetting/data/images/mark.png" width="100px" height="200px"/>
 <select id="monumentAfficher">
   <option value="publique" selected>Monuments certifiés</option>
