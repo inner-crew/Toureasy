@@ -41,7 +41,7 @@ body {
         justify-content: center;
     }
 
-    button {
+    .box button {
         background-color: var(--blanc);
         border: none;
         border-radius: 3px;
@@ -286,11 +286,10 @@ body {
 
     #formConnexion {
         position:relative;
-        padding-top: 50%;
         left:50%;
         width:300px;
         margin-left:-150px;
-        margin-top:-100px;
+        padding-top: 25%;
         color: var(--blanc);
     }
 
@@ -298,11 +297,10 @@ body {
         position: relative;
         text-align: center;
         top: 50%;
-        padding-top: 70%;
+        padding-top: 50%;
         left:50%;
         width:300px;
         margin-left:-150px;
-        margin-top:-100px;
         color: var(--blanc);
     }
 }

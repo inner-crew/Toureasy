@@ -62,7 +62,10 @@ class Vue
         </div>
         <div class="message">
             <h1>{$vars['message']}</h1>
+            <div class="box">
             <button onclick="window.location.href='{$vars['url']}'">Ok</button>
+</div>
+            
         </div>
         
     </div>
@@ -208,7 +211,7 @@ END;
     {
         $html = <<<END
 
- <header>
+<header>
         <div class="menu-btn">
             <div class="menu-btn__burger"></div>
         </div>
