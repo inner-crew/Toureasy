@@ -87,52 +87,20 @@ END;
         
         
         <div class="container">
-        <div>
-            <ul id="menu">
-                <li><a href='{$v['contact']}'">Nous Contacter</a></li>
-                <li><a href='{$v['about-us']}'">A propos</a></li>
-            </ul> 
-        </div>
-            <div class="cadre-diapo" id="center">
-                <img class="diapo" src="{$v['basepath']}/web/img/diapo1.jpg" alt>
-                <img class="diapo" src="{$v['basepath']}/web/img/diapo2.jpg" alt>
-                <img class="diapo" src="{$v['basepath']}/web/img/diapo3.jpg" alt>
-                <img class="diapo" src="{$v['basepath']}/web/img/diapo4.jpg" alt>
+            <div>
+                <ul id="menu">
+                    <li><a href='{$v['contact']}'">Nous Contacter</a></li>
+                    <li><a href='{$v['about-us']}'">A propos</a></li>
+                </ul> 
+            </div>
+            <div id="home">
+                <img id="logo-small" src='{$v['basepath']}/web/img/logo2.png'>
                 <div class="box">
-                    <button class="precedent" aria-label="précédent" onclick="boutons(-1)">❮</button>
-                    <button class="suivant" aria-label="suivant" onclick="boutons(1)">❯</button>
+                    <button onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
                 </div>
-            </div>
-            
-            <div class="box">
-                <button onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
+                <p id="slogan">Découvrez des monuments du monde entier en un clique !</p>
             </div>
         </div>
-            
-         <script>
-            var diaporama = 1;
-            affichage(diaporama);
-                    
-            function boutons(n) {
-                affichage(diaporama += n);
-            }
-                    
-            function affichage(n) {
-                var i;
-                var diapoImg = document.getElementsByClassName("diapo");
-                if (n > diapoImg.length) {diaporama = 1}    
-                if (n < 1) {diaporama = diapoImg.length}
-                for (i = 0; i < diapoImg.length; i++) {
-                    diapoImg[i].style.opacity = "0";
-                }
-                diapoImg[diaporama-1].style.opacity = "1";    
-                indic[diaporama-1].className += " numeros";
-            } 
-
-        </script>
-        
-        
-
 END;
         return $html;
     }
@@ -209,8 +177,8 @@ END;
 
     private function pageProfil(Membre $m, Array $v): string
     {
+        var_dump($m);
         $html = <<<END
-
 <header>
         <div class="menu-btn">
             <div class="menu-btn__burger"></div>
@@ -219,40 +187,52 @@ END;
 </header>
 
 <div class="container">
-<div>
-            <ul id="menu">
-                <li><a href='{$v['contact']}'">Nous Contacter</a></li>
-                <li><a href='{$v['about-us']}'">A propos</a></li>
-            </ul> 
-        </div>
-<h3> Mon Profil </h3>
+    <div>
+        <ul id="menu">
+            <li><a href='{$v['contact']}'">Nous Contacter</a></li>
+            <li><a href='{$v['about-us']}'">A propos</a></li>
+        </ul> 
+    </div>
 <div id="formProfil">
+    
     <form method="post">
-        <div class="container">
+        <div>
+        <h3> Mon Profil </h3>
             <section class="section">
                 <div class="content">
-                    <h5>Prénom </h5><input type="text" name="prenom" class="input-profil" readonly="readonly" value="{$m->prenom}">
-                    <h5>Nom</h5><input type="text" name="nom" class="input-profil" readonly="readonly" value="{$m->nom}">
-                    <h5>Sexe</h5><input type="text" name="sexe" class="input-profil" readonly="readonly" value="{$m->sexe}">
-                    <h5>Date de naissance</h5><input type="date" name="naissance" class="input-profil" readonly="readonly" value="{$m->dateNaissance}">
-                    <h5>Token</h5><input type="text" readonly="readonly" class="input-token" value="{$m->token}" >
+                    <h5>Prénom </h5><input type="text" name="prenom" class="input-profil longInputAvecMargin"  readonly="readonly" value="{$m->prenom}">
+                    <h5>Nom</h5><input type="text" name="nom" class="input-profil longInputAvecMargin" readonly="readonly" value="{$m->nom}">
+                    <h5>Sexe</h5>
+                    <select name="sexe" disabled="true" class="input-profil longSelectAvecMargin">
+END;
+        
+        if ($m->sexe === "non-renseigné") {
+
+        }
+        $html .= <<<END
+                        <option value="" >--Choisissez une option--</option>
+                        <option value="m">Homme</option>
+                        <option value="f">Femme</option>
+                        <option value="x">Non-renseigné</option>
+                    </select>
+                    <h5>Date de naissance</h5><input type="date" name="naissance" class="input-profil longInputAvecMargin" readonly="readonly" value="{$m->dateNaissance}">
+                    <h5>Token</h5><input type="text" readonly="readonly" class="input-token longInputAvecMargin" value="{$m->token}" >
                 </div>
             </section>
         </div>
-        <div class="container">
+        <div>
         <h3>Coordonnées</h3>
             <section class="section">
                 <div class="content">
-                    <h5>Adresse e-mail </h5><input type="text" name="mail" class="input-profil" readonly="readonly" value="{$m->email}">
+                    <h5>Adresse e-mail </h5><input type="text" name="mail" class="input-profil longInputAvecMargin" readonly="readonly" value="{$m->email}">
                 </div>
             </section>
         </div>
-    <div class="bt-bottom box">
+        <div class="bt-bottom box">
         <button id="bt-modif">Modifier</button>
-        <button>Accéder à la carte</button>
+        </div>
+        </form>
     </div>
-    </form>
-</div>
 </div>
 
 
@@ -269,7 +249,7 @@ END;
 
         let valider = document.createElement('input')
         valider.type = 'submit'
-        valider.className = 'block'
+        valider.className = 'box'
         container.appendChild(valider)
     }
 
@@ -286,54 +266,67 @@ END;
     public function monEspace($arrayListeUtilisateur, $arrayMonumentsPrives, $arrayMonumentsPublics, $vars) {
         $basepath = $vars['basepath'];
         $html = <<<END
- <header>
+<header>
         <div class="menu-btn">
             <div class="menu-btn__burger"></div>
         </div>
         <h1 id="name">Toureasy</h1>
 </header>
+
 <div class="container">
-<section class="titre">
-            <h3 class="nom">Vos Listes</h3>
-            <p class="desc">Tableau regroupant toutes vos listes</p>
-            <button onclick="location.href='{$vars['createListe']}'">Creer une liste</button>
-        </section>
+    <div>
+        <ul id="menu">
+            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
+            <li><a href='{$vars['about-us']}'">A propos</a></li>
+        </ul> 
+    </div>
+<section class="sectionEspace">
+    
+    <div class="boxsmall">
+    <h3 class="nomSection">Vos Listes</h3>
+        <button onclick="location.href='{$vars['createListe']}'">+</button>
+    </div>
+
 END;
 
         if (sizeOf($arrayListeUtilisateur)>0) {
             $html .= <<<END
                 
         <section class="tableau">
-            <table>
-                <tr>
-                    <th>Nom</th>
-                    <th>Date</th>
-                    <th>Lien de partage</th>
-                </tr>
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Date</th>
+                        <th>Lien de partage</th>
+                    </tr>
+                </thead>
+                <tbody>
 END;
             for ($i = 0; $i < sizeOf($arrayListeUtilisateur); $i++) {
                 $html .= $this->uneLigneListeMonEspace($arrayListeUtilisateur[$i][0], $basepath, $arrayListeUtilisateur[$i][1]);
             }
             $html .= <<<END
                 
-              </table>
-          </section>
+              </tbody></table>
+          </section></section>
 END;
 
 
         } else {
             $html .= <<<END
-<p>Vous n'avez pas encore créé de liste </p>
+<p>Vous n'avez pas encore créé de liste </p></section>
 END;
 
         }
 
         $html .= <<<END
-<section class="titre">
-            <h3 class="nom">Vos Monuments Privés</h3>
-            <p class="desc">Tableau regroupant tous vos monuments privés</p>
-            <button onclick="location.href='{$vars['createMonument']}'">Creer un monument</button>
-        </section>
+<section class="sectionEspace">
+    <div class="boxsmall">
+        <h3 class="nomSection">Vos Monuments Privés</h3>
+        <button onclick="location.href='{$vars['createMonument']}'">+</button>
+    </div>
+
 END;
 
 
@@ -341,32 +334,35 @@ END;
             $html .= <<<END
                 
         <section class="tableau">
-            <table>
+            <table class="content-table">
+                <thead>
                 <tr>
                     <th>Nom</th>
                     <th>Lien de partage</th>
                 </tr>
+                </thead>
+                <tbody>
 END;
             for ($i = 0; $i < sizeOf($arrayMonumentsPrives); $i++) {
                 $html .= $this->uneLigneMonumentMonEspace($arrayMonumentsPrives[$i][0], $basepath, $arrayMonumentsPrives[$i][1]);
             }
             $html .= <<<END
                 
-              </table>
-          </section>
+              </tbody></table>
+          </section></section>
 END;
 
 
         } else {
-            $html .= "<p>Vous n'avez pas encore créé de monument privé</p>";
+            $html .= "<p>Vous n'avez pas encore créé de monument privé</p></section>";
         }
 
         $html .= <<<END
-<section class="titre">
-            <h3 class="nom">Vos Monuments Publics</h3>
-            <p class="desc">Tableau regroupant tous vos monuments publics</p>
-            <button onclick="location.href='{$vars['createMonument']}'">Creer un monument</button>
-        </section>
+<section class="sectionEspace">
+    <div class="boxsmall">
+        <h3 class="nomSection">Vos Monuments Publics</h3>
+        <button onclick="location.href='{$vars['createMonument']}'">+</button>
+    </div>
 END;
 
 
@@ -374,24 +370,27 @@ END;
             $html .= <<<END
                 
         <section class="tableau">
-            <table>
+            <table class="content-table">
+                <thead>
                 <tr>
                     <th>Nom</th>
                     <th>Lien de partage</th>
-                </tr>
+                    </tr>
+                </thead>
+                <tbody>
 END;
             for ($i = 0; $i < sizeOf($arrayMonumentsPublics); $i++) {
                 $html .= $this->uneLigneMonumentMonEspace($arrayMonumentsPublics[$i][0], $basepath, $arrayMonumentsPublics[$i][1]);
             }
             $html .= <<<END
                 
-              </table>
-          </section></div>
+              </tbody></table>
+          </section></div></section>
 END;
 
 
         } else {
-            $html .= "<p>Vous n'avez pas encore créé de monument publics</p></div>";
+            $html .= "<p>Vous n'avez pas encore créé de monument publics</p></div></section>";
         }
 
         return $html;
@@ -571,32 +570,49 @@ END;
     private function ajoutMonumentHtml($vars): string
     {
         $html = <<<END
-<form method="post" enctype="multipart/form-data" id="add">
-            <p>Nom du monument<span class="required">*</span> : <input type="text" name="nom" required/></p>
-            <div>
-                <input type="radio" id="private" name="visibilite" value="private" checked>
-                <label for="huey">Privé</label>
-                <input type="radio" id="public" name="visibilite" value="public">
-                <label for="dewey">Publique</label>
-            </div></br>
-            <input type="file" multiple="multiple" name="fichier[]"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
-            
-            <div>
-                <p>Description</p>
+<header>
+    <div class="menu-btn">
+        <div class="menu-btn__burger"></div>
+    </div>
+    <h1 id="name">Toureasy</h1>
+</header>
+<div class="container" id="lessLeft">
+    <div>
+        <ul id="menu">
+            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
+            <li><a href='{$vars['about-us']}'">A propos</a></li>
+        </ul> 
+    </div>
+    <form method="post" enctype="multipart/form-data" id="add">
+                <h3>Nom du monument<span class="required"> *</span> : <input class="longInput" type="text" name="nom" required/></h3>
+                <div id="center">
+                    <input type="radio" id="private" name="visibilite" value="private" checked>
+                    <label for="huey">Privé</label>
+                    <input type="radio" id="public" name="visibilite" value="public">
+                    <label for="dewey">Publique</label>
+                </div></br>
+                <input class="longInput" type="file" multiple="multiple" name="fichier[]"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
+                
                 <div>
-                    <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>
-                    <input type="button" name="text" value="I" onclick="formatText('I')" checked>
-                    <input type="button" name="text" value="U" onclick="formatText('U')" checked>
-                    Taille : <input type="number" min="1" max="20" name="text" value="3" id="taille" onclick="formatText('T')"/>
-                    </p>
-                    <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
-                    <iframe name="frm" id="frm"></iframe>
+                    <h3>Description</h3>
+                    <div id="menuEditor">
+                        <p>
+                        <input class="textEditor" type="button" name="text" value="B" onclick="formatText('B')" checked>
+                        <input class="textEditor" type="button" name="text" value="I" onclick="formatText('I')" checked>
+                        <input class="textEditor" type="button" name="text" value="U" onclick="formatText('U')" checked>
+                        </p>
+                        <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
+                        <iframe name="frm" id="frm"></iframe>
+                    </div>
                 </div>
-            </div>
-            
+                
+    <div id="center" class="box">
+        <input type="button" onclick="submitForm()" value="Valider">
+    </div>
+               
+    </form>
+</div>
 
-            <input type="button" onclick="submitForm()" value="Valider">
-</form>
 <script src="{$vars['basepath']}/web/js/textEditor.js"></script>
 END;
         return $html;
@@ -605,11 +621,25 @@ END;
     public function ajoutListeHtml($vars): string
     {
         return <<<END
-        <form method="post" enctype="multipart/form-data">
-            <p>Nom<span class="required">*</span> : <input type="text" name="nom" required/></p>
-            <p>Description<span class="required">*</span> : <input type="text" name="desc" required/></p>
-            <p><input type="submit" value="OK"></p>
-        </form>
+        <header>
+            <div class="menu-btn">
+                <div class="menu-btn__burger"></div>
+            </div>
+            <h1 id="name">Toureasy</h1>
+        </header>
+        <div class="container">
+            <div>
+                <ul id="menu">
+                    <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
+                    <li><a href='{$vars['about-us']}'">A propos</a></li>
+                </ul> 
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                <h3 id="champ">Nom<span class="required">*</span></h3><input type="text" name="nom" class="longInput" required/>
+                <h3 id="champ">Description<span class="required">*</span></h3><input type="text" class="longInput" name="desc" required/>
+                <p id="center"><input type="submit" value="OK"></p>
+            </form>
+        </div>
 END;
     }
 

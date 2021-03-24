@@ -117,13 +117,14 @@ class Controller
         $urlContact = $this->c->router->pathFor('contact');
         // url redirigeant vers la page 'à propos'
         $urlAPropos = $this->c->router->pathFor('about-us');
+        $urlMap = $this->c->router->pathFor('map');
 
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'about-us' => $urlAPropos,
+            'map' => $urlMap
         ];
-        $v = new Vue(null);
 
         if (!$this->verifierUtilisateurConnecte()) {
             return $this->genererRedirectionPageConnexion($rs, $rq);
@@ -166,10 +167,17 @@ class Controller
 
     public function displayMonEspace(Request $rq, Response $rs, array $args): Response
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'createListe' => $this->c->router->pathFor('create-liste', []),
-            'createMonument' => $this->c->router->pathFor('ajoutMonument', [])
+            'createMonument' => $this->c->router->pathFor('ajoutMonument', []),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos,
         ];
 
         if (!$this->verifierUtilisateurConnecte()) {
@@ -250,8 +258,15 @@ class Controller
 
     public function displayAjouterMonument(Request $rq, Response $rs, array $args): Response
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
         $v = new Vue(null);
 
@@ -402,8 +417,15 @@ class Controller
 
     public function displayAjouterListe(Request $rq, Response $rs, array $args): Response
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
         $v = new Vue(null);
 
@@ -417,10 +439,17 @@ class Controller
 
     public function postAjouterListe(Request $rq, Response $rs, array $args): Response
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Succès",
-            'url' => $this->c->router->pathFor('mes-listes')
+            'url' => $this->c->router->pathFor('mes-listes'),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
 
         $v = new Vue(null);
