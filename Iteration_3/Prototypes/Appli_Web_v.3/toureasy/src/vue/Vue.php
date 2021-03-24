@@ -47,8 +47,17 @@ class Vue
     public function unMessage($vars): string
     {
         $html = <<<END
-<p class="message">{$vars['message']}</p>
-<button onclick="window.location.href='{$vars['url']}'">Ok</button>
+    <header>
+        <div class="menu-btn">
+            <div class="menu-btn__burger"></div>
+        </div>
+        <h1 id="name">Toureasy</h1>
+    </header>
+    <div class="message">
+        <h1>{$vars['message']}</h1>
+        <button onclick="window.location.href='{$vars['url']}'">Ok</button>
+    </div>
+
 END;
         return $html;
     }
@@ -56,24 +65,39 @@ END;
     private function homeHtml(array $v): string
     {
         $html = <<<END
-        <div class="boutons-top" id="top-rigth">
-            <button onclick="location.href='{$v['contact']}'">Nous Contacter</button>
-            <button onclick="location.href='{$v['about-us']}'">A propos</button>
+        <header>
+            <div class="menu-btn">
+                <div class="menu-btn__burger"></div>
+            </div>
+            <h1 id="name">Toureasy</h1>
+        </header>
+        
+        
+        
+        <div class="container">
+        <div>
+            <ul id="menu">
+                <li><a href='{$v['contact']}'">Nous Contacter</a></li>
+                <li><a href='{$v['about-us']}'">A propos</a></li>
+            </ul> 
         </div>
-        <header class="logo-home" id="top">
-            <img src="{$v['basepath']}/web/img/Logo_genial.png"/>
-            <h1>Toureasy</h1>
-        </header> 
-        <hr>
-        <div class = "cadre-diapo" id="center">
-	        <img class="diapo" src="{$v['basepath']}/web/img/diapo1.jpg" alt>
-	        <img class="diapo" src="{$v['basepath']}/web/img/diapo2.jpg" alt>
-            <img class="diapo" src="{$v['basepath']}/web/img/diapo3.jpg" alt>
-            <img class="diapo" src="{$v['basepath']}/web/img/diapo4.jpg" alt>
-            <button class="precedent" aria-label="précédent" onclick="boutons(-1)">❮</button>
-            <button class="suivant" aria-label="suivant" onclick="boutons(1)">❯</button>
+            <div class="cadre-diapo" id="center">
+                <img class="diapo" src="{$v['basepath']}/web/img/diapo1.jpg" alt>
+                <img class="diapo" src="{$v['basepath']}/web/img/diapo2.jpg" alt>
+                <img class="diapo" src="{$v['basepath']}/web/img/diapo3.jpg" alt>
+                <img class="diapo" src="{$v['basepath']}/web/img/diapo4.jpg" alt>
+                <div class="box">
+                    <button class="precedent" aria-label="précédent" onclick="boutons(-1)">❮</button>
+                    <button class="suivant" aria-label="suivant" onclick="boutons(1)">❯</button>
+                </div>
+            </div>
+            
+            <div class="box">
+                <button onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
+            </div>
         </div>
-        <script>
+            
+         <script>
             var diaporama = 1;
             affichage(diaporama);
                     
@@ -94,10 +118,8 @@ END;
             } 
 
         </script>
-        </div>
-        <footer class="boutons-footer" id="boutton">
-            <button onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
-        </footer>
+        
+        
 
 END;
         return $html;
@@ -133,13 +155,39 @@ END;
         return $html;
     }
 
-    public function connexionHtml(): string
+    public function connexionHtml($v): string
     {
         $html = <<<END
-<form method="post">
-    <p>J'ai un token : <input type="text" name="token"/><input type="submit" name="action" value="OK" /></p>
-    <input type="submit" name="action" value="Obtenir un token" />
-</form>
+<header>
+        <div class="menu-btn">
+            <div class="menu-btn__burger"></div>
+        </div>
+        <h1 id="name">Toureasy</h1>
+    </header>
+<div class="container">
+<div>
+            <ul id="menu">
+                <li><a href='{$v['contact']}'">Nous Contacter</a></li>
+                <li><a href='{$v['about-us']}'">A propos</a></li>
+            </ul> 
+        </div>
+    <div id="formConnexion">
+        <h1>J'ai un code d'identification</h1>
+        <form method="post">
+            <p>
+                <div class="box">
+                    <input type="text" name="token"/> 
+                    <input type="submit" name="action" value="OK" />
+                </div>
+            </p>
+            <h1>C'est ma première fois</h1>
+            <div class="box">
+                <input type="submit" name="action" value="Obtenir un token" />
+            </div>
+        </form>
+    </div>
+</div>
+
 END;
         return $html;
     }
@@ -147,55 +195,43 @@ END;
     private function pageProfil(Membre $m, Array $v): string
     {
         $html = <<<END
-    
-<div class="boutons-top" id="top-rigth">
-    <button>Contact</button>
-    <button>Propos</button>
-</div>
-<img src="{$v['basepath']}/web/img/Logo_genial.png" class="logo">
-<h1> Tour Easy </h1>
-<hr>
-<h2> Mon espace perso </h2>
-<form method="post">
-    <div class="container">
-        <section class="section">
-            <header>
-                <h3>Profil</h3>
-                <img src="{$v['basepath']}/web/img/avatar.png" class="avatar">
-            </header>
-            <div class="content">
-                <h5>Prénom <br><input type="text" name="prenom" class="input-profil" readonly="readonly" value="{$m->prenom}"></h5>
-                <h5>Nom <br><input type="text" name="nom" class="input-profil" readonly="readonly" value="{$m->nom}"></h5>
-                <h5>Sexe <br><input type="text" name="sexe" class="input-profil" readonly="readonly" value="{$m->sexe}"></h5>
-                <h5>Date de naissance <br><input type="date" name="naissance" class="input-profil" readonly="readonly" value="{$m->dateNaissance}"></h5>
-                <h5>Token <br><input type="text" readonly="readonly" class="input-token" value="{$m->token}" ></h5>
-            </div>
-        </section>
-    </div>
-    <div class="container">
-        <section class="section">
-            <header>
-                <h3>Coordonnées</h3>
-            </header>
-            <div class="content">
-                <h5>Adresse e-mail <br><input type="text" name="mail" class="input-profil" readonly="readonly" value="{$m->email}"></h5>
-            </div>
-        </section>
-    </div>
-<div class="container">
-    <section class="section">
-        <header>
-            <h3>Statistiques</h3>
-        </header>
-        <div class="content">
+
+<header>
+    <div id="logo-small">
+        <img src="{$v['basepath']}/web/img/Logo_genial.png"/>
+    </div>       
+</header>
+
+<h3> Mon Profil </h3>
+
+<div id="formProfil">
+    <form method="post">
+        <div class="container">
+            <section class="section">
+                <div class="content">
+                    <h5>Prénom </h5><input type="text" name="prenom" class="input-profil" readonly="readonly" value="{$m->prenom}">
+                    <h5>Nom</h5><input type="text" name="nom" class="input-profil" readonly="readonly" value="{$m->nom}">
+                    <h5>Sexe</h5><input type="text" name="sexe" class="input-profil" readonly="readonly" value="{$m->sexe}">
+                    <h5>Date de naissance</h5><input type="date" name="naissance" class="input-profil" readonly="readonly" value="{$m->dateNaissance}">
+                    <h5>Token</h5><input type="text" readonly="readonly" class="input-token" value="{$m->token}" >
+                </div>
+            </section>
         </div>
-    </section>
+        <div class="container">
+        <h3>Coordonnées</h3>
+            <section class="section">
+                <div class="content">
+                    <h5>Adresse e-mail </h5><input type="text" name="mail" class="input-profil" readonly="readonly" value="{$m->email}">
+                </div>
+            </section>
+        </div>
+    <div class="bt-bottom box">
+        <button id="bt-modif">Modifier</button>
+        <button>Accéder à la carte</button>
+    </div>
+    </form>
 </div>
-<div class="bt-bottom">
-    <button id="bt-modif">Modifier</button>
-    <button>Accéder à la carte</button>
-</div>
-</form>
+
 <script>
     function modifie() {
         let input = document.getElementsByClassName("input-profil")
@@ -209,6 +245,7 @@ END;
 
         let valider = document.createElement('input')
         valider.type = 'submit'
+        valider.className = 'block'
         container.appendChild(valider)
     }
 
@@ -579,7 +616,7 @@ END;
                 $content = $this->affichageMap($vars);
                 break;
             case Vue::CONNEXION:
-                $content = $this->connexionHtml();
+                $content = $this->connexionHtml($vars);
                 break;
             case Vue::VUE_ENSEMBLE:
                 $content = $this->monEspace($this->data[0], $this->data[1], $this->data[2], $vars);
@@ -617,10 +654,12 @@ END;
     <head>
         <title>Toureasy</title>
         <link rel="stylesheet" href="{$vars['basepath']}/web/css/index.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
     </head>
     <body>
         $content
     </body>
+    <script src="{$vars['basepath']}/web/js/menu.js"></script>
 </html>
 END;
 

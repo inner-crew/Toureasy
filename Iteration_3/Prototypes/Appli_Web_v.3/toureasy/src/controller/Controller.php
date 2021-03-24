@@ -54,8 +54,15 @@ class Controller
 
     public function displayConnexion(Request $rq, Response $rs, array $args): Response
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
         $v = new Vue(null);
         $rs->getBody()->write($v->render($htmlvars, Vue::CONNEXION));
@@ -75,7 +82,7 @@ class Controller
 
         if ($token === "Obtenir un token") {
             $token = bin2hex(random_bytes(5));
-            $htmlvars['message'] = "Votre token est : $token";
+            $htmlvars['message'] = "Votre token est $token";
             $membre = new Membre();
             $membre->token = $token;
             $membre->save();

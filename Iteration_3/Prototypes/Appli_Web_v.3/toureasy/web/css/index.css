@@ -1,14 +1,317 @@
-html{
-    font-family: verdana, sans-serif;
-    background-color: #eee;
+:root {
+    --bleu: #2f435e;
+    --bleuPale: #44566c;
+    --blanc: #ececec;
+    --bleuNoir: #4b5e65;
+    --noir: #201b22;
+}
+
+@font-face{
+    font-family: 'Neon';
+    src: url('Neon.ttf');
+}
+
+@keyframes slideVersDroite {
+    0%   {transform: translateX(0px);}
+    100% {transform: translateX(100vw);}
+}
+
+@keyframes slideVersGauche {
+    0%   {transform: translateX(100vw);}
+    100% {transform: translateX(0px);}
+}
+
+html {
+    font-family: Verdana, sans-serif;
+    background-color: var(--bleu);
 }
 
 body {
     font-family: Verdana, sans-serif;
-    margin: auto;
-    padding: 0px;
+    margin:0 auto;
+    width: 100%;
+    overflow-x: hidden;
 }
 
+@media only screen and (max-width: 992px) {
+
+    .box {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    button {
+        background-color: var(--blanc);
+        border: none;
+        border-radius: 3px;
+        box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        outline: none;
+        font-size: 1.5em;
+        padding: 20px;
+        transition: 0.2s;
+    }
+
+    input {
+        background-color: var(--blanc);
+        border: none;
+        border-radius: 3px;
+        box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        outline: none;
+        font-size: 1em;
+        padding: 20px;
+        margin: 10px;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        box-shadow: 6px 6px 25px 4px rgba(0, 0, 0, 0.18);
+        transform: scale(1.01);
+    }
+
+    button:active {
+        box-shadow: 6px 6px 18px 2px rgba(0, 0, 0, 0.18);
+        transform: scale(0.98);
+    }
+
+    .diapo {
+        opacity: 0;
+        position: absolute;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0);
+        top: 40%;
+        transition: opacity 1s;
+        width: 100%;
+        max-width: 700px;
+    }
+
+    .cadre-diapo > button {
+        border: none;
+        cursor: pointer;
+    }
+
+    .precedent,
+    .suivant {
+        color: silver;
+        transition: color .4s linear;
+        top: 35%;
+        padding: .5rem;
+        font-size: 2rem;
+        background: white;
+        position: absolute
+    }
+
+    .precedent {
+        left: 0
+    }
+
+    .suivant {
+        right: 0
+    }
+
+    .precedent:hover,
+    .suivant:hover {
+        color: black
+    }
+
+    .cadre-diapo {
+        max-width: 800px;
+        min-height: 300px;
+        max-height: 600px;
+        position: relative
+    }
+
+    .message {
+        position:absolute;
+        top:50%;
+        left:50%;
+        width:300px; /* A toi de donner la bonne largeur */
+        height:auto; /* A toi de donner la bonne hauteur */
+        margin-left:-150px; /* -largeur/2 */
+        margin-top:-100px; /* -hauteur/2 */
+        color: var(--blanc);
+        text-align: center;
+    }
+
+    h1, h2, h3, h4, h5, p {
+        color: var(--blanc);
+    }
+
+    .container {
+        padding: 1px 0px 10px 0px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .section{
+        border: 2px solid black;
+        margin: 0 auto;
+        width: 80%;
+        background-color: var(--bleuPale);
+    }
+
+    section{
+        margin: 2%;
+        border-radius: 5px;
+        width: 45%;
+    }
+
+    .content {
+        margin: 5px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        text-align: justify;
+    }
+
+    #formProfil > h2, h3 {
+        padding-left: 5px;
+    }
+
+    .content > h5 {
+        margin: 10px;
+        font-size: 1em;
+    }
+
+    .bt-bottom{
+        text-align: center;
+    }
+
+    .bt-bottom > button{
+        padding: 10px;
+        font-size: 15px;
+        margin: 5px;
+    }
+
+    #logo, #logo-small {
+        right: 0;
+    }
+
+    #logo {
+        position: absolute;
+        max-width: 25%;
+        height: auto;
+    }
+
+    #logo-small > img {
+        max-width: 30%;
+        height: auto;
+    }
+
+    header {
+        display: flex;
+    }
+
+    #name {
+        font-family: "Neon";
+    }
+
+    .menu-btn {
+        display: flex;
+        left: 0;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        height: 80px;
+        cursor: pointer;
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger {
+        width: 50px;
+        height: 6px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(255,101,47,.2);
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger::before, .menu-btn__burger::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 6px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(255,101,47,.2);
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger::before {
+        transform: translateY(-16px);
+    }
+
+    .menu-btn__burger::after {
+        transform: translateY(16px);
+    }
+
+    .menu-btn.open .menu-btn__burger {
+        transform: translateX(-50px);
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .menu-btn.open .menu-btn__burger::before {
+        transform: rotate(45deg) translate(35px,-35px);
+    }
+
+    .menu-btn.open .menu-btn__burger::after {
+        transform: rotate(-45deg) translate(35px,35px);
+    }
+
+    .container.hide {
+        position: relative;
+        animation-name: slideVersDroite;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    .container.show {
+        position: relative;
+        animation-name: slideVersGauche;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    #menu {
+        position: absolute;
+        left: -100vw;
+        list-style:none;
+    }
+
+    #menu a {
+        font-size: 1.5em;
+    }
+
+    a:link {
+        text-decoration: none;
+        color: var(--blanc);
+    }
+
+    a:visited {
+        color: var(--blanc);
+    }
+
+    #formConnexion {
+        position:relative;
+        padding-top: 50%;
+        left:50%;
+        width:300px;
+        margin-left:-150px;
+        margin-top:-100px;
+        color: var(--blanc);
+    }
+}
+
+@media only screen and (min-width: 992px) {
+
+}
+
+/**
 .wrapper {
     padding: 30px;
     text-align: center;
@@ -54,6 +357,7 @@ body {
     font-size: 25px;
 }
 
+
 #top-rigth {
     text-align: right;
 }
@@ -80,6 +384,7 @@ body {
 .boutons-footer{
     text-align: center;
 }
+
 
 .boutons-footer > button {
     min-height: 60px;
@@ -108,11 +413,6 @@ body {
     transition: opacity 1s;
     width: 100%;
     max-width: 700px;
-}
-
-.cadre-diapo > button {
-    border: none;
-    cursor: pointer;
 }
 
 .precedent,
@@ -163,18 +463,7 @@ body {
     position: relative;
 }
 
-.bt-bottom{
-    text-align: center;
-}
 
-.bt-bottom>button{
-    min-height: 25px;
-    margin: 0;
-    border-radius: 3px;
-    border: 0;
-    line-height: 25px;
-    font-size: 25px;
-}
 
 .bt-bottom>input{
     min-height: 25px;
@@ -183,10 +472,6 @@ body {
     border: 0;
     line-height: 25px;
     font-size: 25px;
-}
-
-h1{
-    text-align: center;
 }
 
 h2{
@@ -198,30 +483,11 @@ header{
     margin-top: 10px;
 }
 
-section{
-    margin: 2%;
-    border-radius: 5px;
-    background-color: White;
-    width: 45%;
-}
 
-.content {
-    box-sizing: border-box;
-    border-radius: 5px;
-    text-align: justify;
-}
 
-.container {
-    padding: 1px 0px 10px 0px;
-    display: flex;
-    flex-direction: column;
-}
 
-.section{
-    border: 2px solid black;
-    margin: 0 auto;
-    width: 80%;
-}
+
+
 
 h3{
     font-size: 250%;
@@ -254,3 +520,4 @@ img{
     margin-left: 10px;
     margin-top: 2px;
 }
+**/
