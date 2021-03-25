@@ -76,20 +76,19 @@ var rechercheDeLieuOption = new MapboxGeocoder({
     mapboxgl: mapboxgl
 });
 
-var getImageUrlId = function () {
-    let res = new Array();
-    getJsonFile(getCookie("token")).then(json => {
-        json.monumentsPrives.forEach(unMonumentPrive => {
-            res.push({url: ("../"+unMonumentPrive.urlImage), id: unMonumentPrive.nomImage})
+var getImageUrlId = async function () {
+    return await getJsonFile("monumentPublique").then(jsonPublique => {
+        return getJsonFile(getCookie("token")).then(jsonPriver => {
+            let res = [];
+            jsonPublique.features.forEach(unMonumentPublique => {
+                res.push({url: ("../"+unMonumentPublique.properties.urlImage), id: unMonumentPublique.properties.nomImage})
+            });
+            jsonPriver.monumentsPrives.forEach(unMonumentPrive => {
+                res.push({url: ("../"+unMonumentPrive.urlImage), id: unMonumentPrive.nomImage})
+            });
+            return res;
         });
     });
-    getJsonFile("monumentPublique").then(json => {
-        json.features.forEach(unMonumentPublique => {
-            console.log(unMonumentPublique);
-            res.push({url: ("../"+unMonumentPublique.properties.urlImage), id: unMonumentPublique.properties.nomImage})
-        });
-    });
-    return res;
 }
 
 var afficherCoordonner = function () {

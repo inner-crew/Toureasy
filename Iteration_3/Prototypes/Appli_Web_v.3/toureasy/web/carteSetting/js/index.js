@@ -66,208 +66,199 @@ var afficherLesMaps = function () {
                 });
             }
             const promises = images.map(imageData => addImage(map, imageData.id, imageData.url));
-            /*return fetch(Promise.all(promises)).then(data => {
-                return data;
-            });*/
             return Promise.all(promises);
         }
 
-
-        let tmpArray = [{url: "../web\/img\/02167291.JPG", id: "02167291.JPG"}, {url: "../web\/img\/02137259.JPG", id: "02137259.JPG"}];
-        console.log(someFunction.getImageUrlId());
-        console.log(tmpArray);
-        addImages(beforeMap, tmpArray).then(() => {
-            beforeMap.addSource('monuments', {
-                type: 'geojson',
-                data: null,
-                cluster: true,
-                clusterMaxZoom: 14,
-                clusterRadius: 50,
-            });
-
-            beforeMap.addLayer({
-                id: 'clusters',
-                type: 'circle',
-                source: 'monuments',
-                filter: ['has', 'point_count'],
-                paint: {
-                    'circle-color': [
-                        'step',
-                        ['get', 'point_count'],
-                        '#51bbd6',
-                        100,
-                        '#f1f075',
-                        750,
-                        '#f28cb1'
-                    ],
-                    'circle-radius': [
-                        'step',
-                        ['get', 'point_count'],
-                        20,
-                        100,
-                        30,
-                        750,
-                        40
-                    ]
-                }
-            });
-            beforeMap.addLayer({
-                id: 'cluster-count',
-                type: 'symbol',
-                source: 'monuments',
-                filter: ['has', 'point_count'],
-                layout: {
-                    'text-field': '{point_count_abbreviated}',
-                    'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                    'text-size': 12
-                }
-            });
-
-            beforeMap.addLayer({
-                id: 'unclustered-point',
-                type: 'symbol',
-                source: 'monuments',
-                filter: ['!', ['has', 'point_count']],
-                layout: {
-                    'icon-image': ["get", "nomImage"],
-                    'icon-size': 0.2,
-                    'icon-allow-overlap': true,
-                },
-            });
-
-            // inspect a cluster on click
-            beforeMap.on('click', 'clusters', function (e) {
-                var features = beforeMap.queryRenderedFeatures(e.point, {
-                    layers: ['clusters']
+        let arrayBroken = someFunction.getImageUrlId();
+        arrayBroken.then(data => {
+            addImages(beforeMap, data).then(() => {
+                beforeMap.addSource('monuments', {
+                    type: 'geojson',
+                    data: null,
+                    cluster: true,
+                    clusterMaxZoom: 14,
+                    clusterRadius: 50,
                 });
-                var clusterId = features[0].properties.cluster_id;
-                beforeMap.getSource('monuments').getClusterExpansionZoom(
-                    clusterId,
-                    function (err, zoom) {
-                        if (err) {
-                            return;
-                        }
-                        beforeMap.easeTo({
-                            center: features[0].geometry.coordinates,
-                            zoom: zoom
-                        });
+
+                beforeMap.addLayer({
+                    id: 'clusters',
+                    type: 'circle',
+                    source: 'monuments',
+                    filter: ['has', 'point_count'],
+                    paint: {
+                        'circle-color': [
+                            'step',
+                            ['get', 'point_count'],
+                            '#51bbd6',
+                            100,
+                            '#f1f075',
+                            750,
+                            '#f28cb1'
+                        ],
+                        'circle-radius': [
+                            'step',
+                            ['get', 'point_count'],
+                            20,
+                            100,
+                            30,
+                            750,
+                            40
+                        ]
                     }
-                );
-            });
+                });
+                beforeMap.addLayer({
+                    id: 'cluster-count',
+                    type: 'symbol',
+                    source: 'monuments',
+                    filter: ['has', 'point_count'],
+                    layout: {
+                        'text-field': '{point_count_abbreviated}',
+                        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                        'text-size': 12
+                    }
+                });
+
+                beforeMap.addLayer({
+                    id: 'unclustered-point',
+                    type: 'symbol',
+                    source: 'monuments',
+                    filter: ['!', ['has', 'point_count']],
+                    layout: {
+                        'icon-image': ["get", "nomImage"],
+                        'icon-size': 0.15,
+                        'icon-allow-overlap': true,
+                    },
+                });
+
+                // inspect a cluster on click
+                beforeMap.on('click', 'clusters', function (e) {
+                    var features = beforeMap.queryRenderedFeatures(e.point, {
+                        layers: ['clusters']
+                    });
+                    var clusterId = features[0].properties.cluster_id;
+                    beforeMap.getSource('monuments').getClusterExpansionZoom(
+                        clusterId,
+                        function (err, zoom) {
+                            if (err) {
+                                return;
+                            }
+                            beforeMap.easeTo({
+                                center: features[0].geometry.coordinates,
+                                zoom: zoom
+                            });
+                        }
+                    );
+                });
 
 // When a click event occurs on a feature in
 // the unclustered-point layer, open a popup at
 // the location of the feature, with
 // description HTML from its properties.
-            beforeMap.on('click', 'unclustered-point', function (e) {
-                var coordinates = e.features[0].geometry.coordinates;
+                beforeMap.on('click', 'unclustered-point', function (e) {
+                    var coordinates = e.features[0].geometry.coordinates;
 // Ensure that if the map is zoomed out such that
 // multiple copies of the feature are visible, the
 // popup appears over the copy being pointed to.
-                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
-                e.
-                new mapboxgl.Popup()
-                    .setLngLat(coordinates)
-                    .setHTML(
-                        e.features[0].properties.title
-                    )
-                    .addTo(beforeMap);
-            });
+                    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                    }
+
+                    new mapboxgl.Popup()
+                        .setLngLat(coordinates)
+                        .setHTML(
+                            e.features[0].properties.title
+                        )
+                        .addTo(beforeMap);
+                });
 
 
 //La géolocalisation....
 
-            beforeMap.addControl(someFunction.geolocOption, 'top-left'); //Fonction pour ce geolocaliser sur la carte
+                beforeMap.addControl(someFunction.geolocOption, 'top-left'); //Fonction pour ce geolocaliser sur la carte
 
-            beforeMap.addControl(new mapboxgl.NavigationControl(), 'top-left'); //Control bouton haut gauche
+                beforeMap.addControl(new mapboxgl.NavigationControl(), 'top-left'); //Control bouton haut gauche
 
-            beforeMap.addControl(someFunction.rechercheDeLieuOption, 'top-right'); //Active la box de recherche de lieu
+                beforeMap.addControl(someFunction.rechercheDeLieuOption, 'top-right'); //Active la box de recherche de lieu
 
-            beforeMap.on('mousemove', function (e) {
-                document.getElementById('geoPos').innerHTML = JSON.stringify(e.lngLat.wrap());
-            }); //actualise la position géographique de la souris
+                beforeMap.on('mousemove', function (e) {
+                    document.getElementById('geoPos').innerHTML = JSON.stringify(e.lngLat.wrap());
+                }); //actualise la position géographique de la souris
 
-            document.querySelector('#btn').addEventListener('click', someFunction.afficherCoordonner);  //Afficher ses coordonner dans la console
+                //document.querySelector('#btn').addEventListener('click', someFunction.afficherCoordonner);  //Afficher ses coordonner dans la console
 
 
-            //Affiche les monuments à partir d'un fichier json
-            var mark = [];
+                //Affiche les monuments à partir d'un fichier json
+                var mark = [];
 
-            function afficherMonument(json) {
-                console.log(json);
-                beforeMap.getSource('monuments').setData(json);
-                /*json.features.forEach(function (marker) {
-                    // create a HTML element for each feature
-                    var el = document.createElement('div');
-                    el.className = 'marker';
+                function afficherMonument(json) {
+                    beforeMap.getSource('monuments').setData(json);
+                    /*json.features.forEach(function (marker) {
+                        // create a HTML element for each feature
+                        var el = document.createElement('div');
+                        el.className = 'marker';
 
-                    // make a marker for each feature and add to the map
-                    mark.push(new mapboxgl.Marker(el)
-                        .setLngLat(marker.geometry.coordinates)
-                        .setPopup(new mapboxgl.Popup({offset: 25}) // add popups
-                            .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
-                        .addTo(beforeMap));
-                });*/
-            }
-
-            someFunction.majSelectBoxDesListes();
-            document.getElementById("monumentAfficher").onchange = (e) => {
-                if (mark != null) mark.forEach(unMark => unMark.remove());
-                switch (e.target.value) {
-                    case ('publique') :
-                        someFunction.getJsonFile("monumentPublique").then(json => {
-                            afficherMonument(json);
-                        });
-                        break;
-                    case('mesMonuments') :
-                        someFunction.getJsonFile(someFunction.getCookie("token")).then(json => {
-                            let tmp = someFunction.convertirMonumentsEnFeature(json.monumentsPrives);
-                            let tmp2 = someFunction.convertirMonumentsEnFeature(json.monumentsPubliques);
-                            tmp2.features.forEach(unFeature => {
-                                tmp.features.push(unFeature);
-                            })
-                            afficherMonument(tmp);
-                        });
-                        break;
-                    default :
-                        let idDeLaListe = e.target.value;
-                        someFunction.getJsonFile(someFunction.getCookie("token")).then(json => {
-                            var lesMonuments = [];
-                            var listesDesIdMonuments = [];
-                            json.Listes.forEach(uneListe => {
-                                if (uneListe.liste.idListe.toString() === idDeLaListe.toString()) {
-                                    uneListe.assosiation.forEach(uneAssociation => {
-                                        listesDesIdMonuments.push(uneAssociation.idMonument);
-                                    });
-                                }
-                            });
-                            let ttLesMonuments = json.monumentsPrives;
-                            json.monumentsPubliques.forEach(unMonument => {
-                                ttLesMonuments.push(unMonument);
-                            });
-                            ttLesMonuments.forEach(unMonument => {
-                                listesDesIdMonuments.forEach(unId => {
-                                    if (unId === unMonument.idMonument) lesMonuments.push(unMonument);
-                                });
-                            });
-                            afficherMonument(someFunction.convertirMonumentsEnFeature(lesMonuments));
-                        });
-                        break;
+                        // make a marker for each feature and add to the map
+                        mark.push(new mapboxgl.Marker(el)
+                            .setLngLat(marker.geometry.coordinates)
+                            .setPopup(new mapboxgl.Popup({offset: 25}) // add popups
+                                .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+                            .addTo(beforeMap));
+                    });*/
                 }
-            }
 
-            someFunction.getJsonFile("monumentPublique").then(json => {
-                afficherMonument(json);
+                someFunction.majSelectBoxDesListes();
+                document.getElementById("monumentAfficher").onchange = (e) => {
+                    if (mark != null) mark.forEach(unMark => unMark.remove());
+                    switch (e.target.value) {
+                        case ('publique') :
+                            someFunction.getJsonFile("monumentPublique").then(json => {
+                                afficherMonument(json);
+                            });
+                            break;
+                        case('mesMonuments') :
+                            someFunction.getJsonFile(someFunction.getCookie("token")).then(json => {
+                                let tmp = someFunction.convertirMonumentsEnFeature(json.monumentsPrives);
+                                let tmp2 = someFunction.convertirMonumentsEnFeature(json.monumentsPubliques);
+                                tmp2.features.forEach(unFeature => {
+                                    tmp.features.push(unFeature);
+                                })
+                                afficherMonument(tmp);
+                            });
+                            break;
+                        default :
+                            let idDeLaListe = e.target.value;
+                            someFunction.getJsonFile(someFunction.getCookie("token")).then(json => {
+                                var lesMonuments = [];
+                                var listesDesIdMonuments = [];
+                                json.Listes.forEach(uneListe => {
+                                    if (uneListe.liste.idListe.toString() === idDeLaListe.toString()) {
+                                        uneListe.assosiation.forEach(uneAssociation => {
+                                            listesDesIdMonuments.push(uneAssociation.idMonument);
+                                        });
+                                    }
+                                });
+                                let ttLesMonuments = json.monumentsPrives;
+                                json.monumentsPubliques.forEach(unMonument => {
+                                    ttLesMonuments.push(unMonument);
+                                });
+                                ttLesMonuments.forEach(unMonument => {
+                                    listesDesIdMonuments.forEach(unId => {
+                                        if (unId === unMonument.idMonument) lesMonuments.push(unMonument);
+                                    });
+                                });
+                                afficherMonument(someFunction.convertirMonumentsEnFeature(lesMonuments));
+                            });
+                            break;
+                    }
+                }
+
+                someFunction.getJsonFile("monumentPublique").then(json => {
+                    afficherMonument(json);
+                });
             });
-        });
 
-
-        /*addImages(beforeMap, [
-            {url: "../web/img/02167290.JPG", id: "02167290.JPG"}
-        ]);*/
-    })
+        })
+    });
     //Assemblage des deux map en mode c'est styler
     var container = '#comparison-container';
     var map = new mapboxgl.Compare(beforeMap, afterMap, container, {});

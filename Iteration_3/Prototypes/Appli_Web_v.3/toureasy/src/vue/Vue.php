@@ -130,7 +130,7 @@ END;
   <span class="slider"></span>
 </label>
 <p id="txt3D">3D On/Off</p>
-<input type= "image" id="btn" src="{$v['basepath']}/web/carteSetting/data/images/mark.png" width="100px" height="200px"/>
+<!--<input type= "image" id="btn" src="{$v['basepath']}/web/carteSetting/data/images/mark.png" width="100px" height="200px"/>-->
 <select id="monumentAfficher">
   
 </select>
