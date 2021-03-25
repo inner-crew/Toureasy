@@ -1,6 +1,8 @@
-var troisD = false;
+import someFunction from "./someFunction.js";
 
-var afficherLesMaps = function() {
+var troisD = true;
+
+var afficherLesMaps = function () {
     //Creation des deux map ------------------------------------------------------------------------------------------------------
     mapboxgl.accessToken = 'pk.eyJ1IjoicmVtaXRvczU3IiwiYSI6ImNramsxc3EwaTR2bW4ycm5xZXgwamQ3em0ifQ.LxF1l4i5VksFZHOzuJmqTA';
     document.getElementById('comparison-container').innerHTML = `<div id="before" class="map"></div>
@@ -15,15 +17,6 @@ var afficherLesMaps = function() {
         pitch: 45
     });
 
-    /*var afterMap = new mapboxgl.Map({
-        container: 'after',
-        style: 'mapbox://styles/remitos57/ckjprz1r02jy519qkxyw4f09h',
-        center: [0, 0],
-        zoom: 0,
-        minZoom: 3,
-        pitch: 45
-    });*/
-
     var afterMap = new mapboxgl.Map({
         container: 'after',
         style: 'mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y',
@@ -33,31 +26,9 @@ var afficherLesMaps = function() {
         pitch: 45
     });
 
-    var cielSetting = {
-        'id': 'sky',
-        'type': 'sky',
-        'paint': {
-            'sky-opacity': [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                0,
-                0,
-                5,
-                0.3,
-                8,
-                1
-            ],
-            // set up the sky layer for atmospheric scattering
-            'sky-type': 'atmosphere',
-            // explicitly set the position of the sun rather than allowing the sun to be attached to the main light source
-            'sky-atmosphere-sun': getSunPosition(),
-            // set the intensity of the sun as a light source (0-100 with higher values corresponding to brighter skies)
-            'sky-atmosphere-sun-intensity': 5
-        }
-    }
+
     afterMap.on('load', function () {
-        afterMap.addLayer(cielSetting);
+        afterMap.addLayer(someFunction.cielSetting);
         if (troisD) {
             afterMap.addSource('mapbox-dem', {
                 'type': 'raster-dem',
@@ -65,237 +36,244 @@ var afficherLesMaps = function() {
                 'tileSize': 512,
                 'maxzoom': 14
             });
-            afterMap.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+            afterMap.setTerrain({'source': 'mapbox-dem', 'exaggeration': 1.5});
         }
     });
 
-    function getSunPosition(date) {
-        var center = afterMap.getCenter();
-        var sunPos = SunCalc.getPosition(
-            date || Date.now(),
-            center.lat,
-            center.lng
-        );
-        var sunAzimuth = 180 + (sunPos.azimuth * 180) / Math.PI;
-        var sunAltitude = 90 - (sunPos.altitude * 180) / Math.PI;
-        return [sunAzimuth, sunAltitude];
-    }
 
-
-//Ajout du layer deep water pour des océans de giga quality
     beforeMap.on('load', function () {
+        //Ajout du layer deep water pour des océans de giga quality
         beforeMap.addSource('10m-bathymetry-81bsvj', {
             type: 'vector',
             url: 'mapbox://mapbox.9tm8dx88'
         });
-        beforeMap.addLayer(cielSetting);
-        beforeMap.addLayer(
-            {
-                'id': '10m-bathymetry-81bsvj',
-                'type': 'fill',
-                'source': '10m-bathymetry-81bsvj',
-                'source-layer': '10m-bathymetry-81bsvj',
-                'layout': {},
-                'paint': {
-                    'fill-outline-color': 'hsla(337, 82%, 62%, 0)',
-// cubic bezier is a four point curve for smooth and precise styling
-// adjust the points to change the rate and intensity of interpolation
-                    'fill-color': [
-                        'interpolate',
-                        ['cubic-bezier', 0, 0.5, 1, 0.5],
-                        ['get', 'DEPTH'],
-                        200,
-                        '#78bced',
-                        9000,
-                        '#15659f'
+        beforeMap.addLayer(someFunction.cielSetting);
+        beforeMap.addLayer(someFunction.belleMerSetting, 'land-structure-polygon');
+
+
+        function addImages(map, images) {
+            const addImage = (map, id, url) => {
+                return new Promise((resolve, reject) => {
+                    map.loadImage(url, (error, image) => {
+                        if (error) {
+                            reject(error);
+                            return;
+                        }
+                        map.addImage(id, image);
+                        resolve(image);
+                    });
+                });
+            }
+            const promises = images.map(imageData => addImage(map, imageData.id, imageData.url));
+            /*return fetch(Promise.all(promises)).then(data => {
+                return data;
+            });*/
+            return Promise.all(promises);
+        }
+        //someFunction.getImageUrlId()
+        addImages(beforeMap, [
+            {url: "../web/img/02167290.JPG", id: "02167290.JPG"},
+            {url: "../web/img/02167291.JPG", id: "02167291.JPG"}
+        ]).then(() => {
+            beforeMap.addSource('monuments', {
+                type: 'geojson',
+                data: null,
+                cluster: true,
+                clusterMaxZoom: 14,
+                clusterRadius: 50,
+            });
+
+            beforeMap.addLayer({
+                id: 'clusters',
+                type: 'circle',
+                source: 'monuments',
+                filter: ['has', 'point_count'],
+                paint: {
+                    'circle-color': [
+                        'step',
+                        ['get', 'point_count'],
+                        '#51bbd6',
+                        100,
+                        '#f1f075',
+                        750,
+                        '#f28cb1'
+                    ],
+                    'circle-radius': [
+                        'step',
+                        ['get', 'point_count'],
+                        20,
+                        100,
+                        30,
+                        750,
+                        40
                     ]
                 }
-            },
-            'land-structure-polygon'
-        );
-    });
+            });
+            beforeMap.addLayer({
+                id: 'cluster-count',
+                type: 'symbol',
+                source: 'monuments',
+                filter: ['has', 'point_count'],
+                layout: {
+                    'text-field': '{point_count_abbreviated}',
+                    'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                    'text-size': 12
+                }
+            });
 
-//Assemblage des deux map en mode c'ets styler
-    var container = '#comparison-container';
-    var map = new mapboxgl.Compare(beforeMap, afterMap, container, {});
+            beforeMap.addLayer({
+                id: 'unclustered-point',
+                type: 'symbol',
+                source: 'monuments',
+                filter: ['!', ['has', 'point_count']],
+                layout: {
+                    'icon-image': ["get", "type"],
+                    'icon-size': 0.5,
+                    'icon-allow-overlap': true,
+                },
+            });
+
+            // inspect a cluster on click
+            beforeMap.on('click', 'clusters', function (e) {
+                var features = beforeMap.queryRenderedFeatures(e.point, {
+                    layers: ['clusters']
+                });
+                var clusterId = features[0].properties.cluster_id;
+                beforeMap.getSource('monuments').getClusterExpansionZoom(
+                    clusterId,
+                    function (err, zoom) {
+                        if (err) {
+                            return;
+                        }
+                        beforeMap.easeTo({
+                            center: features[0].geometry.coordinates,
+                            zoom: zoom
+                        });
+                    }
+                );
+            });
+
+// When a click event occurs on a feature in
+// the unclustered-point layer, open a popup at
+// the location of the feature, with
+// description HTML from its properties.
+            beforeMap.on('click', 'unclustered-point', function (e) {
+                var coordinates = e.features[0].geometry.coordinates;
+// Ensure that if the map is zoomed out such that
+// multiple copies of the feature are visible, the
+// popup appears over the copy being pointed to.
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+
+                new mapboxgl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(
+                        e.features[0].properties.title
+                    )
+                    .addTo(beforeMap);
+            });
+
 
 //La géolocalisation....
-    var geolocOption = new mapboxgl.GeolocateControl({
-        positionOptions: {enableHighAccuracy: true},
-        trackUserLocation: true
-    });
-    beforeMap.addControl(geolocOption, 'top-left');
 
-    beforeMap.addControl(new mapboxgl.NavigationControl(), 'top-left'); //Control bouton haut gauche
+            beforeMap.addControl(someFunction.geolocOption, 'top-left'); //Fonction pour ce geolocaliser sur la carte
 
-    beforeMap.addControl(    //Active la box de recherche de lieu
-        new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken,
-            flyTo: {
-                bearing: 0,
-                speed: 2,
-                curve: 1,
-            },
-            marker: {
-                color: 'orange'
-            },
-            mapboxgl: mapboxgl
-        }), 'top-right'
-    );
+            beforeMap.addControl(new mapboxgl.NavigationControl(), 'top-left'); //Control bouton haut gauche
 
-    beforeMap.on('mousemove', function (e) {
-        document.getElementById('geoPos').innerHTML = JSON.stringify(e.lngLat.wrap());
-    }); //actualise la position géographique de la souris
+            beforeMap.addControl(someFunction.rechercheDeLieuOption, 'top-right'); //Active la box de recherche de lieu
 
-    var btn = document.querySelector('#btn');
-    btn.addEventListener('click', afficherCoord);
+            beforeMap.on('mousemove', function (e) {
+                document.getElementById('geoPos').innerHTML = JSON.stringify(e.lngLat.wrap());
+            }); //actualise la position géographique de la souris
 
-    function afficherCoord() {
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(position => {
-                console.log(position.coords.latitude, position.coords.longitude);
-            });
-        } else {
-            console.log("Euh erreur mdr");
-        }
-    }
+            document.querySelector('#btn').addEventListener('click', someFunction.afficherCoordonner);  //Afficher ses coordonner dans la console
 
 
-//Revoir une promesse d'un fichier json
-    function getJsonFile(nom) {
-        let path;
-        if (nom === "monumentPublique") path = `../web/carteSetting/data/${nom}.json`;
-        else path = `../web/carteSetting/data/tmp/${nom}.json`;
-        return fetch(path)
-            .then(response => response.json())
-            .then(data => {
-                return data;
-            });
-    }
+            //Affiche les monuments à partir d'un fichier json
+            var mark = [];
 
-//convertir un json de monuments de la database pour la rendre compatible avec l'API MapBox
-    function convertirMonumentsEnFeature(jsonDeMonuments) {
-        let res = {
-            features: []
-        };
-        jsonDeMonuments.forEach(unMonument => {
-            res.features.push({
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        unMonument.longitude,
-                        unMonument.latitude
-                    ]
-                },
-                "properties": {
-                    "title": unMonument.nomMonum,
-                    "description": unMonument.descLongue
-                }
-            })
-        });
-        return res;
-    }
+            function afficherMonument(json) {
+                beforeMap.getSource('monuments').setData(json);
+                /*json.features.forEach(function (marker) {
+                    // create a HTML element for each feature
+                    var el = document.createElement('div');
+                    el.className = 'marker';
 
-//Affiche les monuments à partir d'un fichier json
-    var mark = [];
-
-    function afficherMonument(json) {
-        json.features.forEach(function (marker) {
-            // create a HTML element for each feature
-            var el = document.createElement('div');
-            el.className = 'marker';
-
-            // make a marker for each feature and add to the map
-            mark.push(new mapboxgl.Marker(el)
-                .setLngLat(marker.geometry.coordinates)
-                .setPopup(new mapboxgl.Popup({offset: 25}) // add popups
-                    .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
-                .addTo(beforeMap));
-        });
-    }
-
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
+                    // make a marker for each feature and add to the map
+                    mark.push(new mapboxgl.Marker(el)
+                        .setLngLat(marker.geometry.coordinates)
+                        .setPopup(new mapboxgl.Popup({offset: 25}) // add popups
+                            .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+                        .addTo(beforeMap));
+                });*/
             }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
 
-    var selectBox = document.getElementById("monumentAfficher");
-
-    function ajouterLesListesALHTML() {
-        getJsonFile(getCookie("token")).then(json => {
-            json.Listes.forEach(uneListe => {
-                selectBox.innerHTML += `<option value="${uneListe.liste.idListe}">${uneListe.liste.nom}</option>`;
-            });
-        });
-    }
-
-    ajouterLesListesALHTML();
-
-    selectBox.onchange = (e) => {
-        if (mark != null) mark.forEach(unMark => unMark.remove());
-        switch (e.target.value) {
-            case ('publique') :
-                getJsonFile("monumentPublique").then(json => {
-                    afficherMonument(json);
-                });
-                break;
-            case('mesMonuments') :
-                getJsonFile(getCookie("token")).then(json => {
-                    let tmp = convertirMonumentsEnFeature(json.monumentsPrives);
-                    let tmp2 = convertirMonumentsEnFeature(json.monumentsPubliques);
-                    tmp2.features.forEach(unFeature => {
-                        tmp.features.push(unFeature);
-                    })
-                    afficherMonument(tmp);
-                });
-                break;
-            default :
-                let idDeLaListe = e.target.value;
-                getJsonFile(getCookie("token")).then(json => {
-                    var lesMonuments = [];
-                    var listesDesIdMonuments = [];
-                    json.Listes.forEach(uneListe => {
-                        if (uneListe.liste.idListe.toString() === idDeLaListe.toString()) {
-                            uneListe.assosiation.forEach(uneAssociation => {
-                                listesDesIdMonuments.push(uneAssociation.idMonument);
-                            });
-                        }
-                    });
-                    let ttLesMonuments = json.monumentsPrives;
-                    json.monumentsPubliques.forEach(unMonument => {
-                        ttLesMonuments.push(unMonument);
-                    });
-                    ttLesMonuments.forEach(unMonument => {
-                        listesDesIdMonuments.forEach(unId => {
-                            if (unId === unMonument.idMonument) lesMonuments.push(unMonument);
+            someFunction.majSelectBoxDesListes();
+            document.getElementById("monumentAfficher").onchange = (e) => {
+                if (mark != null) mark.forEach(unMark => unMark.remove());
+                switch (e.target.value) {
+                    case ('publique') :
+                        someFunction.getJsonFile("monumentPublique").then(json => {
+                            afficherMonument(json);
                         });
-                    });
-                    afficherMonument(convertirMonumentsEnFeature(lesMonuments));
-                });
-                break;
-        }
-    }
+                        break;
+                    case('mesMonuments') :
+                        someFunction.getJsonFile(someFunction.getCookie("token")).then(json => {
+                            let tmp = someFunction.convertirMonumentsEnFeature(json.monumentsPrives);
+                            let tmp2 = someFunction.convertirMonumentsEnFeature(json.monumentsPubliques);
+                            tmp2.features.forEach(unFeature => {
+                                tmp.features.push(unFeature);
+                            })
+                            afficherMonument(tmp);
+                        });
+                        break;
+                    default :
+                        let idDeLaListe = e.target.value;
+                        someFunction.getJsonFile(someFunction.getCookie("token")).then(json => {
+                            var lesMonuments = [];
+                            var listesDesIdMonuments = [];
+                            json.Listes.forEach(uneListe => {
+                                if (uneListe.liste.idListe.toString() === idDeLaListe.toString()) {
+                                    uneListe.assosiation.forEach(uneAssociation => {
+                                        listesDesIdMonuments.push(uneAssociation.idMonument);
+                                    });
+                                }
+                            });
+                            let ttLesMonuments = json.monumentsPrives;
+                            json.monumentsPubliques.forEach(unMonument => {
+                                ttLesMonuments.push(unMonument);
+                            });
+                            ttLesMonuments.forEach(unMonument => {
+                                listesDesIdMonuments.forEach(unId => {
+                                    if (unId === unMonument.idMonument) lesMonuments.push(unMonument);
+                                });
+                            });
+                            afficherMonument(someFunction.convertirMonumentsEnFeature(lesMonuments));
+                        });
+                        break;
+                }
+            }
 
-    getJsonFile("monumentPublique").then(json => {
-        afficherMonument(json);
+            someFunction.getJsonFile("monumentPublique").then(json => {
+                afficherMonument(json);
+            });
+        });
+
+        //Assemblage des deux map en mode c'est styler
+        var container = '#comparison-container';
+        var map = new mapboxgl.Compare(beforeMap, afterMap, container, {});
+
     });
+        /*addImages(beforeMap, [
+            {url: "../web/img/02167290.JPG", id: "02167290.JPG"}
+        ]);*/
+
 }
 
 window.addEventListener("load", function () {
     afficherLesMaps();
-    document.getElementById("3dSwitch").addEventListener("change", function() {
+    document.getElementById("3dSwitch").addEventListener("change", function () {
         if (this.checked) troisD = true;
         else troisD = false
         afficherLesMaps();
