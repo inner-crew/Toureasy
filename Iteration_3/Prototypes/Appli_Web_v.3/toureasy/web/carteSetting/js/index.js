@@ -61,6 +61,7 @@ var afficherLesMaps = function () {
                         }
                         map.addImage(id, image);
                         resolve(image);
+
                     });
                 });
             }
@@ -70,11 +71,12 @@ var afficherLesMaps = function () {
             });*/
             return Promise.all(promises);
         }
-        //someFunction.getImageUrlId()
-        addImages(beforeMap, [
-            {url: "../web/img/02167290.JPG", id: "02167290.JPG"},
-            {url: "../web/img/02167291.JPG", id: "02167291.JPG"}
-        ]).then(() => {
+
+
+        let tmpArray = [{url: "../web\/img\/02167291.JPG", id: "02167291.JPG"}, {url: "../web\/img\/02137259.JPG", id: "02137259.JPG"}];
+        console.log(someFunction.getImageUrlId());
+        console.log(tmpArray);
+        addImages(beforeMap, tmpArray).then(() => {
             beforeMap.addSource('monuments', {
                 type: 'geojson',
                 data: null,
@@ -127,8 +129,8 @@ var afficherLesMaps = function () {
                 source: 'monuments',
                 filter: ['!', ['has', 'point_count']],
                 layout: {
-                    'icon-image': ["get", "type"],
-                    'icon-size': 0.5,
+                    'icon-image': ["get", "nomImage"],
+                    'icon-size': 0.2,
                     'icon-allow-overlap': true,
                 },
             });
@@ -165,7 +167,7 @@ var afficherLesMaps = function () {
                 while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
-
+                e.
                 new mapboxgl.Popup()
                     .setLngLat(coordinates)
                     .setHTML(
@@ -194,6 +196,7 @@ var afficherLesMaps = function () {
             var mark = [];
 
             function afficherMonument(json) {
+                console.log(json);
                 beforeMap.getSource('monuments').setData(json);
                 /*json.features.forEach(function (marker) {
                     // create a HTML element for each feature
@@ -260,15 +263,14 @@ var afficherLesMaps = function () {
             });
         });
 
-        //Assemblage des deux map en mode c'est styler
-        var container = '#comparison-container';
-        var map = new mapboxgl.Compare(beforeMap, afterMap, container, {});
 
-    });
         /*addImages(beforeMap, [
             {url: "../web/img/02167290.JPG", id: "02167290.JPG"}
         ]);*/
-
+    })
+    //Assemblage des deux map en mode c'est styler
+    var container = '#comparison-container';
+    var map = new mapboxgl.Compare(beforeMap, afterMap, container, {});
 }
 
 window.addEventListener("load", function () {
