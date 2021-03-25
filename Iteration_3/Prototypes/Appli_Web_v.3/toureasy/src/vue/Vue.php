@@ -619,7 +619,7 @@ END;
     </div>
 <form method="post" enctype="multipart/form-data" id="add">
     <input type="hidden" id="delete" name="delete"/>
-    <h3>Nom du monument : <input name="nom" id='lessMargin' value="{$monument->nomMonum}"></h3>
+    <h3>Nom du monument : <input name="nom" id='lessMargin' value="{$monument->nomMonum}" required></h3>
 END;
             $html .= "<div class='wrapper' id='galerie'>";
             foreach ($arrayImg as $img) {

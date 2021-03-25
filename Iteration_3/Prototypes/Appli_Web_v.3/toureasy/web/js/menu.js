@@ -7,7 +7,11 @@ menuBtn.addEventListener('click', () => {
         menuOpen = true;
         document.querySelector(".container").classList.remove('show')
         document.querySelector(".container").classList.add('hide')
-        document.body.style.overflow = 'hidden'
+
+        if (window.screen.height > 440) {
+            document.body.style.overflow = 'hidden'
+        }
+
         document.body.classList.remove('out')
         document.body.classList.add('in')
     } else {
