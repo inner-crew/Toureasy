@@ -77,18 +77,18 @@ var rechercheDeLieuOption = new MapboxGeocoder({
 });
 
 var getImageUrlId = function () {
-    let res = [];
+    let res = new Array();
     getJsonFile(getCookie("token")).then(json => {
         json.monumentsPrives.forEach(unMonumentPrive => {
-            res.push({url: ("../"+unMonumentPrive.image.url), id: unMonumentPrive.image.nom})
+            res.push({url: ("../"+unMonumentPrive.urlImage), id: unMonumentPrive.nomImage})
         });
     });
     getJsonFile("monumentPublique").then(json => {
         json.features.forEach(unMonumentPublique => {
-            res.push({url: ("../"+unMonumentPublique.image.url), id: unMonumentPublique.image.nom})
+            console.log(unMonumentPublique);
+            res.push({url: ("../"+unMonumentPublique.properties.urlImage), id: unMonumentPublique.properties.nomImage})
         });
     });
-    console.log(res);
     return res;
 }
 
@@ -130,7 +130,9 @@ var convertirMonumentsEnFeature = function(jsonDeMonuments) {
             },
             "properties": {
                 "title": unMonument.nomMonum,
-                "description": unMonument.descLongue
+                "description": unMonument.descLongue,
+                "urlImage": unMonument.urlImage,
+                "nomImage": unMonument.nomImage
             }
         })
     });

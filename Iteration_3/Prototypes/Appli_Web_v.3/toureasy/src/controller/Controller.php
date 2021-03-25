@@ -228,10 +228,8 @@ class Controller
                     $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
                     array_push($arrayMonumentsPublics, [$monument, $url]);
                 } else {
-                    $monument->image = array(
-                        "url" => $image->urlImage,
-                        "nom" => substr($image->urlImage, 8)
-                    );
+                    $monument->urlImage = $image->urlImage;
+                    $monument->nomImage = substr($image->urlImage, 8);
                     array_push($arrayMonumentsPublics, $monument);
                 }
             }
@@ -250,10 +248,8 @@ class Controller
                 $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
                 array_push($arrayMonumentsPrives, [$monument, $url]);
             } else {
-                $monument->image = array(
-                    "url" => $image->urlImage,
-                    "nom" => substr($image->urlImage, 8)
-                );
+                $monument->urlImage = $image->urlImage;
+                $monument->nomImage = substr($image->urlImage, 8);
                 array_push($arrayMonumentsPrives, $monument);
             }
         }
@@ -434,11 +430,9 @@ class Controller
                     ),
                     "properties" => array(
                         "title" => $monument->nomMonum,
-                        "description" => $monument->descLongue
-                    ),
-                    "image" => array(
-                        "url" => $imageJson,
-                        "nom" => $nomFichierImage
+                        "description" => $monument->descLongue,
+                        "urlImage" => $imageJson,
+                        "nomImage" => $nomFichierImage
                     )
                 ));
 
