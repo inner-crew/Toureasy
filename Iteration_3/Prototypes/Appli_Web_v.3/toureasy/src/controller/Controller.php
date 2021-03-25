@@ -32,10 +32,6 @@ class Controller
         $urlConnexion = $this->c->router->pathFor('connexion');
         // url redirigeant vers la page de navigation sur la carte
         $urlAccederMap = $this->c->router->pathFor('map');
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
 
         if (!$this->verifierUtilisateurConnecte()) {
             $urlAccederMap = $urlConnexion;
@@ -45,8 +41,7 @@ class Controller
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'map' => $urlAccederMap,
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
 
         $v = new Vue(null);
@@ -56,15 +51,9 @@ class Controller
 
     public function displayConnexion(Request $rq, Response $rs, array $args): Response
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
-
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
         $v = new Vue(null);
         $rs->getBody()->write($v->render($htmlvars, Vue::CONNEXION));
@@ -73,16 +62,11 @@ class Controller
 
     public function postConnexion(Request $rq, Response $rs, array $args)
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'url' => $this->c->router->pathFor('map', []),
             'message' => "Connexion réussie",
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
 
         ];
         $data = $rq->getParsedBody();
@@ -115,21 +99,16 @@ class Controller
 
     public function displayProfil(Request $rq, Response $rs, array $args): Response
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
         $urlMap = $this->c->router->pathFor('map');
 
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos,
-            'map' => $urlMap
+            'map' => $urlMap,
+            'menu' => $this->getMenu($args)
         ];
 
         if (!$this->verifierUtilisateurConnecte()) {
-            return $this->genererRedirectionPageConnexion($rs, $rq);
+            return $this->genererRedirectionPageConnexion($rs, $rq, $args);
         } else {
             $m = Membre::getMembreByToken($_COOKIE['token']);
             $v = new Vue([$m]);
@@ -141,16 +120,11 @@ class Controller
 
     public function postProfil(Request $rq, Response $rs, array $args): Response
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Succès",
             'url' => $this->c->router->pathFor('profil'),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
 
         $data = $rq->getParsedBody();
@@ -191,21 +165,15 @@ class Controller
 
     public function displayMonEspace(Request $rq, Response $rs, array $args): Response
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
-
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'createListe' => $this->c->router->pathFor('create-liste', []),
             'createMonument' => $this->c->router->pathFor('ajoutMonument', []),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos,
+            'menu' => $this->getMenu($args)
         ];
 
         if (!$this->verifierUtilisateurConnecte()) {
-            return $this->genererRedirectionPageConnexion($rs, $rq);
+            return $this->genererRedirectionPageConnexion($rs, $rq, $args);
         } else {
             $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
 
@@ -295,20 +263,14 @@ class Controller
 
     public function displayAjouterMonument(Request $rq, Response $rs, array $args): Response
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
-
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
         $v = new Vue(null);
 
         if (!$this->verifierUtilisateurConnecte()) {
-            return $this->genererRedirectionPageConnexion($rs, $rq);
+            return $this->genererRedirectionPageConnexion($rs, $rq, $args);
         } else {
             $rs->getBody()->write($v->render($htmlvars, Vue::AJOUTER_MONUMENT));
         }
@@ -364,7 +326,7 @@ class Controller
             if ($monument != null) {
                 $monument->delete();
             }
-            return $this->genererMessageAvecRedirection($rs, $rq, "Erreur lors de l'ajout du monument", "ajoutMonument");
+            return $this->genererMessageAvecRedirection($rs, $rq, "Erreur lors de l'ajout du monument", "ajoutMonument", $args);
         }
 
         // si une image est bien présente dans la variable
@@ -415,7 +377,7 @@ class Controller
                     if ($monument != null) {
                         $monument->delete();
                     }
-                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument");
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument", $args);
                 }
             }
             if ($monument->estPrive == 0) {
@@ -449,23 +411,17 @@ class Controller
             if ($monument != null) {
                 $monument->delete();
             }
-            return $this->genererMessageAvecRedirection($rs, $rq, "Vous devez mettre une image pour ajouter un monument", "ajoutMonument");
+            return $this->genererMessageAvecRedirection($rs, $rq, "Vous devez mettre une image pour ajouter un monument", "ajoutMonument", $args);
         }
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Monument créé avec succès", "mes-listes");
+        return $this->genererMessageAvecRedirection($rs, $rq, "Monument créé avec succès", "mes-listes", $args);
     }
 
     public function displayAjouterListe(Request $rq, Response $rs, array $args): Response
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
-
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
         $v = new Vue(null);
 
@@ -473,23 +429,17 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::AJOUTER_LISTE));
             return $rs;
         } else {
-            return $this->genererRedirectionPageConnexion($rs, $htmlvars);
+            return $this->genererRedirectionPageConnexion($rs, $args, $htmlvars);
         }
     }
 
     public function postAjouterListe(Request $rq, Response $rs, array $args): Response
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
-
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Succès",
             'url' => $this->c->router->pathFor('mes-listes'),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
 
         $v = new Vue(null);
@@ -510,7 +460,7 @@ class Controller
             if ($liste != null) {
                 $liste->delete();
             }
-            return $this->genererMessageAvecRedirection($rs, $htmlvars, "Erreur lors de la création de votre liste", "createListe");
+            return $this->genererMessageAvecRedirection($rs, $htmlvars, "Erreur lors de la création de votre liste", "createListe", $args);
         }
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
@@ -518,17 +468,11 @@ class Controller
 
     public function displayDetailListe(Request $rq, Response $rs, array $args): Response
     {
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
-
         $liste = ListeMonument::getListeByToken($args['token']);
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'modifierListe' => $this->c->router->pathFor('modifierListe', ["token" => $args['token']]),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
@@ -553,7 +497,7 @@ class Controller
 
             $rs->getBody()->write($v->render($htmlvars, Vue::LISTE));
         } else {
-            return $this->genererRedirectionPageConnexion($rs, $rq);
+            return $this->genererRedirectionPageConnexion($rs, $rq, $args);
         }
 
         return $rs;
@@ -562,7 +506,8 @@ class Controller
     public function displayModifierListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args)
         ];
 
         $liste = ListeMonument::getListeByToken($args['token']);
@@ -575,7 +520,7 @@ class Controller
     public function postModifierListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
         ];
 
         $data = $rq->getParsedBody();
@@ -587,7 +532,7 @@ class Controller
         $liste->description = $description;
         $liste->save();
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Liste modifiée avec succès", "mes-listes");
+        return $this->genererMessageAvecRedirection($rs, $rq, "Liste modifiée avec succès", "mes-listes", $args);
     }
 
     public function displayDetailMonument(Request $rq, Response $rs, array $args): Response
@@ -595,24 +540,18 @@ class Controller
         $monument = Monument::getMonumentByToken($args['token']);
         $images = Image::getImageUrlByIdMonument($monument->idMonument);
 
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
-
         $v = new Vue([$monument, $images]);
 
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             "modifierMonument" => $this->c->router->pathFor('modifierMonument', ["token" => $args['token']]),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
             $rs->getBody()->write($v->render($htmlvars, Vue::MONUMENT));
         } else {
-            return $this->genererRedirectionPageConnexion($rs, $rq);
+            return $this->genererRedirectionPageConnexion($rs, $rq,$args);
         }
 
         return $rs;
@@ -620,17 +559,11 @@ class Controller
 
     public function displayModifierMonument(Request $rq, Response $rs, array $args): Response
     {
-
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
         $monument = Monument::getMonumentByToken($args['token']);
         $image = Image::getImageUrlByIdMonument($monument->idMonument);
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
         $v = new Vue([$monument, $image]);
 
@@ -695,16 +628,16 @@ class Controller
                         $image->urlImage = $file_dest;
                         $image->save();
                     } else {
-                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "modifierMonument", ['token' => $args['token']]);
+                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "modifierMonument",$args ,['token' => $args['token']]);
                     }
                 } else {
-                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "modifierMonument", ['token' => $args['token']]);
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "modifierMonument",$args, ['token' => $args['token']]);
                 }
             }
         }
         $monument->save();
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Monument modifié", "detail-monument", ["token" => $args['token']]);
+        return $this->genererMessageAvecRedirection($rs, $rq, "Monument modifié", "detail-monument",$args, ["token" => $args['token']]);
 
     }
 
@@ -721,7 +654,7 @@ class Controller
         $appartenanceListe->idMonument = $monument->idMonument;
         $appartenanceListe->save();
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Monument ajouté à la liste avec succès", 'detail-liste', ['token' => $args['token']]);
+        return $this->genererMessageAvecRedirection($rs, $rq, "Monument ajouté à la liste avec succès", 'detail-liste',$args, ['token' => $args['token']]);
     }
 
     private function verifierUtilisateurConnecte(): bool
@@ -738,37 +671,28 @@ class Controller
         }
     }
 
-    private function genererRedirectionPageConnexion($rs, $rq)
+    private function genererRedirectionPageConnexion($rs, $rq, array $args)
     {
         $v = new Vue(null);
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Vous devez vous connecter pour accéder à cette page",
             'url' => $this->c->router->pathFor('connexion', []),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
     }
 
-    private function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection, $argsUrl = array())
+    private function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection,array $args, $argsUrl = array())
     {
         $v = new Vue(null);
-        // url redirigeant vers la page de contact
-        $urlContact = $this->c->router->pathFor('contact');
-        // url redirigeant vers la page 'à propos'
-        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => $message,
             'url' => $this->c->router->pathFor($nameRedirection, $argsUrl),
-            'contact' => $urlContact,
-            'about-us' => $urlAPropos
+            'menu' => $this->getMenu($args)
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
@@ -820,7 +744,37 @@ class Controller
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::TEST));
         return $rs;
+    }
 
+    private function getMenu() {
+        $urlContact = $this->c->router->pathFor('contact');
+        $urlAPropos = $this->c->router->pathFor('about-us');
+        $urlConnexion = $this->c->router->pathFor('connexion');
+        $urlMap = $this->c->router->pathFor('map');
+
+
+        $isConnected = $this->verifierUtilisateurConnecte();
+        $menu = [];
+        if ($isConnected) {
+            $urlEspace = $this->c->router->pathFor('mes-listes', ['token' => $_COOKIE['token']]);
+            $urlAjouterMonument = $this->c->router->pathFor('ajoutMonument');
+            $urlProfil = $this->c->router->pathFor('profil');
+            $menu = [
+                'contact' => $urlContact,
+                'about-us' => $urlAPropos,
+                'map' => $urlMap,
+                'espace' => $urlEspace,
+                'ajout' => $urlAjouterMonument,
+                'profil' => $urlProfil
+            ];
+        } else {
+            $menu = [
+                'contact' => $urlContact,
+                'about-us' => $urlAPropos,
+                'connexion' => $urlConnexion
+            ];
+        }
+        return $menu;
     }
 
 }

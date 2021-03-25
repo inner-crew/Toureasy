@@ -56,9 +56,11 @@ class Vue
     <div class="container">
     <div>
             <ul id="menu">
-                <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
-                <li><a href='{$vars['about-us']}'">A propos</a></li>
-            </ul> 
+END;
+
+        $html .= $this->insererMenu($vars);
+
+        $html .= <<<END
         </div>
         <div class="message">
             <h1>{$vars['message']}</h1>
@@ -89,9 +91,11 @@ END;
         <div class="container">
             <div>
                 <ul id="menu">
-                    <li><a href='{$v['contact']}'">Nous Contacter</a></li>
-                    <li><a href='{$v['about-us']}'">A propos</a></li>
-                </ul> 
+END;
+
+        $html .= $this->insererMenu($v);
+
+        $html .= <<<END
             </div>
             <div id="home">
                 <img id="logo-small" src='{$v['basepath']}/web/img/logo2.png'>
@@ -148,9 +152,9 @@ END;
 <div class="container">
 <div>
             <ul id="menu">
-                <li><a href='{$v['contact']}'">Nous Contacter</a></li>
-                <li><a href='{$v['about-us']}'">A propos</a></li>
-            </ul> 
+END;
+        $html .= $this->insererMenu($v);
+        $html .= <<<END
         </div>
     <div id="formConnexion">
         <h1>J'ai un code d'identification</h1>
@@ -186,9 +190,9 @@ END;
 <div class="container">
     <div>
         <ul id="menu">
-            <li><a href='{$v['contact']}'">Nous Contacter</a></li>
-            <li><a href='{$v['about-us']}'">A propos</a></li>
-        </ul> 
+END;
+        $html .= $this->insererMenu($v);
+        $html .= <<<END
     </div>
 <div id="formProfil">
     
@@ -297,9 +301,9 @@ END;
 <div class="container">
     <div>
         <ul id="menu">
-            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
-            <li><a href='{$vars['about-us']}'">A propos</a></li>
-        </ul> 
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
     </div>
 <section class="sectionEspace">
     
@@ -452,9 +456,9 @@ END;
 <div class="container">
 <div>
         <ul id="menu">
-            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
-            <li><a href='{$vars['about-us']}'">A propos</a></li>
-        </ul> 
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
     </div>
 <section class="titreListe">
             <h3 class="nomSection">{$liste->nom}</h3>
@@ -516,13 +520,26 @@ END;
         return $html;
     }
 
-    private function modifierUneListe(ListeMonument $liste): string {
+    private function modifierUneListe(ListeMonument $liste, $vars): string {
         $html = <<<END
-                <section class="titre">
+<header>
+    <div class="menu-btn">
+        <div class="menu-btn__burger"></div>
+    </div>
+    <h1 id="name">Toureasy</h1>
+</header>
+
+<div class="container">
+<div>
+        <ul id="menu">
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
+                <section class="titreListe">
                     <form method="post">
-                        <p>Nom : <input type="text" name="nom" value="{$liste->nom}" /></p>
-                        <p>Description :<input type="text" name="desc" value="{$liste->description}" /></p>
-                        <input type="submit" value="Valider" />
+                        <h3 class="nomSection">Nom : <input id="lessMargin" type="text" name="nom" value="{$liste->nom}" /></h3>
+                        <h3 class="nomSection">Description :<input id="lessMargin" type="text" name="desc" value="{$liste->description}" /></h3>
+                        <div id="center"><input id="lessMargin" type="submit"  value="Valider" /></div>
                     </form>
                 </section>
 END;
@@ -541,9 +558,9 @@ END;
 <div class="container">
 <div>
         <ul id="menu">
-            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
-            <li><a href='{$vars['about-us']}'">A propos</a></li>
-        </ul> 
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
     </div>
         <section class="infos">
             <h3 id="nom">{$monument->nomMonum}</h3>
@@ -646,9 +663,9 @@ END;
 <div class="container" id="lessLeft">
     <div>
         <ul id="menu">
-            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
-            <li><a href='{$vars['about-us']}'">A propos</a></li>
-        </ul> 
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
     </div>
     <form method="post" enctype="multipart/form-data" id="add">
                 <h3>Nom du monument<span class="required"> *</span> : <input class="longInput" type="text" name="nom" required/></h3>
@@ -727,6 +744,34 @@ END;
 END;
     }
 
+    private function insererMenu($vars): string {
+        $html = "";
+        if (isset($vars['menu']['profil'])) {
+            $html .= <<<END
+    <li><a href='{$vars['menu']['map']}'">Map</a></li>
+    <li><a href='{$vars['menu']['espace']}'">Mon Espace</a></li>
+    <li><a href='{$vars['menu']['profil']}'">Mon Profil</a></li>
+    <li><a href='{$vars['menu']['ajout']}'">Ajouter un monument</a></li>
+    </br>
+    <li><a href='{$vars['menu']['contact']}'">Nous Contacter</a></li>
+    <li><a href='{$vars['menu']['about-us']}'">A propos</a></li>
+END;
+
+        } else {
+            $html .= <<<END
+    <li><a href='{$vars['menu']['connexion']}'">Connexion</a></li>
+    </br>
+    <li><a href='{$vars['menu']['contact']}'">Nous Contacter</a></li>
+    <li><a href='{$vars['menu']['about-us']}'">A propos</a></li>
+END;
+        }
+        $html .= <<<END
+</ul>
+END;
+
+        return $html;
+    }
+
     public function render(array $vars, int $typeAffichage): string
     {
         $content = null;
@@ -765,7 +810,7 @@ END;
                 $content = $this->modifierUnMonument($this->data[0], $this->data[1], $vars);
                 break;
             case Vue::MODIFIER_LISTE:
-                $content = $this->modifierUneListe($this->data[0]);
+                $content = $this->modifierUneListe($this->data[0], $vars);
                 break;
             case Vue::TEST:
                 $content = $this->pageTest($vars);

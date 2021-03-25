@@ -93,6 +93,10 @@ body {
 
 @media only screen and (max-width: 992px) {
 
+    li {
+        margin: 5px;
+    }
+
     .box {
         align-items: center;
         display: flex;
@@ -325,6 +329,7 @@ body {
         position: absolute;
         left: -100vw;
         list-style:none;
+        height: 72%;
     }
 
     #menu a {
@@ -601,7 +606,7 @@ body {
 
     #logo-small {
         padding-top: 4%;
-        width: 30%;
+        width: 28%;
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -699,6 +704,7 @@ body {
         position: absolute;
         left: -100vw;
         list-style:none;
+        height: 75%;
     }
 
     #menu a {
