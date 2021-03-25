@@ -265,7 +265,8 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu($args),
+            'publique' => isset($_GET['publique'])
         ];
         $v = new Vue(null);
 
@@ -472,7 +473,8 @@ class Controller
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'modifierListe' => $this->c->router->pathFor('modifierListe', ["token" => $args['token']]),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu($args),
+            'back' => $this->c->router->pathFor('mes-listes')
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
@@ -545,7 +547,8 @@ class Controller
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             "modifierMonument" => $this->c->router->pathFor('modifierMonument', ["token" => $args['token']]),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu($args),
+            'back' => $this->c->router->pathFor('mes-listes')
         ];
 
         if ($this->verifierUtilisateurConnecte()) {

@@ -386,7 +386,7 @@ END;
 <section class="sectionEspace">
     <div class="boxsmall">
         <h3 class="nomSection">Vos Monuments Publics</h3>
-        <button onclick="location.href='{$vars['createMonument']}'">+</button>
+        <button onclick="location.href='{$vars['createMonument']}?publique=1'">+</button>
     </div>
 END;
 
@@ -506,7 +506,15 @@ END;
             }
             $html .= "</select> <div id='center'><input type='submit' value='OK'></div></form>";
         }
-        return $html . "</div>";
+        return $html .= <<<END
+<div id="back"><img onclick="back('{$vars['back']}')" src="{$vars['basepath']}/web/img/back.png"/></div></div>
+</div>
+<script>
+    function back(chemin) {
+        window.location = chemin
+    }
+</script>
+END;
     }
 
     private function uneLigneMonumentListe(Monument $monument, $url): string {
@@ -581,7 +589,13 @@ END;
 
         $html .= <<<END
 </section>
-        <div class="box"><button onclick="window.location.href='{$vars['modifierMonument']}'">Modifier</button></div></div>
+        <div class="box"><button onclick="window.location.href='{$vars['modifierMonument']}'">Modifier</button></div>
+<div id="back"><img onclick="back('{$vars['back']}')" src="{$vars['basepath']}/web/img/back.png"/></div></div>
+<script>
+    function back(chemin) {
+        window.location = chemin
+    }
+</script>
 END;
 
         return $html;
@@ -642,7 +656,7 @@ END;
             <div id="center" class="box">
         <input type="button" onclick="submitForm()" value="Valider">
     </div>
-</form></div>
+</form>
 <script src="{$vars['basepath']}/web/js/textEditor.js"></script>
 <script src="{$vars['basepath']}/web/js/modifierMonument.js"></script>
 END;
@@ -670,10 +684,27 @@ END;
     <form method="post" enctype="multipart/form-data" id="add">
                 <h3>Nom du monument<span class="required"> *</span> : <input class="longInput" type="text" name="nom" required/></h3>
                 <div id="center">
-                    <input type="radio" id="private" name="visibilite" value="private" checked>
-                    <label for="huey">Privé</label>
-                    <input type="radio" id="public" name="visibilite" value="public">
-                    <label for="dewey">Publique</label>
+END;
+        if ($vars['publique']) {
+            $html .= <<<END
+<input type="radio" id="private" name="visibilite" value="private">
+<label for="huey">Privé</label>
+<input type="radio" id="public" name="visibilite" value="public" checked>
+<label for="dewey">Publique</label>
+END;
+
+        } else {
+            $html .= <<<END
+<input type="radio" id="private" name="visibilite" value="private" checked>
+<label for="huey">Privé</label>
+<input type="radio" id="public" name="visibilite" value="public" >
+<label for="dewey">Public</label>
+END;
+        }
+
+        $html .= <<<END
+                    
+                    
                 </div></br>
                 <div class="image-upload cell" id="addImages">
   <label for="file-input">
