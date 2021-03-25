@@ -175,7 +175,6 @@ END;
 
     private function pageProfil(Membre $m, Array $v): string
     {
-        var_dump($m);
         $html = <<<END
 <header>
         <div class="menu-btn">
@@ -201,17 +200,39 @@ END;
                     <h5>Prénom </h5><input type="text" name="prenom" class="input-profil longInputAvecMargin"  readonly="readonly" value="{$m->prenom}">
                     <h5>Nom</h5><input type="text" name="nom" class="input-profil longInputAvecMargin" readonly="readonly" value="{$m->nom}">
                     <h5>Sexe</h5>
-                    <select name="sexe" disabled="true" class="input-profil longSelectAvecMargin">
+                    <select name="sexe" disabled="true" id="select" class="input-profil longSelectAvecMargin">
+                    <option value="" >--Choisissez une option--</option>
 END;
-        
         if ($m->sexe === "non-renseigné") {
+            $html .= <<<END
+ <option value='x' selected="">Non-renseigné</option>
+ END;
+        } else {
+            $html .= <<<END
+ <option value='x'>Non-renseigné</option>
+ END;
+        }
 
+        if ($m->sexe === "homme") {
+            $html .= <<<END
+ <option value='m' selected="">Homme</option>
+ END;
+        } else {
+            $html .= <<<END
+ <option value="m">Homme</option>
+ END;
+        }
+
+        if ($m->sexe === "femme") {
+            $html .= <<<END
+ <option value='f' selected="">Femme</option>
+ END;
+        } else {
+            $html .= <<<END
+<option value="f">Femme</option>
+END;
         }
         $html .= <<<END
-                        <option value="" >--Choisissez une option--</option>
-                        <option value="m">Homme</option>
-                        <option value="f">Femme</option>
-                        <option value="x">Non-renseigné</option>
                     </select>
                     <h5>Date de naissance</h5><input type="date" name="naissance" class="input-profil longInputAvecMargin" readonly="readonly" value="{$m->dateNaissance}">
                     <h5>Token</h5><input type="text" readonly="readonly" class="input-token longInputAvecMargin" value="{$m->token}" >
@@ -241,6 +262,8 @@ END;
         for (let i = 0; i < input.length; i++) {
             input[i].readOnly = false;
         }
+        
+        document.getElementById('select').disabled = false;
 
         let container = document.querySelector('.bt-bottom');
         container.innerHTML = ''
@@ -419,34 +442,52 @@ END;
     public function uneListeHtml(ListeMonument $liste, $monumentsDeCetteListe, $monumentsDeUtilisateur ,$vars): string
     {
         $html = <<<END
+<header>
+    <div class="menu-btn">
+        <div class="menu-btn__burger"></div>
+    </div>
+    <h1 id="name">Toureasy</h1>
+</header>
+
+<div class="container">
+<div>
+        <ul id="menu">
+            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
+            <li><a href='{$vars['about-us']}'">A propos</a></li>
+        </ul> 
+    </div>
 <section class="titreListe">
-            <h3 class="nom">Nom de la liste : {$liste->nom}</h3>
-            <p class="desc">Description : {$liste->description}</p>
-        </section>
-        <div><button onclick="window.location.href='{$vars['modifierListe']}'">Modifier</button></div>
-        </br>
+            <h3 class="nomSection">{$liste->nom}</h3>
+            <i class="desc">{$liste->description}</i>
+        
+        <div class="box"><button id="modifier" onclick="window.location.href='{$vars['modifierListe']}'">Modifier</button></div>
+        </section></br>
 END;
         if (sizeOf($monumentsDeCetteListe)>0) {
             $html .= <<<END
                 
         <section class="tableau">
-            <table>
-                <tr>
-                    <th>Nom</th>
-                    <th>Lien de partage</th>
-                </tr>
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Lien de partage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
 END;
             for ($i = 0; $i < sizeOf($monumentsDeCetteListe); $i++) {
                 $html .= $this->uneLigneMonumentListe($monumentsDeCetteListe[$i][0], $monumentsDeCetteListe[$i][1]);
             }
             $html .= <<<END
-                
+                </tbody>
               </table>
         </section>
 END;
 
         } else {
-            $html .= "<p>Aucuns monuments dans cette liste</p></br>";
+            $html .= "<p id='message'>Aucuns monuments dans cette liste</p></br>";
         }
 
         if (sizeof($monumentsDeUtilisateur) > 0) {
@@ -459,9 +500,9 @@ END;
             foreach ($monumentsDeUtilisateur as $monument) {
                 $html .= "<option value='{$monument->idMonument}'>{$monument->nomMonum}</option>";
             }
-            $html .= "</select> <input type='submit' value='OK'></form>";
+            $html .= "</select> <div id='center'><input type='submit' value='OK'></div></form>";
         }
-        return $html;
+        return $html . "</div>";
     }
 
     private function uneLigneMonumentListe(Monument $monument, $url): string {
@@ -490,9 +531,23 @@ END;
 
     public function unMonumentHtml(Monument $monument, array $images, $vars): string {
         $html = <<<END
+<header>
+    <div class="menu-btn">
+        <div class="menu-btn__burger"></div>
+    </div>
+    <h1 id="name">Toureasy</h1>
+</header>
+
+<div class="container">
+<div>
+        <ul id="menu">
+            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
+            <li><a href='{$vars['about-us']}'">A propos</a></li>
+        </ul> 
+    </div>
         <section class="infos">
-            <h3 class="nom">Nom : {$monument->nomMonum}</h3>
-            <p class="desc">Description : {$monument->descLongue}</p>
+            <h3 id="nom">{$monument->nomMonum}</h3>
+            <i class="desc">{$monument->descLongue}</i>
 END;
         if (sizeof($images) > 0) {
             $html .= "<div class='wrapper' id='galerie'>";
@@ -509,7 +564,7 @@ END;
 
         $html .= <<<END
 </section>
-        <div><button onclick="window.location.href='{$vars['modifierMonument']}'">Modifier</button></div>
+        <div class="box"><button onclick="window.location.href='{$vars['modifierMonument']}'">Modifier</button></div></div>
 END;
 
         return $html;
@@ -518,9 +573,22 @@ END;
     public function modifierUnMonument(Monument $monument, array $arrayImg, $vars): string
     {
         $html = <<<END
+<header>
+    <div class="menu-btn">
+        <div class="menu-btn__burger"></div>
+    </div>
+    <h1 id="name">Toureasy</h1>
+</header>
+<div class="container">
+<div>
+        <ul id="menu">
+            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
+            <li><a href='{$vars['about-us']}'">A propos</a></li>
+        </ul> 
+    </div>
 <form method="post" enctype="multipart/form-data" id="add">
     <input type="hidden" id="delete" name="delete"/>
-    <p>Nom du monument : <input name="nom" value="{$monument->nomMonum}"></p>
+    <h3>Nom du monument : <input name="nom" id='lessMargin' value="{$monument->nomMonum}"></h3>
 END;
             $html .= "<div class='wrapper' id='galerie'>";
             foreach ($arrayImg as $img) {
@@ -544,19 +612,20 @@ END;
 END;
         $html .= <<<END
                 <br>
-                <p>Description</p>
-                <div>
-                    <p><input type="button" name="text" value="B" onclick="formatText('B')" checked>
-                    <input type="button" name="text" value="I" onclick="formatText('I')" checked>
-                    <input type="button" name="text" value="U" onclick="formatText('U')" checked>
-                    Taille : <input type="number" min="1" max="20" name="text" value="3" id="taille" onclick="formatText('T')"/>
-                    </p>
+                <h3>Description</h3>
+                <div id="menuEditor" >
+                    <p><input class="textEditor" type="button" name="text" value="B" onclick="formatText('B')" checked>
+                    <input class="textEditor" type="button" name="text" value="I" onclick="formatText('I')" checked>
+                    <input class="textEditor" type="button" name="text" value="U" onclick="formatText('U')" checked>
                     <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
-                    <iframe name="frm" id="frm"></iframe>
+                    <iframe style="background: #FFFFFF" name="frm" id="frm"></iframe>
                     <input type="hidden" name="descr" value="{$monument->descLongue}"/>
                 </div>
-            <input type="button" onclick="submitForm()" value="Valider">
-</form>
+               
+            <div id="center" class="box">
+        <input type="button" onclick="submitForm()" value="Valider">
+    </div>
+</form></div>
 <script src="{$vars['basepath']}/web/js/textEditor.js"></script>
 <script src="{$vars['basepath']}/web/js/modifierMonument.js"></script>
 END;
@@ -600,7 +669,7 @@ END;
                         <input class="textEditor" type="button" name="text" value="U" onclick="formatText('U')" checked>
                         </p>
                         <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
-                        <iframe name="frm" id="frm"></iframe>
+                        <iframe style="background: #FFFFFF" name="frm" id="frm"></iframe>
                     </div>
                 </div>
                 

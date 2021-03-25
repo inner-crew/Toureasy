@@ -139,23 +139,45 @@ class Controller
 
     public function postProfil(Request $rq, Response $rs, array $args): Response
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Succès",
-            'url' => $this->c->router->pathFor('profil')
+            'url' => $this->c->router->pathFor('profil'),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
 
         $data = $rq->getParsedBody();
         $prenom = filter_var($data['prenom'], FILTER_SANITIZE_STRING);
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
-        $sexe = filter_var($data['sexe'], FILTER_SANITIZE_STRING);
+        $sexe = $data['sexe'];
         $naissance = filter_var($data['naissance'], FILTER_SANITIZE_STRING);
         $mail = filter_var($data['mail'], FILTER_SANITIZE_STRING);
         $membre = Membre::getMembreByToken($_COOKIE['token']);
 
+        if ($mail === "") {
+            $mail = null;
+        }
+
         $membre->prenom = $prenom;
         $membre->nom = $nom;
-        $membre->sexe = $sexe;
+        switch ($sexe) {
+            case 'm':
+                $membre->sexe = 'homme';
+                break;
+            case 'f':
+                $membre->sexe = 'femme';
+                break;
+            case 'x':
+                $membre->sexe = 'non-renseigné';
+                break;
+            default:
+                break;
+        }
         $membre->dateNaissance = $naissance;
         $membre->email = $mail;
         $membre->save();
@@ -478,10 +500,17 @@ class Controller
 
     public function displayDetailListe(Request $rq, Response $rs, array $args): Response
     {
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $liste = ListeMonument::getListeByToken($args['token']);
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'modifierListe' => $this->c->router->pathFor('modifierListe', ["token" => $args['token']])
+            'modifierListe' => $this->c->router->pathFor('modifierListe', ["token" => $args['token']]),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
@@ -548,11 +577,18 @@ class Controller
         $monument = Monument::getMonumentByToken($args['token']);
         $images = Image::getImageUrlByIdMonument($monument->idMonument);
 
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
+
         $v = new Vue([$monument, $images]);
 
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            "modifierMonument" => $this->c->router->pathFor('modifierMonument', ["token" => $args['token']])
+            "modifierMonument" => $this->c->router->pathFor('modifierMonument', ["token" => $args['token']]),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
@@ -566,10 +602,17 @@ class Controller
 
     public function displayModifierMonument(Request $rq, Response $rs, array $args): Response
     {
+
+        // url redirigeant vers la page de contact
+        $urlContact = $this->c->router->pathFor('contact');
+        // url redirigeant vers la page 'à propos'
+        $urlAPropos = $this->c->router->pathFor('about-us');
         $monument = Monument::getMonumentByToken($args['token']);
         $image = Image::getImageUrlByIdMonument($monument->idMonument);
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            'contact' => $urlContact,
+            'about-us' => $urlAPropos
         ];
         $v = new Vue([$monument, $image]);
 

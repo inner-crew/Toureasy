@@ -158,6 +158,10 @@ body {
         font-family: 'Roboto';
     }
 
+    p {
+        color: white;
+    }
+
     .container {
         display: flex;
         flex-direction: column;
@@ -417,6 +421,7 @@ body {
     }
 
     .content-table thead tr {
+        font-family: 'Roboto';
         background-color: var(--gris);
         color: white;
         text-align: left;
@@ -454,6 +459,11 @@ body {
         padding-left: 5px;
     }
 
+    #lessMargin {
+        margin: 0;
+        margin-top: 5px
+    }
+
     .textEditor {
         background-color: var(--blanc);
         display: inline-block;
@@ -467,6 +477,76 @@ body {
         margin: 10px;
     }
 
+    iframe {
+        border-radius: 5px 5px 5px 5px;
+        width: 90%;
+    }
+
+    .titreListe {
+        width: 100%;
+    }
+
+    .desc {
+        color: white;
+    }
+
+    #modifier {
+        margin-top: 30px;
+    }
+
+    #monument-selected {
+        width: 90%;
+    }
+
+    #message {
+        margin-left: 2%;
+    }
+
+    .wrapper {
+        padding-top: 10px;
+        text-align: center;
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-gap: 10px;
+    }
+
+    .cell {
+        margin: 0 auto;
+    }
+
+    .cell > img, .cell > label > img{
+        width:100%; /* you can use % */
+        height: auto;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .infos {
+        width: 96%;
+    }
+
+    #nom {
+        margin-top: 5px;
+    }
+
+    .cross {
+        width: 50px;
+    }
+
+    .image-upload>input {
+        display: none;
+    }
+
+    #content {
+        position: relative;
+    }
+    #content img {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+
 }
 
 @media only screen and (min-width: 992px) {
@@ -474,40 +554,17 @@ body {
 }
 
 /**
-.wrapper {
-    padding: 30px;
-    text-align: center;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 10px;
-}
 
-.cell {
-    margin: 0 auto;
-}
 
-.image-upload>input {
-    display: none;
-}
 
-.cell > img, .cell > label > img{
-    width:  500px;
-    height: 500px;
-    object-fit: cover;
-}
 
-#content {
-    position: relative;
-}
-#content img {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-}
 
-.cross {
-    width: 50px;
-}
+
+
+
+
+
+
 
 #top-rigth > button {
     min-height: 25px;
