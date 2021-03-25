@@ -96,7 +96,7 @@ END;
             <div id="home">
                 <img id="logo-small" src='{$v['basepath']}/web/img/logo2.png'>
                 <div class="box">
-                    <button onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
+                    <button id="homeBouton" onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
                 </div>
                 <p id="slogan">Découvrez des monuments du monde entier en un clique !</p>
             </div>
