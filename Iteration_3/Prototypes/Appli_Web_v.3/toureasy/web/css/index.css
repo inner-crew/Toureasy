@@ -1,0 +1,1046 @@
+:root {
+    --bleu: #2f435e;
+    --bleuPale: #44566c;
+    --blanc: #ececec;
+    --bleuNoir: #4b5e65;
+    --noir: #201b22;
+
+    --beige: #FBE0C3;
+    --orange: #FFBB98;
+    --gris: #7D8E95;
+    --vert: #344648;
+
+    --rouge: #bf3f3f
+}
+
+@font-face{
+    font-family: 'Neon';
+    src: url('Neon.ttf');
+}
+
+@font-face{
+    font-family: 'Quicksand';
+    src: url('Quicksand-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('roboto-condensed.bold.ttf');
+}
+
+@keyframes slideVersDroite {
+    0%   {transform: translateX(0px);}
+    100% {transform: translateX(100vw);}
+}
+
+@keyframes slideVersGauche {
+    0%   {transform: translateX(100vw);}
+    100% {transform: translateX(0px);}
+}
+
+@keyframes animSelection {
+    0%   {transform: scale(1, 1);}
+    100% {transform: scale(0, 0);}
+}
+@keyframes animDeSelection {
+    0%   {transform: scale(1.5, 1.5);}
+    100% {transform: scale(1, 1);}
+}
+
+@keyframes smoothColorIn {
+    0%   {background-color: var(--vert)}
+    100% {background-color: var(--gris)}
+}
+
+@keyframes smoothColorOut {
+    0%   {background-color: var(--gris)}
+    100% {background-color: var(--vert)}
+}
+
+@keyframes animApparition {
+    0%  {transform: translateY(25vh) scale(0,0)}
+    60% {transform: translateY(2vh) scale(1.1,1.1)}
+    100%    {transform: translateY(0vh) scale(1,1)}
+}
+
+html {
+    font-family: Verdana, sans-serif;
+}
+
+body {
+    font-family: Verdana, sans-serif;
+    margin:0 auto;
+    width: 100%;
+    overflow-x: hidden;
+    background-color: var(--vert);
+}
+
+.in {
+    animation-name: smoothColorIn;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+.out {
+    animation-name: smoothColorOut;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+@media only screen and (max-width: 992px) {
+
+    #back {
+        bottom: 0;
+        margin-top: 10%;
+        margin-bottom: 5%;
+    }
+
+    #back img {
+        width: 20%;
+    }
+
+    li {
+        margin: 5px;
+    }
+
+    .box {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    .boxsmall {
+        display: flex;
+        align-items: center;
+    }
+
+
+    .box button {
+        background-color: var(--blanc);
+        border: none;
+        border-radius: 3px;
+        box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        outline: none;
+        font-size: 1.5em;
+        padding: 20px;
+        transition: 0.2s;
+    }
+
+    .boxsmall button {
+        background-color: var(--blanc);
+        border: none;
+        border-radius: 3px;
+        box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        outline: none;
+        font-size: 1em;
+        padding: 5px;
+        transition: 0.2s;
+        margin: 10px;
+    }
+
+    input, select {
+        background-color: var(--blanc);
+        border: none;
+        border-radius: 3px;
+        box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        outline: none;
+        font-size: 1em;
+        padding: 20px;
+        margin: 10px;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        box-shadow: 6px 6px 25px 4px rgba(0, 0, 0, 0.18);
+        transform: scale(1.01);
+    }
+
+    button:active {
+        box-shadow: 6px 6px 18px 2px rgba(0, 0, 0, 0.18);
+        transform: scale(0.98);
+    }
+
+    h1, h2, h3, h4, h5, a {
+        color: var(--blanc);
+        font-family: 'Roboto';
+    }
+
+    p {
+        color: white;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        padding: 10px;
+    }
+
+    .section{
+        border: 2px solid black;
+        border-color: var(--blanc);
+        width: 93%;
+        background-color: var(--vert);
+    }
+
+    section{
+        margin: 2%;
+        border-radius: 5px;
+        width: 45%;
+    }
+
+    .content {
+        margin: 5px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        text-align: justify;
+    }
+
+    #formProfil h3 {
+        font-size: 1.5em;
+        margin-left: 2%;
+    }
+
+    .content > h5 {
+        margin: 10px;
+        font-size: 1em;
+    }
+
+    .bt-bottom{
+        text-align: center;
+    }
+
+    .bt-bottom > button{
+        padding: 10px;
+        font-size: 15px;
+        margin: 5px;
+    }
+
+    #logo, #logo-small {
+        right: 0;
+    }
+
+    #logo {
+        position: absolute;
+        max-width: 25%;
+        height: auto;
+    }
+
+    #logo-small {
+        padding-top: 20%;
+        width: 90%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #slogan {
+        font-family: 'Roboto';
+        font-size: 1.8em;
+        text-align: center;
+        color: white;
+    }
+
+    #home {
+        animation-name: animApparition;
+        animation-duration: 1s;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-out;
+        animation-fill-mode: none;
+        animation-direction: alternate;
+    }
+
+    header {
+        display: flex;
+    }
+
+    #name {
+        font-family: "Neon";
+    }
+
+    .menu-btn {
+        display: flex;
+        left: 0;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        height: 80px;
+        cursor: pointer;
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger {
+        width: 50px;
+        height: 6px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(255,101,47,.2);
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger::before, .menu-btn__burger::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 6px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(255,101,47,.2);
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger::before {
+        transform: translateY(-16px);
+    }
+
+    .menu-btn__burger::after {
+        transform: translateY(16px);
+    }
+
+    .menu-btn.open .menu-btn__burger {
+        transform: translateX(-50px);
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .menu-btn.open .menu-btn__burger::before {
+        transform: rotate(45deg) translate(35px,-35px);
+    }
+
+    .menu-btn.open .menu-btn__burger::after {
+        transform: rotate(-45deg) translate(35px,35px);
+    }
+
+    .container.hide {
+        position: relative;
+        animation-name: slideVersDroite;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    .container.show {
+        position: relative;
+        animation-name: slideVersGauche;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    #menu {
+        position: absolute;
+        left: -100vw;
+        list-style:none;
+        height: 72%;
+    }
+
+    #menu a {
+        font-size: 2.2em;
+    }
+
+    a:link {
+        text-decoration: none;
+        color: var(--blanc);
+    }
+
+    a:visited {
+        color: var(--blanc);
+    }
+
+    #formConnexion {
+        position:relative;
+        left:50%;
+        width:300px;
+        margin-left:-150px;
+        padding-top: 25%;
+        color: var(--blanc);
+    }
+
+    .message {
+        position: relative;
+        text-align: center;
+        top: 50%;
+        padding-top: 50%;
+        left:50%;
+        width:300px;
+        margin-left:-150px;
+        color: var(--blanc);
+    }
+
+    li:active {
+        position: relative;
+        animation-name: animSelection;
+        animation-duration: 0.5s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
+
+    .sectionEspace {
+        font-family: 'Roboto';
+        width: auto;
+        color: white;
+    }
+
+    .nomSection {
+        font-size: 1.5em;
+    }
+
+    .longInput {
+        width: 85%;
+        margin-left: 0;
+    }
+
+    .longInputAvecMargin {
+        width: 80%;
+        margin: 10px;
+    }
+
+    .longSelectAvecMargin {
+        width: 80%;
+        margin: 10px;
+    }
+
+    #add {
+        margin-left: 2%;
+    }
+
+    #smallImageUpload {
+        justify-content: center;
+        width: 30%;
+    }
+
+    #addImages {
+        text-align: center;
+    }
+
+
+    #champ {
+        margin-left: 3%;
+    }
+
+    #center {
+        text-align: center;
+    }
+
+    .tableau {
+        width: 95%;
+    }
+
+    .content-table {
+        width: 100%;
+       border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        min-width: 300px;
+        border-radius: 5px 5px 0 0;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    }
+
+    .content-table thead tr {
+        font-family: 'Roboto';
+        background-color: var(--gris);
+        color: white;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .content-table th,
+    .content-table td {
+        padding: 12px 15px;
+    }
+
+    .content-table tbody tr {
+        font-family: 'Quicksand';
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .content-table tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
+    }
+
+    .required {
+        color: var(--rouge);
+    }
+
+    label {
+        color: white;
+        font-family: 'Roboto';
+    }
+
+    #menuEditor {
+        text-align: center;
+    }
+
+    #lessLeft {
+        padding-left: 5px;
+    }
+
+    #lessMargin {
+        margin: 0;
+        margin-top: 5px
+    }
+
+    .textEditor {
+        background-color: var(--blanc);
+        display: inline-block;
+        border: none;
+        border-radius: 3px;
+        box-shadow: none;
+        cursor: pointer;
+        outline: none;
+        font-size: 1em;
+        padding: 20px;
+        margin: 10px;
+    }
+
+    iframe {
+        border-radius: 5px 5px 5px 5px;
+        width: 90%;
+    }
+
+    .titreListe {
+        width: 100%;
+    }
+
+    .desc {
+        color: white;
+    }
+
+    #modifier {
+        margin-top: 30px;
+    }
+
+    #monument-selected {
+        width: 90%;
+    }
+
+    #message {
+        margin-left: 2%;
+    }
+
+    .wrapper {
+        padding-top: 10px;
+        text-align: center;
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-gap: 10px;
+    }
+
+    .cell {
+        margin: 0 auto;
+    }
+
+    .cell > img, .cell > label > img{
+        width:100%; /* you can use % */
+        height: auto;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .infos {
+        width: 96%;
+    }
+
+    #nom {
+        margin-top: 5px;
+    }
+
+    .cross {
+        width: 50px;
+    }
+
+    .image-upload>input {
+        display: none;
+    }
+
+    #content {
+        position: relative;
+    }
+    #content img {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+    #homeBouton {
+        padding-right: 15%;
+        padding-left: 15%;
+    }
+
+
+}
+
+@media only screen and (min-width: 992px) {
+
+    /** page Home */
+    h1, h2, h3, h4, h5, a {
+        color: var(--blanc);
+        font-family: 'Roboto';
+        font-size: 3em;
+    }
+
+    #name{
+        font-size: 3.15em;
+        font-family: "Neon";
+    }
+
+    #home {
+        animation-name: animApparition;
+        animation-duration: 1s;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-out;
+        animation-fill-mode: none;
+        animation-direction: alternate;
+    }
+
+    header {
+        display: flex;
+    }
+
+    .box {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    .box button {
+        background-color: var(--blanc);
+        border: none;
+        border-radius: 3px;
+        box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        outline: none;
+        font-size: 2.5em;
+        padding: 20px;
+        transition: 0.2s;
+    }
+
+    #logo-small {
+        padding-top: 4%;
+        width: 28%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #slogan {
+        font-family: 'Roboto';
+        font-size: 2.6em;
+        text-align: center;
+        color: white;
+    }
+
+    button:hover {
+        box-shadow: 6px 6px 25px 4px rgba(0, 0, 0, 0.18);
+        transform: scale(1.01);
+    }
+
+    button:active {
+        box-shadow: 6px 6px 18px 2px rgba(0, 0, 0, 0.18);
+        transform: scale(0.98);
+    }
+
+    /**Menu*/
+    .menu-btn {
+        display: flex;
+        left: 0;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger {
+        width: 65px;
+        height: 9px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(255,101,47,.2);
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger::before, .menu-btn__burger::after {
+        content: '';
+        position: absolute;
+        width: 65px;
+        height: 9px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(255,101,47,.2);
+        transition: all .5s ease-in-out;
+    }
+
+    .menu-btn__burger::before {
+        transform: translateY(-16px);
+    }
+
+    .menu-btn__burger::after {
+        transform: translateY(16px);
+    }
+
+    .menu-btn.open .menu-btn__burger {
+        transform: translateX(-50px);
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .menu-btn.open .menu-btn__burger::before {
+        transform: rotate(45deg) translate(35px,-35px);
+    }
+
+    .menu-btn.open .menu-btn__burger::after {
+        transform: rotate(-45deg) translate(35px,35px);
+    }
+
+    .container.hide {
+        position: relative;
+        animation-name: slideVersDroite;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    .container.show {
+        position: relative;
+        animation-name: slideVersGauche;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    #menu {
+        position: absolute;
+        left: -100vw;
+        list-style:none;
+        height: 75%;
+    }
+
+    #menu a {
+        font-size: 3em;
+    }
+
+    a:link {
+        text-decoration: none;
+        color: var(--blanc);
+    }
+
+    a:visited {
+        color: var(--blanc);
+    }
+
+    /**Connection*/
+    input, select {
+        background-color: var(--blanc);
+        border: none;
+        border-radius: 3px;
+        box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        outline: none;
+        font-size: 2em;
+        padding: 20px;
+        margin: 10px;
+        transition: 0.2s;
+    }
+
+    .longInput {
+        width: 85%;
+        margin-left: 0;
+    }
+
+    .longInputAvecMargin {
+        width: 80%;
+        margin: 10px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        padding: 10px;
+    }
+
+    #formConnexion {
+        position:relative;
+        left:42%;
+        width:600px;
+        margin-left:-150px;
+        padding-top: 5%;
+        color: var(--blanc);
+        text-align: center;
+    }
+
+    /**Message*/
+    .message {
+        position: relative;
+        text-align: center;
+        padding-top: 10%;
+        left:42%;
+        width:600px;
+        margin-left:-150px;
+        color: var(--blanc);
+        text-align: center;
+    }
+
+    /**Profil*/
+    .section{
+        border: 2px solid black;
+        border-color: var(--blanc);
+        width: 70%;
+        background-color: var(--vert);
+    }
+
+    section{
+        margin: 2%;
+        border-radius: 5px;
+        width: 45%;
+    }
+
+    .content {
+        margin: 5px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        text-align: justify;
+    }
+
+    #formProfil h3 {
+        font-size: 2.5em;
+        margin: 2%;
+    }
+
+    .content > h5 {
+        margin: 10px;
+        font-size: 1.8em;
+    }
+
+    .bt-bottom{
+        text-align: center;
+    }
+
+    .bt-bottom > button{
+        padding: 10px;
+        font-size: 2.5em;
+        margin: 5px;
+    }
+
+    .longInput {
+        width: 85%;
+        margin-left: 3%;
+    }
+
+    .longInputAvecMargin {
+        width: 92%;
+        margin: 10px;
+    }
+
+    .longSelectAvecMargin {
+        width: 92%;
+        margin: 10px;
+    }
+
+    /**Listes*/
+    .boxsmall {
+        display: flex;
+        align-items: center;
+    }
+
+    .boxsmall button {
+        background-color: var(--blanc);
+        border: none;
+        border-radius: 3px;
+        box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        outline: none;
+        font-size: 1.5em;
+        padding: 5px;
+        transition: 0.2s;
+        margin: 10px;
+    }
+
+    p {
+        color: white;
+        font-size: 1.5em;
+        margin-left: 2%;
+    }
+
+    .sectionEspace {
+        font-family: 'Roboto';
+        width: auto;
+        color: white;
+    }
+
+    #add {
+        margin-left: 2%;
+    }
+
+    #smallImageUpload {
+        justify-content: center;
+        width: 20%;
+    }
+
+    #addImages {
+        text-align: center;
+    }
+
+    #champ {
+        margin-left: 3%;
+    }
+
+    #center {
+        text-align: center;
+    }
+
+    .tableau {
+        width: 95%;
+    }
+
+    .content-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        min-width: 300px;
+        border-radius: 5px 5px 0 0;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    }
+
+    .content-table thead tr {
+        font-family: 'Roboto';
+        background-color: var(--gris);
+        color: white;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .content-table th,
+    .content-table td {
+        padding: 12px 15px;
+    }
+
+    .content-table tbody tr {
+        font-family: 'Quicksand';
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .content-table tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
+    }
+
+    .required {
+        color: var(--rouge);
+    }
+
+    label {
+        color: white;
+        font-family: 'Roboto';
+    }
+
+    #menuEditor {
+        text-align: center;
+    }
+
+    #lessLeft {
+        padding-left: 5px;
+    }
+
+    #lessMargin {
+        margin: 0;
+        margin-top: 5px
+    }
+
+    .textEditor {
+        background-color: var(--blanc);
+        display: inline-block;
+        border: none;
+        border-radius: 3px;
+        box-shadow: none;
+        cursor: pointer;
+        outline: none;
+        font-size: 1em;
+        padding: 20px;
+        margin: 10px;
+    }
+
+    iframe {
+        border-radius: 5px 5px 5px 5px;
+        width: 90%;
+    }
+
+    .titreListe {
+        width: 100%;
+    }
+
+    .desc {
+        color: white;
+    }
+
+    #modifier {
+        margin-top: 30px;
+    }
+
+    #monument-selected {
+        width: 90%;
+    }
+
+    #message {
+        margin-left: 2%;
+    }
+
+    .wrapper {
+        padding-top: 10px;
+        text-align: center;
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-gap: 10px;
+    }
+
+    .cell {
+        margin: 0 auto;
+    }
+
+    .cell > img, .cell > label > img{
+        width:100%; /* you can use % */
+        height: auto;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .infos {
+        width: 96%;
+    }
+
+    #nom {
+        margin-top: 5px;
+    }
+
+    .cross {
+        width: 50px;
+    }
+
+    .image-upload>input {
+        display: none;
+    }
+
+    #content {
+        position: relative;
+    }
+    #content img {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+
+}
