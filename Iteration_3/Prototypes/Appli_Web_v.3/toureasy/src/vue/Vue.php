@@ -564,7 +564,7 @@ END;
     </div>
         <section class="infos">
             <h3 id="nom">{$monument->nomMonum}</h3>
-            <i class="desc">{$monument->descLongue}</i>
+            <p class="desc">{$monument->descLongue}</p>
 END;
         if (sizeof($images) > 0) {
             $html .= "<div class='wrapper' id='galerie'>";
@@ -599,9 +599,9 @@ END;
 <div class="container">
 <div>
         <ul id="menu">
-            <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
-            <li><a href='{$vars['about-us']}'">A propos</a></li>
-        </ul> 
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
     </div>
 <form method="post" enctype="multipart/form-data" id="add">
     <input type="hidden" id="delete" name="delete"/>
@@ -675,7 +675,12 @@ END;
                     <input type="radio" id="public" name="visibilite" value="public">
                     <label for="dewey">Publique</label>
                 </div></br>
-                <input class="longInput" type="file" multiple="multiple" name="fichier[]"/><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
+                <div class="image-upload cell" id="addImages">
+  <label for="file-input">
+    <img id="smallImageUpload" src="{$vars['basepath']}/web/img/addImage.png"/>
+  </label>
+  <input id="file-input" type="file" multiple="multiple" name="fichier[]"/>
+</div><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
                 
                 <div>
                     <h3>Description</h3>
@@ -704,7 +709,7 @@ END;
 
     public function ajoutListeHtml($vars): string
     {
-        return <<<END
+        $html = <<<END
         <header>
             <div class="menu-btn">
                 <div class="menu-btn__burger"></div>
@@ -714,9 +719,9 @@ END;
         <div class="container">
             <div>
                 <ul id="menu">
-                    <li><a href='{$vars['contact']}'">Nous Contacter</a></li>
-                    <li><a href='{$vars['about-us']}'">A propos</a></li>
-                </ul> 
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
             </div>
             <form method="post" enctype="multipart/form-data">
                 <h3 id="champ">Nom<span class="required">*</span></h3><input type="text" name="nom" class="longInput" required/>
@@ -725,6 +730,7 @@ END;
             </form>
         </div>
 END;
+        return $html;
     }
 
     public function pageDemandeAmi($vars): string

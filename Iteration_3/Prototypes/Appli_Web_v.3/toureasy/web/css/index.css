@@ -402,6 +402,16 @@ body {
         margin-left: 2%;
     }
 
+    #smallImageUpload {
+        justify-content: center;
+        width: 30%;
+    }
+
+    #addImages {
+        text-align: center;
+    }
+
+
     #champ {
         margin-left: 3%;
     }
@@ -862,6 +872,15 @@ body {
 
     #add {
         margin-left: 2%;
+    }
+
+    #smallImageUpload {
+        justify-content: center;
+        width: 20%;
+    }
+
+    #addImages {
+        text-align: center;
     }
 
     #champ {
