@@ -182,12 +182,12 @@ ALTER TABLE source
 
 
 	
-ALTER TABLE appartenanceListe
+ALTER TABLE appartenanceliste
     ADD CONSTRAINT fk_appartenanceListe_monument
     FOREIGN KEY (idMonument)
     REFERENCES monument(idMonument);	
 	
-ALTER TABLE appartenanceListe
+ALTER TABLE appartenanceliste
     ADD CONSTRAINT fk_appartenanceListe_listeMonument
     FOREIGN KEY (idListe)
     REFERENCES listeMonument(idListe);	
@@ -257,15 +257,15 @@ ALTER TABLE `membre`
 	ADD INDEX  membre_index_email_password(`email`,`password`),
 	ADD INDEX  membre_index_username_password(`username`,`password`);
 
-ALTER TABLE MONUMENT
+ALTER TABLE monument
 	ADD INDEX monument_index_coordonnées(estTemporaire, latitude, longitude),
 	ADD INDEX monument_index_nom(estTemporaire, nomMonum);
 
-ALTER TABLE Contribution
+ALTER TABLE contribution
 	ADD INDEX contribution_unique_statut_date(statutContribution, date),
 	ADD INDEX contribution_unique_contributeur(contributeur, date);
 	
-ALTER TABLE ListeMonument
+ALTER TABLE listemonument
 	ADD INDEX listeMonument_unique_nom(nom),
 	ADD INDEX listeMonument_unique_createur(idcreateur);
 	
