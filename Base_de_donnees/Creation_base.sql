@@ -1,3 +1,4 @@
+#--mysql -u root -p toureasy < /var/www/site/S3B_S16_BRANCATTI_FRACHE_MOITRIER_ZAPP/Base_de_donnees/Creation_base.sql
 
 #-------------------------------------------------------------------------------
 #---------------------------	                        ------------------------ 
@@ -19,7 +20,7 @@ CREATE TABLE `listemonument` (
  `idListe` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
  `description` VARCHAR(200) NOT NULL DEFAULT 'Description absente' ,
  `visibilite` SET('toutLeMonde','moiUniquement','UtilisateurAvecLien') NOT NULL DEFAULT 'moiUniquement' ,
- `dateCreation` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `dateCreation` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `idcreateur` INT UNSIGNED NOT NULL ,
  `token` VARCHAR(20) DEFAULT NULL,
  PRIMARY KEY (`idListe`)
@@ -28,7 +29,7 @@ CREATE TABLE `listemonument` (
 CREATE TABLE `demandeAmi` (
  `idDemandeAmi` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
  `idDemandeur`  INT UNSIGNED NOT NULL ,
- `dateExpiration` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `dateExpiration` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `token` VARCHAR(20) DEFAULT NULL,
  `disponible` BOOLEAN NOT NULL DEFAULT TRUE ,
  PRIMARY KEY (`idDemandeAmi`)
@@ -42,7 +43,7 @@ CREATE TABLE `membre` (
  `email` VARCHAR(256) NULL DEFAULT NULL ,
  `dateNaissance` DATE NULL DEFAULT NULL ,
  `username` VARCHAR(30) NULL DEFAULT NULL ,
- `dateInscription` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `dateInscription` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `role` TINYINT UNSIGNED NOT NULL DEFAULT '1' ,
  `password` varchar(100) DEFAULT NULL,
  `token` varchar(20) DEFAULT NULL,
@@ -105,7 +106,7 @@ CREATE TABLE `contribution` (
  `contributeur` INT UNSIGNED NOT NULL ,
  `moderateurDemande` INT UNSIGNED NULL DEFAULT NULL ,
  `estNouveauMonument` BOOLEAN NOT NULL ,
- `date` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  `statutContribution` ENUM('enAttenteDeTraitement','acceptée','refusée') NOT NULL ,
  `description` VARCHAR(400) NULL DEFAULT NULL COMMENT 'sert au contributeur à synthétiser et expliquer les modifications qu il a apportées.\r\nNULL dans le cas d un nouveau monument.' ,
  PRIMARY KEY (`idContribution`)
