@@ -223,7 +223,7 @@ ALTER TABLE contribution
 
 
 
-ALTER TABLE listeMonument
+ALTER TABLE listemonument
     ADD CONSTRAINT fk_listeMonument_idMembre
 	FOREIGN KEY (idCreateur)
     REFERENCES membre(idMembre);
@@ -266,8 +266,8 @@ ALTER TABLE contribution
 	ADD INDEX contribution_unique_contributeur(contributeur, date);
 	
 ALTER TABLE listemonument
-	ADD INDEX listeMonument_unique_nom(nom),
-	ADD INDEX listeMonument_unique_createur(idcreateur);
+	ADD INDEX listemonument_unique_nom(nom),
+	ADD INDEX listemonument_unique_createur(idcreateur);
 	
 
 
