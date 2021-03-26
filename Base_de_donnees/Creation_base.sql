@@ -190,7 +190,7 @@ ALTER TABLE appartenanceliste
 ALTER TABLE appartenanceliste
     ADD CONSTRAINT fk_appartenanceListe_listeMonument
     FOREIGN KEY (idListe)
-    REFERENCES listeMonument(idListe);	
+    REFERENCES listemonument(idListe);	
 
 
 	
