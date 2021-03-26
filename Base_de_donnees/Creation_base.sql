@@ -259,10 +259,10 @@ ALTER TABLE `membre`
 
 ALTER TABLE monument
 	ADD INDEX monument_index_coordonnées(estTemporaire, latitude, longitude),
-	ADD INDEX monument_index_nom(estTemporaire, nomMonum);
+	ADD INDEX monument_index_nom(esttemporaire, nommonum);
 
 ALTER TABLE contribution
-	ADD INDEX contribution_unique_statut_date(statutContribution, date),
+	ADD INDEX contribution_unique_statut_date(statutcontribution, date),
 	ADD INDEX contribution_unique_contributeur(contributeur, date);
 	
 ALTER TABLE listemonument
