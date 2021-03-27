@@ -258,7 +258,7 @@ ALTER TABLE `membre`
 	ADD INDEX  membre_index_username_password(`username`,`password`);
 
 ALTER TABLE monument
-	ADD INDEX monument_index_coordonnées(estTemporaire, latitude, longitude),
+	ADD INDEX monument_index_coordonnees(estTemporaire, latitude, longitude),
 	ADD INDEX monument_index_nom(esttemporaire, nommonum);
 
 ALTER TABLE contribution
@@ -293,7 +293,7 @@ BEGIN
 	END IF;
 	IF NEW.amis1 = NEW.amis2
 	THEN
-		signal sqlstate '45000' set message_text = 'On ne peut être amis avec soit-même (ce serait triste)';
+		signal sqlstate '45000' set message_text = 'On ne peut etre amis avec soit-meme (ce serait triste)';
 	END IF;
 	
 END |
@@ -311,9 +311,9 @@ BEGIN
 	DECLARE V_PERM_Moderer tinyint(1) ;
 	
 
-	IF ( NEW.statutContribution = 'acceptée' ) THEN
+	IF ( NEW.statutContribution = 'acceptee' ) THEN
 		IF NEW.moderateurDemande IS NULL THEN
-			signal sqlstate '45000' set message_text = 'La contribution ne peut-être acceptée avec le champ moderateurDemande  à null';
+			signal sqlstate '45000' set message_text = 'La contribution ne peut-etre acceptee avec le champ moderateurDemande null';
 
 		ELSE 
 		
@@ -329,7 +329,7 @@ BEGIN
 			
 			IF (  V_PERM_Moderer = FALSE )
 			THEN
-				signal sqlstate '45000' set message_text = 'L attribut moderateurDemande correspond à un membre qui n a pas la permission de moderer les contributions';
+				signal sqlstate '45000' set message_text = 'L attribut moderateurDemande correspond a un membre qui n a pas la permission de moderer les contributions';
 			END IF;
 			 
 		END IF;
@@ -347,7 +347,7 @@ BEGIN
 	
 	IF NEW.numeroImage != 0
 	THEN
-		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de lui donner la valeur 0 à l insertion';
+		signal sqlstate '45000' set message_text = 'Le numero est determine automatiquement, merci de lui donner la valeur 0 a l insertion';
 	END IF;
 
 
@@ -370,7 +370,7 @@ DELIMITER ;
 DELIMITER |
 CREATE OR REPLACE PROCEDURE p_Image_decalageNumero(IN old_idMonument INT, IN old_numeroImage TINYINT )
 BEGIN
-	-- éxecuter la ligne suivante 
+	-- executer la ligne suivante 
 	-- CALL p_Image_decalageNumero(deleted_monumentID, deleted_numeroImage);
     UPDATE Image
 	SET numeroImage = numeroImage -1
@@ -388,7 +388,7 @@ BEGIN
 	
 	IF NEW.numeroSource != 0
 	THEN
-		signal sqlstate '45000' set message_text = 'Le numero est determiné automatiquement, merci de lui donner la valeur 0 à l insertion';
+		signal sqlstate '45000' set message_text = 'Le numero est determine automatiquement, merci de lui donner la valeur 0 a l insertion';
 	END IF;
 	
 	SELECT max(numeroSource)+1 INTO maxNumero 
