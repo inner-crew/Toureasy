@@ -486,7 +486,8 @@ body {
 
     #lessMargin {
         margin: 0;
-        margin-top: 5px
+        margin-top: 5px;
+        max-width: 80%;
     }
 
     .textEditor {
@@ -880,10 +881,6 @@ body {
         color: white;
     }
 
-    #add {
-        margin-left: 2%;
-    }
-
     #smallImageUpload {
         justify-content: center;
         width: 20%;
@@ -947,7 +944,7 @@ body {
         font-family: 'Roboto';
     }
 
-    #menuEditor {
+    #menuEditor>p {
         text-align: center;
     }
 
@@ -957,7 +954,9 @@ body {
 
     #lessMargin {
         margin: 0;
-        margin-top: 5px
+        margin-top: 5px;
+        max-width: 86%;
+        font-size: 1em;
     }
 
     .textEditor {
@@ -975,15 +974,23 @@ body {
 
     iframe {
         border-radius: 5px 5px 5px 5px;
-        width: 90%;
+        width: 80%;
+        margin: 2px 6% 2px 6%;
     }
 
     .titreListe {
         width: 100%;
     }
 
+    .nomSection {
+        font-size: 4em;
+        margin-left: 10%;
+    }
+
     .desc {
         color: white;
+        font-size: 2em;
+        margin-left: 10%;
     }
 
     #modifier {
@@ -995,7 +1002,7 @@ body {
     }
 
     #message {
-        margin-left: 2%;
+        margin-left: 10%;
     }
 
     .wrapper {
@@ -1023,6 +1030,7 @@ body {
 
     #nom {
         margin-top: 5px;
+        margin-left: 14%;
     }
 
     .cross {
@@ -1040,6 +1048,45 @@ body {
         position: absolute;
         top: 0px;
         right: 0px;
+    }
+
+    #back {
+        bottom: 0;
+        margin-top: 20px;
+        margin-bottom: 5%;
+    }
+
+    #back img {
+        width: 10%;
+    }
+
+    .cell {
+        margin: 0 auto;
+    }
+
+    .cell > img, .cell > label > img{
+        width:80%; /* you can use % */
+        height: auto;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .infos {
+        width: 96%;
+    }
+
+    #modifNom{
+        margin-left: 10%;
+    }
+
+    #add>h3{
+        margin-left: 10%;
+    }
+
+    #monument-selected {
+        width: 80%;
+        margin-left: 10%;
+        margin-bottom: 40px;
     }
 
 
