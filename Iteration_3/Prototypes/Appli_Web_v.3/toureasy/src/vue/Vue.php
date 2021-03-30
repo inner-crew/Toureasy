@@ -703,12 +703,15 @@ END;
                     
                     
                 </div></br>
+                <div id='galerie'>
                 <div class="image-upload cell" id="addImages">
   <label for="file-input">
     <img id="smallImageUpload" src="{$vars['basepath']}/web/img/addImage.png"/>
   </label>
   <input id="file-input" type="file" multiple="multiple" name="fichier[]"/>
-</div><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
+</div><input type="hidden" name="lat"/><input type="hidden" name="long"/>
+                </div>
+                 <br>
                 
                 <div>
                     <h3 id="descTitre">Description</h3>
@@ -726,6 +729,7 @@ END;
 </div>
 
 <script src="{$vars['basepath']}/web/js/textEditor.js"></script>
+<script src="{$vars['basepath']}/web/js/ajouterMonument.js"></script>
 END;
         return $html;
     }
