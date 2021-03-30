@@ -572,7 +572,7 @@ END;
     </div>
         <section class="infos">
             <h3 id="nom">{$monument->nomMonum}</h3>
-            <p class="desc">{$monument->descLongue}</p>
+            <p class="desc" id="descMonu">{$monument->descLongue}</p>
 END;
         if (sizeof($images) > 0) {
             $html .= "<div class='wrapper' id='galerie'>";
@@ -714,7 +714,7 @@ END;
 </div><input type="hidden" name="lat"/><input type="hidden" name="long"/> <br>
                 
                 <div>
-                    <h3>Description</h3>
+                    <h3 id="descTitre">Description</h3>
                     <div id="menuEditor">
                         <p>
                         <input class="textEditor" type="button" name="text" value="B" onclick="formatText('B')" checked>
