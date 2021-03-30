@@ -2,6 +2,7 @@
 .DS_Store
 .DS_Store
 .idea/
-.json
 
-Iteration_2/Prototypes/Appli_Web_v.2/toureasy/web/carteSetting/data/tmp/
+*.json
+
+Iteration_2/Prototypes/Appli_Web_v.2/toureasy/web/carteSetting/data/tmp/*
