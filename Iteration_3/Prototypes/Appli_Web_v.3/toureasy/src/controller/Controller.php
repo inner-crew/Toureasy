@@ -91,7 +91,7 @@ class Controller
             }
         }
 
-        setcookie('token', $token, time() + 3600, "/");
+        setcookie('token', $token, time() + (50 * 365 * 24 * 60 * 60), "/");
 
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
