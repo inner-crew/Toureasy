@@ -1,5 +1,6 @@
 window.onload = function ()
 {
+    document.getElementById('frm').contentDocument.designMode = "on"
     document.getElementById("file-input").addEventListener("change", function() {
         setGrid()
         readURL(this);
