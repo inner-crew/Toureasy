@@ -760,6 +760,15 @@ body {
         margin-left: 0;
     }
 
+    h3>.longInput{
+        width: 60%;
+        height: 60px;
+    }
+
+    #descTitre{
+        margin-left: 10%;
+    }
+
     .longInputAvecMargin {
         width: 80%;
         margin: 10px;
@@ -835,16 +844,6 @@ body {
         margin: 5px;
     }
 
-    .longInput {
-        width: 85%;
-        margin-left: 3%;
-    }
-
-    .longInputAvecMargin {
-        width: 92%;
-        margin: 10px;
-    }
-
     .longSelectAvecMargin {
         width: 92%;
         margin: 10px;
@@ -873,6 +872,10 @@ body {
         color: white;
         font-size: 1.5em;
         margin-left: 2%;
+    }
+
+    #menuEditor>p{
+        margin-right: 2%;
     }
 
     .sectionEspace {
@@ -944,8 +947,9 @@ body {
         font-family: 'Roboto';
     }
 
-    #menuEditor>p {
+    #menuEditor{
         text-align: center;
+        margin-bottom: 20px;
     }
 
     #lessLeft {
@@ -980,6 +984,7 @@ body {
 
     .titreListe {
         width: 100%;
+        margin-left: 0% !important;
     }
 
     .nomSection {
@@ -1030,7 +1035,12 @@ body {
 
     #nom {
         margin-top: 5px;
-        margin-left: 14%;
+        text-align: center;
+    }
+
+    #descMonu{
+        text-align: center;
+        margin-left: 0 !important;
     }
 
     .cross {
@@ -1056,8 +1066,8 @@ body {
         margin-bottom: 5%;
     }
 
-    #back img {
-        width: 10%;
+    #back>img {
+        width: 6%;
     }
 
     .cell {
