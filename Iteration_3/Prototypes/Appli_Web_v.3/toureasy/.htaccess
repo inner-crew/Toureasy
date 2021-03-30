@@ -1,5 +1,9 @@
 RewriteEngine On
 
+RewriteBase /toureasy/
+#RewriteBase /site/S3B_S16_BRANCATTI_FRACHE_MOITRIER_ZAPP/Iteration_3/Prototypes/Appli_Web_v.3/toureasy
+
+
 # Pour interdire l'accès aux répertoires contenant du code
 RewriteRule ^sql(/.*|)$ - [NC,F]
 RewriteRule ^src(/.*|)$ - [NC,F]
