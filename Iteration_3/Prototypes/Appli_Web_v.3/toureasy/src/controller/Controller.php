@@ -91,7 +91,7 @@ class Controller
             }
         }
 
-        setcookie('token', $token, time() + 3600, "/");
+        setcookie('token', $token, time()+60*60*24*500, "/");
 
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
@@ -366,7 +366,7 @@ class Controller
                         if ($monument != null) {
                             $monument->delete();
                         }
-                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "ajoutMonument");
+                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "ajoutMonument", $args);
                     }
                 } else {
                     if ($contribution != null) {
