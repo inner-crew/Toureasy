@@ -645,9 +645,6 @@ END;
                 <br>
                 <h3>Description</h3>
                 <div id="menuEditor" >
-                    <p><input class="textEditor" type="button" name="text" value="B" onclick="formatText('B')" checked>
-                    <input class="textEditor" type="button" name="text" value="I" onclick="formatText('I')" checked>
-                    <input class="textEditor" type="button" name="text" value="U" onclick="formatText('U')" checked>
                     <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
                     <iframe style="background: #FFFFFF" name="frm" id="frm"></iframe>
                     <input type="hidden" name="descr" value="{$monument->descLongue}"/>
@@ -716,11 +713,6 @@ END;
                 <div>
                     <h3>Description</h3>
                     <div id="menuEditor">
-                        <p>
-                        <input class="textEditor" type="button" name="text" value="B" onclick="formatText('B')" checked>
-                        <input class="textEditor" type="button" name="text" value="I" onclick="formatText('I')" checked>
-                        <input class="textEditor" type="button" name="text" value="U" onclick="formatText('U')" checked>
-                        </p>
                         <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
                         <iframe style="background: #FFFFFF" name="frm" id="frm"></iframe>
                     </div>

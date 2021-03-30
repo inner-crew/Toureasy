@@ -282,7 +282,7 @@ class Controller
     {
         $data = $rq->getParsedBody();
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
-        $description = $data['desc'];
+        $description = filter_var($data['desc'], FILTER_SANITIZE_STRING);
         $contribution = null;
         $auteurPrive = null;
 
