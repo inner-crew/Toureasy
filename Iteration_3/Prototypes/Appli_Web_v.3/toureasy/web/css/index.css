@@ -770,7 +770,7 @@ body {
     }
 
     .longInputAvecMargin {
-        width: 80%;
+        width: 90%;
         margin: 10px;
     }
 
@@ -1096,6 +1096,10 @@ body {
         width: 80%;
         margin-left: 10%;
         margin-bottom: 40px;
+    }
+
+    #select {
+        width: 80%;
     }
 
 
