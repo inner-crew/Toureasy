@@ -14,7 +14,7 @@
 }
 
 body {
-    overflow: hidden;
+
     margin: 0;
     padding: 0;
 }
@@ -34,11 +34,11 @@ body * {
     width: 100%;
     height: 100%;
 }
-#btn {
+#comparison-container {
+    display: inline-block;
     position: absolute;
-    font-family: 'Open Sans', sans-serif;
-    bottom: 85px;
-    left: 20px;
+    height: 100%;
+    width: 100%;
 }
 #monumentAfficher {
     position: absolute;
