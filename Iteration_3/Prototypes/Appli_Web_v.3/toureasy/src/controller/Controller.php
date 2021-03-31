@@ -344,7 +344,7 @@ class Controller
                 // stockage temporaire du fichier
                 $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
                 // ajout destination du fichier
-                $file_dest = "web/img/" . $file_name;
+                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $file_extension;
                 // conditions de format du fichier
                 $extension_autorise = array('.jpg', '.png', '.JPG', '.PNG');
 
@@ -615,7 +615,7 @@ class Controller
                 // stockage temporaire du fichier
                 $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
                 // ajout destination du fichier
-                $file_dest = "web/img/" . $file_name;
+                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $file_extension;
                 // conditions de format du fichier
                 $extension_autorise = array('.jpg', '.png', '.JPG', '.PNG');
 
