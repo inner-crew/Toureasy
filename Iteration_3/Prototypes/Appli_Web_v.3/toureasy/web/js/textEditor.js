@@ -1,10 +1,9 @@
-window.onload = function ()
-{
+window.addEventListener("load", function () {
     if ((document.getElementsByName("lat").length > 0)) {
         getPos()
     }
     loadFrame()
-};
+})
 
 function submitForm() {
     form = document.getElementById("add")
