@@ -24,9 +24,9 @@ var init = function () {
     ];
     troisD = false;
     document.getElementById('comparison-container').innerHTML = `<div id="before" class="map"></div>
-    <pre id="geoPos"></pre>
+    
     <div id="after" class="map"></div>`;
-
+//<pre id="geoPos"></pre>
     loadingPhase.increment();
 
     beforeMap = new mapboxgl.Map({
@@ -90,7 +90,7 @@ var init = function () {
         beforeMap.addLayer(someFunction.belleMerSetting, 'land-structure-polygon');
         loadingPhase.increment();
     });
-    
+
 
     beforeMap.addControl(someFunction.geolocOption, 'top-left'); //Fonction pour ce geolocaliser sur la carte
     beforeMap.addControl(new mapboxgl.NavigationControl(), 'top-left'); //Control bouton haut gauche

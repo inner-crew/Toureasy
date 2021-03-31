@@ -734,6 +734,11 @@ body {
         animation-timing-function: ease-in-out;
     }
 
+    #containerMap {
+        height: 100vh;
+        padding: 0px;
+    }
+
     #menu {
         position: absolute;
         left: -100vw;
