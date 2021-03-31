@@ -21,5 +21,11 @@ class DemandeAmi extends Model
         return Membre::getMembreById($idDem['idDemandeur']);
     }
 
+    public static function getDemandeurByTokenDemande($token) : Membre
+    {
+        $idDem = DemandeAmi::select('idDemandeur')->where('token',"=",$token)->firstOrFail();
+        return Membre::getMembreById($idDem['idDemandeur']);
+    }
+
 
 }

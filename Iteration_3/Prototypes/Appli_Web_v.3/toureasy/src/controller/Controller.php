@@ -715,20 +715,96 @@ class Controller
     {
         $v = new Vue(null);
 
-        $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath(),
-        ];
 
-        //TODO : implement method
 
-        $rs->getBody()->write($v->render($htmlvars, Vue::DEMANDE_AMI));
-        return $rs;
+        if(! $this->verifierUtilisateurConnecte()){
+            return $this->genererRedirectionPageConnexion($rs, $rq);
+        }
+
+        try {
+            $demandeur = DemandeAmi::getDemandeurByTokenDemande($args['token']);
+            $demande = DemandeAmi::getDemandeByToken($args['token']);
+        } catch (ModelNotFoundException $e){
+            return $this->genererMessageAvecRedirection($rs, $rq, "La demande d'ami à laquelle vous essayez
+            d'accèder n'est pas valide",'home', $args);
+        }
+
+        $membre = Membre::getMembreByToken($_COOKIE['token']);
+
+        if($_COOKIE['token'] == $demandeur->token){
+            return $this->genererMessageAvecRedirection($rs, $rq, "Vous êtes à l'origine de
+            cette demande d'ami, tentez plutôt de l'envoyer à quelqu'un d'autre",'home', $args);
+        }
+
+        $amisDuDemandeur = Amis::getAllAmisByIdMembre($demandeur->idMembre);
+        try {
+            Amis::query()->where([["amis1", "=", $demandeur->idMembre],["amis2", "=", $membre->idMembre]])->firstOrFail();
+        } catch (ModelNotFoundException $e){
+            try {
+                Amis::query()->where([["amis2", "=", $demandeur->idMembre],["amis1", "=", $membre->idMembre]])->firstOrFail();
+            } catch (ModelNotFoundException $e){
+
+                if(!$demande->disponible) {
+                    return $this->genererMessageAvecRedirection($rs, $rq, "Cette demande n'est plus disponible,
+            elle a probablement déjà été utilisée par quelqu'un d'autre",'home', $args);
+                }
+
+                if(isset($demandeur['username'])){
+                    $username = $demandeur['username'];
+                } else {
+                    $username = "Un membre anonyme";
+                }
+
+                $htmlvars = [
+                    'username' => $username,
+                    'basepath' => $rq->getUri()->getBasePath(),
+                    'menu' => $this->getMenu($args)
+                ];
+
+                $rs->getBody()->write($v->render($htmlvars, Vue::DEMANDE_AMI));
+                return $rs;
+
+
+            }
+        }
+
+
+        return $this->genererMessageAvecRedirection($rs, $rq, "Vous êtres déjà ami avec machin",'home', $args);
+
+
 
     }
 
     public function postDemandeAmi(Request $rq, Response $rs, array $args): Response
     {
-        //TODO : implement method
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'message' => "Succès",
+            'url' => $this->c->router->pathFor('profil'),
+            'menu' => $this->getMenu($args)
+        ];
+
+        $data = $rq->getParsedBody();
+        if($data["rep"] == "Accepter"){
+            $demandeur = DemandeAmi::getDemandeurByTokenDemande($args['token']);
+            $receveur = Membre::getMembreByToken($_COOKIE['token']);
+
+            $amis = new Amis();
+            $amis->amis1 = $demandeur->idMembre;
+            $amis->amis2 = $receveur->idMembre;
+            $amis->save();
+
+            $demandeAmi = DemandeAmi::getDemandeByToken($args['token']);
+            $demandeAmi->disponible = 0;
+            $demandeAmi->save();
+
+            return $this->genererMessageAvecRedirection($rs, $rq, "Le membre a bien été ajouté à vos amis",'home', $args);
+        } else {
+           // return $this->genererMessageAvecRedirection($rs, $rq, "La demande a été refusée",'home', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, "La demande a bien été refusée",'home', $args);
+
+
+        }
     }
 
 

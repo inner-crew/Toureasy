@@ -663,11 +663,37 @@ class Controller
     {
         $v = new Vue(null);
 
+
+
+        if(! $this->verifierUtilisateurConnecte()){
+          return $this->genererRedirectionPageConnexion($rs, $rq);
+        }
+
+        try {
+            $demandeur = DemandeAmi::getDemandeurByTokenDemande($args['token']);
+        } catch (ModelNotFoundException $e){
+            return $this->genererMessageAvecRedirection($rs, $rq, "La demande d'ami à laquelle vous essayez
+            d'accèder n'est pas valide",'home');
+        }
+
+        $membre = Membre::getMembreByToken($_COOKIE['token']);
+
+        if($_COOKIE['token'] == $args['token']){
+            return $this->genererMessageAvecRedirection($rs, $rq, "Vous êtes à l'origine de
+            cette demande d'ami, tentez plutôt de l'envoyer à quelqu'un d'autre",'home');
+        }
+
+        if(isset($demandeur['username'])){
+            $username = $demandeur['username'];
+        }
+        else {
+            $username = "Un membre anonyme";
+        }
+
         $htmlvars = [
+            'username' => $username,
             'basepath' => $rq->getUri()->getBasePath(),
         ];
-
-        //TODO : implement method
 
         $rs->getBody()->write($v->render($htmlvars, Vue::DEMANDE_AMI));
         return $rs;
@@ -677,6 +703,7 @@ class Controller
     public function postDemandeAmi(Request $rq, Response $rs, array $args): Response
     {
         //TODO : implement method
+        return $this->genererMessageAvecRedirection($rs, $rq, "Amis ajouté",'home');
     }
 
 
@@ -686,7 +713,11 @@ class Controller
 
         $req1 = Amis::getAllAmisByIdMembre(2);
         $req2 = DemandeAmi::getDemandeurByIdDemande(1);
-
+        try {
+            $req2 = DemandeAmi::getDemandeurByTokenDemande('abc');
+        } catch (ModelNotFoundException $e){
+            $req2 = "erreur";
+        }
 
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),

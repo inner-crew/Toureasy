@@ -762,11 +762,31 @@ END;
 
     public function pageDemandeAmi($vars): string
     {
-        return <<<END
-<h1>Demande D'ami !</h1>
+        $html = <<<END
+        <header>
+            <div class="menu-btn">
+                <div class="menu-btn__burger"></div>
+            </div>
+            <h1 id="name">Toureasy</h1>
+        </header>
+        <div class="container">
+            <div>
+                <ul id="menu">
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
+<h1 id="center">{$vars['username']} vous a envoyé une demande d'ami </h1>
+            </div>
+            <div class="box"> 
+                <form method="post" enctype="multipart/form-data">
+                    <input name="rep" type="submit" value="Accepter">
+                    <input name="rep" type="submit" value="Refuser" >
+               </form>
+            </div>
+        </div>
 END;
 
-        //TODO
+        return $html;
     }
     public function pageTest($vars): string
     {

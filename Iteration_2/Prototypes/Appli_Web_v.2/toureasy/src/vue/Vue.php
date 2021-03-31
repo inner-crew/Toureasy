@@ -548,7 +548,12 @@ END;
     public function pageDemandeAmi($vars): string
     {
         return <<<END
-<h1>Demande D'ami !</h1>
+<h1>{$vars['username']} vous a envoyé une demande d'ami </h1>
+<div> 
+    <input name="b1" type="button" onclick="submitForm()" value="Accepter">
+    <input name="b2" type="button" onclick="submitForm()" value="Refuser">
+</div> COUCOU
+
 END;
 
         //TODO
