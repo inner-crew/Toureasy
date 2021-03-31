@@ -125,18 +125,18 @@ END;
     <link href="{$v['basepath']}/web/carteSetting/css/index.css" rel="stylesheet"/>                                                 <!--Le css principal de la page web-->
     <link rel="stylesheet" href="{$v['basepath']}/web/carteSetting/css/doubleMap_mapbox-gl-compare.css" type="text/css"/>           <!--le css qui gère la transition des 2 maps-->
     <link rel="stylesheet" href="{$v['basepath']}/web/carteSetting/css/barreDeRecherche_mapbox-gl-geocoder.css" type="text/css"/>   <!--css de la recherche de lieu-->
-        <header>
-            <div class="menu-btn">
+        <header id="headerMap">
+            <div id="menu-btn-map" class="menu-btn">
                 <div class="menu-btn__burger"></div>
             </div>
-            <h1 id="name">Toureasy</h1>
+            <h1 id="nameMap">Toureasy</h1>
         </header>
         
         
         
         <div id="containerMap" class="container">
             <div>
-                <ul id="menu">
+                <ul id="menuMap">
 END;
 
         $html .= $this->insererMenu($v);

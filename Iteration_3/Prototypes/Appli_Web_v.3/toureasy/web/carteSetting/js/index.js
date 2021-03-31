@@ -95,9 +95,6 @@ var init = function () {
     beforeMap.addControl(someFunction.geolocOption, 'top-left'); //Fonction pour ce geolocaliser sur la carte
     beforeMap.addControl(new mapboxgl.NavigationControl(), 'top-left'); //Control bouton haut gauche
     beforeMap.addControl(someFunction.rechercheDeLieuOption, 'top-right'); //Active la box de recherche de lieu
-    beforeMap.on('mousemove', function (e) {
-        document.getElementById('geoPos').innerHTML = JSON.stringify(e.lngLat.wrap());
-    }); //actualise la position géographique de la souris
 
     loadingPhase.increment();
 

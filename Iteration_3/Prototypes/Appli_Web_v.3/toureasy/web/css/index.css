@@ -607,6 +607,15 @@ body {
         font-family: "Neon";
     }
 
+    #nameMap {
+        position: relative;
+        top: 0%;
+        font-size: 3.15em;
+        font-family: "Neon";
+        transform: rotateZ(-90deg);
+        margin-top: 130px;
+    }
+
     #home {
         animation-name: animApparition;
         animation-duration: 1s;
@@ -618,6 +627,13 @@ body {
 
     header {
         display: flex;
+    }
+
+    #headerMap {
+        width: 100px;
+        display: block;
+        float: left;
+        height: 100vh;
     }
 
     .box {
@@ -718,6 +734,10 @@ body {
         transform: rotate(-45deg) translate(35px,35px);
     }
 
+    #menu-btn-map {
+        width: 100px;
+    }
+
     .container.hide {
         position: relative;
         animation-name: slideVersDroite;
@@ -744,6 +764,17 @@ body {
         left: -100vw;
         list-style:none;
         height: 75%;
+    }
+
+    #menuMap {
+        position: absolute;
+        left: -100vw;
+        list-style:none;
+        height: 75%;
+    }
+
+    #menuMap a {
+        font-size: 3em;
     }
 
     #menu a {
