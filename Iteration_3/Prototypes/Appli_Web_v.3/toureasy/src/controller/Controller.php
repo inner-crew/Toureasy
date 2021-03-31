@@ -240,7 +240,8 @@ class Controller
     public function displayMap(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
-            'basepath' => $rq->getUri()->getBasePath()
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args)
         ];
         $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
 
