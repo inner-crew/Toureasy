@@ -78,7 +78,7 @@ CREATE TABLE `favoris` (
  PRIMARY KEY (`idMonument`, `idMembre`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `auteurMonumentPrive` (
+CREATE TABLE `auteurmonumentprive` (
  `idMonument` INT UNSIGNED NOT NULL ,
  `idMembre` INT UNSIGNED NOT NULL ,
  PRIMARY KEY (`idMonument`, `idMembre`)
@@ -222,6 +222,16 @@ ALTER TABLE contribution
     REFERENCES membre(idMembre);		
 
 
+ALTER TABLE auteurmonumentprive
+    ADD CONSTRAINT fk_auteurmonumentprive_idmonument
+	FOREIGN KEY (idmonument)
+    REFERENCES monument(idmonument);		
+
+ALTER TABLE auteurmonumentprive
+    ADD CONSTRAINT fk_auteurmonumentprive_idmembre
+	FOREIGN KEY (idmembre)
+    REFERENCES membre(idMembre);		
+
 
 ALTER TABLE listemonument
     ADD CONSTRAINT fk_listeMonument_idMembre
@@ -269,6 +279,14 @@ ALTER TABLE listemonument
 	ADD INDEX listemonument_unique_nom(nom),
 	ADD INDEX listemonument_unique_createur(idcreateur);
 	
+#-----------------------------------------------------------------------------
+#---------------------------	                         ---------------------
+#---------------------------			 DONNEES        ---------------------
+#---------------------------	                         ---------------------
+#----------------------------------------------------------------------------- 
+
+INSERT INTO `role` (`idRole`, `nomRole`, `permModererContrib`, `permProposerContrib`, `permAdministration`) VALUES (NULL, 'utilisateur', '0', '1', '0'), (NULL, 'utilisateurDeConfiance', '1', '1', '0'), (NULL, 'administrateur', '1', '1', '1'); 
+
 
 
 
