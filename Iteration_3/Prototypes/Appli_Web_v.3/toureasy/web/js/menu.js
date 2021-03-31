@@ -19,7 +19,7 @@ menuBtn.addEventListener('click', () => {
         menuOpen = false;
         document.querySelector(".container").classList.remove('hide')
         document.querySelector(".container").classList.add('show')
-        document.body.style.overflow = 'visible'
+        document.body.style.overflowY = 'visible'
         document.body.classList.remove('in')
         document.body.classList.add('out')
     }

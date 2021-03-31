@@ -320,7 +320,6 @@ body {
     }
 
     .container.hide {
-        position: relative;
         animation-name: slideVersDroite;
         animation-duration: 0.5s;
         animation-fill-mode: forwards;
@@ -328,7 +327,6 @@ body {
     }
 
     .container.show {
-        position: relative;
         animation-name: slideVersGauche;
         animation-duration: 0.5s;
         animation-fill-mode: forwards;
@@ -585,10 +583,50 @@ body {
         padding-left: 15%;
     }
 
+    #nameMap {
+        top: 0%;
+        font-size: 2em;
+        font-family: "Neon";
+    }
 
+    #headerMap {
+        width: 100%;
+        display: flex;
+    }
+
+    #menu-btn-map {
+        width: 70px;
+    }
+    #menuMap {
+        position: absolute;
+        left: -100vw;
+        list-style:none;
+        height: 75%;
+    }
+    #containerMap {
+        
+        position: relative;
+        height: 89vh;
+        padding: 0px;
+    }
+    #comparison-container {
+        height: 100vh;
+    }
+
+    #menuMap a {
+        font-size: 2em;
+    }
 }
 
+
 @media only screen and (min-width: 992px) {
+
+    #comparison-container {
+        display: block;
+        height: 100%;
+        width: 93%;
+    }
+
 
     /** page Home */
     h1, h2, h3, h4, h5, a {
@@ -610,7 +648,7 @@ body {
     #nameMap {
         position: relative;
         top: 0%;
-        font-size: 3.15em;
+        font-size: 2.5em;
         font-family: "Neon";
         transform: rotateZ(-90deg);
         margin-top: 130px;
@@ -630,7 +668,7 @@ body {
     }
 
     #headerMap {
-        width: 100px;
+        width: 7%;
         display: block;
         float: left;
         height: 100vh;
@@ -735,11 +773,11 @@ body {
     }
 
     #menu-btn-map {
-        width: 100px;
+        margin: auto;
+        width: 70px;
     }
 
     .container.hide {
-        position: relative;
         animation-name: slideVersDroite;
         animation-duration: 0.5s;
         animation-fill-mode: forwards;
@@ -747,7 +785,6 @@ body {
     }
 
     .container.show {
-        position: relative;
         animation-name: slideVersGauche;
         animation-duration: 0.5s;
         animation-fill-mode: forwards;
@@ -755,6 +792,7 @@ body {
     }
 
     #containerMap {
+        position: relative;
         height: 100vh;
         padding: 0px;
     }

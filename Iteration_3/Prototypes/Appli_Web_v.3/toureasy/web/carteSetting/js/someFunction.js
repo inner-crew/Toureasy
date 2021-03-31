@@ -303,12 +303,13 @@ var onClickMonument = function (unClusteredPoint, map) {
         coordinates[0] += unClusteredPoint.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    new mapboxgl.Popup()
+    /*new mapboxgl.Popup()
         .setLngLat(coordinates)
         .setHTML(
             unClusteredPoint.features[0].properties.title
         )
-        .addTo(map);
+        .addTo(map);*/
+    toggleSideBar(map);
 }
 
 var quoiAfficherSurLaMap = function(e, map) {
@@ -359,7 +360,42 @@ var afficherMonument = function(json, map) {
     map.getSource('monuments').setData(json);
 }
 
+var toggleSideBar = function (map) {
+    let id = "left"
+    var elem = document.getElementById(id);
+    var classes = elem.className.split(' ');
+    var collapsed = classes.indexOf('collapsed') !== -1;
+
+    var padding = {};
+
+    if (collapsed) {
+// Remove the 'collapsed' class from the class list of the element, this sets it back to the expanded state.
+        classes.splice(classes.indexOf('collapsed'), 1);
+
+        padding[id] = 300; // In px, matches the width of the sidebars set in .sidebar CSS class
+        map.easeTo({
+            padding: padding,
+            duration: 1000 // In ms, CSS transition duration property for the sidebar matches this value
+        });
+    } else {
+        padding[id] = 0;
+// Add the 'collapsed' class to the class list of the element
+        classes.push('collapsed');
+
+        map.easeTo({
+            padding: padding,
+            duration: 1000
+        });
+    }
+
+// Update the class list on the element
+    elem.className = classes.join(' ');
+}
+
 var mapCharger = function (streetMap, sateliteMap) {
+    document.getElementById("fleche").onclick = function () {
+        toggleSideBar(streetMap);
+    };
     document.getElementById("3dSwitch").checked = false;
     document.getElementById("3dSwitch").addEventListener("change", function () {
         if (this.checked) {

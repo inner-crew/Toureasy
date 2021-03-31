@@ -6,12 +6,13 @@ var beforeMap;
 var afterMap;
 var loadingPhase = new loadingBar();
 
-function loadingBar(){
+function loadingBar() {
     this.step = 0;
 }
-loadingBar.prototype.increment = function() {
+
+loadingBar.prototype.increment = function () {
     this.step++;
-    if (this.step === 10) {
+    if (this.step === 13) {
         console.log("Les maps sont loads");
         someFunction.mapCharger(beforeMap, afterMap);
     }
@@ -23,7 +24,16 @@ var init = function () {
         [180, 85]
     ];
     troisD = false;
-    document.getElementById('comparison-container').innerHTML = `<div id="before" class="map"></div>
+    document.getElementById('comparison-container').innerHTML = `<div id="before" class="map">
+<div id="left" class="sidebar flex-center left collapsed">
+<div class="sidebar-content rounded-rect flex-center">
+Left Sidebar
+<div id="fleche" class="sidebar-toggle rounded-rect left">
+&larr;
+</div>
+</div>
+</div>
+</div>
     
     <div id="after" class="map"></div>`;
 //<pre id="geoPos"></pre>
@@ -64,7 +74,6 @@ var init = function () {
         });
         loadingPhase.increment();
     });
-
 
 
     beforeMap.on('load', function () {
