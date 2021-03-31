@@ -7,7 +7,7 @@ menuBtn.addEventListener('click', () => {
         menuOpen = true;
         document.querySelector(".container").classList.remove('show')
         document.querySelector(".container").classList.add('hide')
-
+        document.body.style.overflowY = 'hidden'
         if (window.screen.height > 440) {
             document.body.style.overflow = 'hidden'
         }

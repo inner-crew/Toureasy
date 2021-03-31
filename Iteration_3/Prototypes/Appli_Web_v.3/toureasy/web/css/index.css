@@ -604,9 +604,9 @@ body {
         height: 75%;
     }
     #containerMap {
-        
+
         position: relative;
-        height: 89vh;
+        height: 85vh;
         padding: 0px;
     }
     #comparison-container {

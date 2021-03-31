@@ -171,6 +171,7 @@ input:checked + .slider:before {
 }
 
 @media only screen and (max-width: 992px) {
+
     .sidebar {
         top: 10%;
         transition: transform 1s;
