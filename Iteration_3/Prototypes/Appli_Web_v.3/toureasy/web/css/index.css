@@ -172,7 +172,7 @@ body {
         font-family: 'Roboto';
     }
 
-    p {
+    p, i {
         color: white;
     }
 
@@ -536,6 +536,14 @@ body {
         grid-gap: 10px;
     }
 
+    .wrapperRows {
+        padding-top: 75px;
+        text-align: center;
+        display: grid;
+        grid-template-rows: repeat(3, 1fr);
+        grid-gap: 10px;
+    }
+
     .cell {
         margin: 0 auto;
     }
@@ -587,6 +595,11 @@ body {
         color: var(--blanc);
         font-family: 'Roboto';
         font-size: 3em;
+    }
+
+    i {
+        color: white;
+        font-family: 'Quicksand';
     }
 
     #name{
@@ -1016,6 +1029,23 @@ body {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 10px;
+    }
+
+    .wrapperRows {
+        text-align: center;
+        padding-top: 75px;
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        grid-template-rows: repeat(2, 1fr);
+        grid-gap: 10px;
+    }
+
+    .cellRow {
+        margin-left: 2%;
+    }
+
+    .cellRow p {
+        margin-left: 0;
     }
 
     .cell {

@@ -39,6 +39,10 @@ class Vue
 
     const MODIFIER_LISTE = 13;
 
+    const CONTACT = 14;
+
+    const ABOUT = 15;
+
     public function __construct($data)
     {
         $this->data = $data;
@@ -805,6 +809,59 @@ END;
         return $html;
     }
 
+    private function pageContact($vars): string {
+        $html = <<<END
+        <header>
+            <div class="menu-btn">
+                <div class="menu-btn__burger"></div>
+            </div>
+            <h1 id="name">Toureasy</h1>
+        </header>
+        <div class="container">
+            <div>
+                <ul id="menu">
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
+            </div>
+            
+        </div>
+END;
+        return $html;
+    }
+
+    private function pageAbout($vars): string {
+        $html = <<<END
+        <header>
+            <div class="menu-btn">
+                <div class="menu-btn__burger"></div>
+            </div>
+            <h1 id="name">Toureasy</h1>
+        </header>
+        <div class="container">
+            <div>
+                <ul id="menu">
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
+            </div>
+            <h1 id="center">A propos</h1>
+            <i id="center">Toureasy est le projet tuteuré de 4 étudiants.</i>
+            <div class="wrapperRows">
+                <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
+</p></div>
+                <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
+</p></div>
+                <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
+</p></div>
+                <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
+</p></div>
+            </div> 
+        </div>
+END;
+        return $html;
+    }
+
     public function render(array $vars, int $typeAffichage): string
     {
         $content = null;
@@ -850,6 +907,12 @@ END;
                 break;
             case Vue::DEMANDE_AMI:
                 $content = $this->pageDemandeAmi($vars);
+                break;
+            case Vue::CONTACT:
+                $content = $this->pageContact($vars);
+                break;
+            case Vue::ABOUT:
+                $content = $this->pageAbout($vars);
                 break;
         }
 

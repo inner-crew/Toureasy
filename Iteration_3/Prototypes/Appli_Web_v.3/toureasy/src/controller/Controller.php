@@ -703,12 +703,24 @@ class Controller
 
     public function displayContact(Request $rq, Response $rs, array $args): Response
     {
-        //TODO : implement method
+        $v = new Vue(null);
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args)
+        ];
+        $rs->getBody()->write($v->render($htmlvars, Vue::CONTACT));
+        return $rs;
     }
 
     public function displayAboutUs(Request $rq, Response $rs, array $args): Response
     {
-        //TODO : implement method
+        $v = new Vue(null);
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args)
+        ];
+        $rs->getBody()->write($v->render($htmlvars, Vue::ABOUT));
+        return $rs;
     }
 
     public function displayDemandeAmi(Request $rq, Response $rs, array $args): Response
