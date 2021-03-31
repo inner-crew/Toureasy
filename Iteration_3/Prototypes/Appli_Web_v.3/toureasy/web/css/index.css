@@ -749,7 +749,7 @@ body {
         box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
         cursor: pointer;
         outline: none;
-        font-size: 2em;
+        font-size: 1.5em;
         padding: 20px;
         margin: 10px;
         transition: 0.2s;
@@ -1039,7 +1039,6 @@ body {
     }
 
     #descMonu{
-        text-align: center;
         margin-left: 0 !important;
     }
 

@@ -751,8 +751,8 @@ END;
         $html .= <<<END
             </div>
             <form method="post" enctype="multipart/form-data">
-                <h3 id="champ">Nom<span class="required">*</span></h3><input type="text" name="nom" class="longInput" required/>
-                <h3 id="champ">Description<span class="required">*</span></h3><input type="text" class="longInput" name="desc" required/>
+                <h3 id="champ">Nom<span class="required">*</span></h3><input type="text" name="nom" id="champ" class="longInput" required/>
+                <h3 id="champ">Description<span class="required">*</span></h3><input type="text" id="champ" class="longInput" name="desc" required/>
                 <p id="center"><input type="submit" value="OK"></p>
             </form>
         </div>
