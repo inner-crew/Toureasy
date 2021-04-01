@@ -27,7 +27,9 @@ var init = function () {
     document.getElementById('comparison-container').innerHTML = `<div id="before" class="map">
 <div id="left" class="sidebar flex-center left collapsed">
 <div class="sidebar-content rounded-rect flex-center">
-Left Sidebar
+<div id="descMonument">
+default
+</div>
 <div id="fleche" class="sidebar-toggle rounded-rect left">
 &larr;
 </div>

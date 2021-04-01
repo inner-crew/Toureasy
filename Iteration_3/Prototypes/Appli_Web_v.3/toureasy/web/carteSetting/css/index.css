@@ -133,13 +133,31 @@ input:checked + .slider:before {
     left: 50px;
 }
 
+.sidebar-content h1 {
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    color: red;
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.sidebar-content p {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: black;
+}
+
+.sidebar-content img {
+    width: 100%;
+    border-radius: 3px;
+}
+
 .sidebar-content {
+    display: inline-block;
     position: absolute;
     width: 95%;
     height: 95%;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 32px;
-    color: gray;
+    padding: 10px;
 }
 
 .sidebar-toggle {
@@ -171,7 +189,6 @@ input:checked + .slider:before {
 }
 
 @media only screen and (max-width: 992px) {
-
     .sidebar {
         top: 10%;
         transition: transform 1s;

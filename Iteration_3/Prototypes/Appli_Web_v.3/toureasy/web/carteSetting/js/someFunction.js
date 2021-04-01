@@ -309,7 +309,7 @@ var onClickMonument = function (unClusteredPoint, map) {
             unClusteredPoint.features[0].properties.title
         )
         .addTo(map);*/
-    toggleSideBar(map);
+    toggleSideBar(map, unClusteredPoint.features[0].properties);
 }
 
 var quoiAfficherSurLaMap = function(e, map) {
@@ -360,7 +360,16 @@ var afficherMonument = function(json, map) {
     map.getSource('monuments').setData(json);
 }
 
-var toggleSideBar = function (map) {
+var genererMonumentDescr = function (monument) {
+    let html = `
+        <h1>${monument.title}</h1>
+        <p>${monument.description}</p>
+        <img src="../${monument.urlImage}" alt="${monument.nomImage}">
+    `
+    return html;
+}
+
+var toggleSideBar = function (map, leMonument) {
     let id = "left"
     var elem = document.getElementById(id);
     var classes = elem.className.split(' ');
@@ -377,7 +386,10 @@ var toggleSideBar = function (map) {
             padding: padding,
             duration: 1000 // In ms, CSS transition duration property for the sidebar matches this value
         });
+        console.log(genererMonumentDescr(leMonument));
+        document.getElementById("descMonument").innerHTML = genererMonumentDescr(leMonument)
     } else {
+        setInterval(document.getElementById("descMonument").innerHTML = "<p>Monument vide</p>", 1000);
         padding[id] = 0;
 // Add the 'collapsed' class to the class list of the element
         classes.push('collapsed');
