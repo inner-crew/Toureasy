@@ -1,6 +1,7 @@
 <?php
 
 namespace toureasy\vue;
+
 use toureasy\models\Image;
 use toureasy\models\ListeMonument;
 use toureasy\models\Membre;
@@ -102,7 +103,10 @@ END;
             <div id="menu-btn-map" class="menu-btn">
                 <div class="menu-btn__burger"></div>
             </div>
-            <h1 id="nameMap">Toureasy</h1>
+            <div id="divNomSite" style="cursor: pointer;" onclick="window.location='{$v['menu']['home']}';">
+                <h1 id="nameMap">Toureasy</h1>       
+            </div>
+            
         </header>
         
         
@@ -161,7 +165,7 @@ END;
         return $html;
     }
 
-    private function pageProfil(Membre $m, Array $vars): string
+    private function pageProfil(Membre $m, array $vars): string
     {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
@@ -259,7 +263,8 @@ END;
         return $html;
     }
 
-    public function monEspace($arrayListeUtilisateur, $arrayMonumentsPrives, $arrayMonumentsPublics, $vars) {
+    public function monEspace($arrayListeUtilisateur, $arrayMonumentsPrives, $arrayMonumentsPublics, $vars)
+    {
         $basepath = $vars['basepath'];
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
@@ -272,7 +277,7 @@ END;
 
 END;
 
-        if (sizeOf($arrayListeUtilisateur)>0) {
+        if (sizeOf($arrayListeUtilisateur) > 0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -313,7 +318,7 @@ END;
 END;
 
 
-        if (sizeOf($arrayMonumentsPrives)>0) {
+        if (sizeOf($arrayMonumentsPrives) > 0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -349,7 +354,7 @@ END;
 END;
 
 
-        if (sizeOf($arrayMonumentsPublics)>0) {
+        if (sizeOf($arrayMonumentsPublics) > 0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -401,7 +406,7 @@ END;
         return $html;
     }
 
-    public function uneListeHtml(ListeMonument $liste, $monumentsDeCetteListe, $monumentsDeUtilisateur ,$vars): string
+    public function uneListeHtml(ListeMonument $liste, $monumentsDeCetteListe, $monumentsDeUtilisateur, $vars): string
     {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
@@ -412,7 +417,7 @@ END;
         <div class="box"><button id="modifier" onclick="window.location.href='{$vars['modifierListe']}'">Modifier</button></div>
         </section></br>
 END;
-        if (sizeOf($monumentsDeCetteListe)>0) {
+        if (sizeOf($monumentsDeCetteListe) > 0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -462,7 +467,8 @@ END;
 END;
     }
 
-    private function uneLigneMonumentListe(Monument $monument, $url): string {
+    private function uneLigneMonumentListe(Monument $monument, $url): string
+    {
         $html = <<<END
             
                 <tr>
@@ -473,7 +479,8 @@ END;
         return $html;
     }
 
-    private function modifierUneListe(ListeMonument $liste, $vars): string {
+    private function modifierUneListe(ListeMonument $liste, $vars): string
+    {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
                 <section class="titreListe">
@@ -488,7 +495,8 @@ END;
         return $html;
     }
 
-    public function unMonumentHtml(Monument $monument, array $images, $vars): string {
+    public function unMonumentHtml(Monument $monument, array $images, $vars): string
+    {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
         <section class="infos">
@@ -530,9 +538,9 @@ END;
             <input type="hidden" id="delete" name="delete"/>
             <h3 id="modifNom">Nom du monument : <input name="nom" id='lessMargin' value="{$monument->nomMonum}" required></h3>
         END;
-                    $html .= "<div class='wrapper' id='galerie'>";
-                    foreach ($arrayImg as $img) {
-                        $html .= <<<END
+        $html .= "<div class='wrapper' id='galerie'>";
+        foreach ($arrayImg as $img) {
+            $html .= <<<END
         <div class='cell'>
             <div id="content">
                 <img src="{$vars['basepath']}/web/img/cross.png" class="cross"/>
@@ -540,8 +548,8 @@ END;
             <img id="{$img['numeroImage']}" src='{$vars['basepath']}/{$img['urlImage']}'>
         </div>
         END;
-            }
-            $html .= <<<END
+        }
+        $html .= <<<END
 <div class="image-upload cell">
   <label for="file-input">
     <img src="{$vars['basepath']}/web/img/addImage.png"/>
@@ -669,7 +677,7 @@ END;
        <h1 id="center">Page Amis </h1>    
        <div class="box">
 END;
-        if(!isset($vars["lienAmis"])) {
+        if (!isset($vars["lienAmis"])) {
             $html .= <<<END
             <form method="post" enctype="multipart/form-data">
     
@@ -677,10 +685,10 @@ END;
             </form>
 END;
         } else {
-           $html .= '<p  class="asinput"> ' . $vars["lienAmis"] . '</p>';
+            $html .= '<p  class="asinput"> ' . $vars["lienAmis"] . '</p>';
         }
 
-$html .= <<<END
+        $html .= <<<END
        </div>
        
 
@@ -689,7 +697,7 @@ $html .= <<<END
        </div>
 END;
         $liste = $vars["listeAmis"];
-        if (sizeOf($liste)>0) {
+        if (sizeOf($liste) > 0) {
             $html .= <<<END
                 
         <section class="tableau">
@@ -703,7 +711,7 @@ END;
                 <tbody>
                 
 END;
-            foreach($liste as $item){
+            foreach ($liste as $item) {
                 $html .= $this->uneLigneListeAmis($item);
             }
             $html .= <<<END
@@ -717,7 +725,7 @@ END;
             $html .= "<p id='message'>Vous n'avez pour l'instant aucun amis</p></br>";
             $html .= "/div";
         }
-         return $html;
+        return $html;
     }
 
     private function uneLigneListeAmis($item): string
@@ -761,7 +769,8 @@ END;
 END;
     }
 
-    private function insererMenu($vars): string {
+    private function insererMenu($vars): string
+    {
         $html = "";
         if (isset($vars['menu']['profil'])) {
             $html .= <<<END
@@ -795,34 +804,39 @@ END;
      * @param $vars
      * @return string
      */
-    private function insererEnteteSite($vars): string {
+    private function insererEnteteSite($vars): string
+    {
         $html = <<<END
         <header>
             <div class="menu-btn">
                 <div class="menu-btn__burger"></div>
             </div>
-            <h1 id="name">Toureasy</h1>
+            <div id="divNomSite" style="cursor: pointer;" onclick="window.location='{$vars['menu']['home']}';">
+                <h1 id="name"  >Toureasy</h1>         
+            </div>
         </header>
         <div class="container">
             <div>
                 <ul id="menu">
 END;
-                $html .= $this->insererMenu($vars);
-                $html .=  "</div>";
+        $html .= $this->insererMenu($vars);
+        $html .= "</div>";
 
-                return $html;
+        return $html;
     }
 
-    private function pageContact($vars): string {
-       $html = $this->insererEnteteSite($vars);
-            
+    private function pageContact($vars): string
+    {
+        $html = $this->insererEnteteSite($vars);
+
         //content here
-            
-       $html .=  "</div>";
-       return $html;
+
+        $html .= "</div>";
+        return $html;
     }
 
-    private function pageAbout($vars): string {
+    private function pageAbout($vars): string
+    {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
             <h1 id="center">A propos</h1>

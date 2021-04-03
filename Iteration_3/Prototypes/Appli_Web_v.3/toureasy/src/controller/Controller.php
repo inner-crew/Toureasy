@@ -918,7 +918,7 @@ class Controller
         $urlConnexion = $this->c->router->pathFor('connexion');
         $urlMap = $this->c->router->pathFor('map');
         $urlAmis = $this->c->router->pathFor('amis');
-
+        $urlHome = $this->c->router->pathFor('home');
 
         $isConnected = $this->verifierUtilisateurConnecte();
         $menu = [];
@@ -926,6 +926,7 @@ class Controller
             $urlEspace = $this->c->router->pathFor('mes-listes', ['token' => $_COOKIE['token']]);
             $urlAjouterMonument = $this->c->router->pathFor('ajoutMonument');
             $urlProfil = $this->c->router->pathFor('profil');
+
             $menu = [
                 'contact' => $urlContact,
                 'about-us' => $urlAPropos,
@@ -934,12 +935,14 @@ class Controller
                 'ajout' => $urlAjouterMonument,
                 'profil' => $urlProfil,
                 'amis' => $urlAmis,
+                'home' =>$urlHome,
             ];
         } else {
             $menu = [
                 'contact' => $urlContact,
                 'about-us' => $urlAPropos,
                 'connexion' => $urlConnexion,
+                'home' => $urlHome,
             ];
         }
         return $menu;
