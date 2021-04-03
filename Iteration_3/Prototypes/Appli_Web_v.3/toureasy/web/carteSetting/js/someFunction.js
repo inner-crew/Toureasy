@@ -184,7 +184,7 @@ var createPointeurOfAnImage = function (taille, urlImage, couleur, id, map) {
     ctx.clip();
 
     let background = new Image();
-    background.onload = function (){
+    background.onload = function () {
         if (background.height <= background.width) {
             ctx.drawImage(background, (background.width - background.height) / 2, 0, background.height, background.height, 0, 0, taille * 200, taille * 200);
             console.log(background);
@@ -366,19 +366,10 @@ var onClickCluster = function (cluster, map) {
 
 var onClickMonument = function (unClusteredPoint, map) {
     var coordinates = unClusteredPoint.features[0].geometry.coordinates;
-// Ensure that if the map is zoomed out such that
-// multiple copies of the feature are visible, the
-// popup appears over the copy being pointed to.
     while (Math.abs(unClusteredPoint.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += unClusteredPoint.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    /*new mapboxgl.Popup()
-        .setLngLat(coordinates)
-        .setHTML(
-            unClusteredPoint.features[0].properties.title
-        )
-        .addTo(map);*/
     toggleSideBar(map, unClusteredPoint.features[0].properties);
 }
 
@@ -456,10 +447,8 @@ var toggleSideBar = function (map, leMonument) {
             padding: padding,
             duration: 1000 // In ms, CSS transition duration property for the sidebar matches this value
         });
-        console.log(genererMonumentDescr(leMonument));
         document.getElementById("descMonument").innerHTML = genererMonumentDescr(leMonument)
     } else {
-        setInterval(document.getElementById("descMonument").innerHTML = "<p>Monument vide</p>", 1000);
         padding[id] = 0;
 // Add the 'collapsed' class to the class list of the element
         classes.push('collapsed');
@@ -468,9 +457,11 @@ var toggleSideBar = function (map, leMonument) {
             padding: padding,
             duration: 1000
         });
+        setTimeout(() => {
+            document.getElementById("descMonument").innerHTML = "<p>Monument vide</p>"
+        }, 1000);
     }
-
-// Update the class list on the element
+    // Update the class list on the element
     elem.className = classes.join(' ');
 }
 
@@ -494,9 +485,6 @@ var mapCharger = function (streetMap, sateliteMap) {
         for (const assos of data) {
             createPointeurOfAnImage(1, assos.url, "#" + Math.floor(Math.random() * 16777215).toString(16), assos.id, streetMap);
         }
-        /*addImages(streetMap, data).then(() => {
-            console.log("Image ajouter");
-        });*/
     });
 
     streetMap.addLayer(clusterLayer);
