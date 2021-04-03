@@ -1,4 +1,6 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVtaXRvczU3IiwiYSI6ImNramsxc3EwaTR2bW4ycm5xZXgwamQ3em0ifQ.LxF1l4i5VksFZHOzuJmqTA';
+var reader = new FileReader();
+
 var premierFonction = function () {
     console.log("BlaBla");
 }
@@ -158,6 +160,74 @@ var rechercheDeLieuOption = new MapboxGeocoder({
     mapboxgl: mapboxgl
 });
 
+function createCanvas(width, height) {
+    var c = document.createElement('canvas');
+    c.setAttribute('width', width);
+    c.setAttribute('height', height);
+    return c;
+}
+
+var createPointeurOfAnImage = function (taille, urlImage, couleur, id, map) {
+    let canvas = createCanvas(taille * 200, taille * 350);
+    let ctx = canvas.getContext('2d');
+
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(
+        canvas.width * 0.5,
+        canvas.width * 0.5,
+        (taille * 200) * 0.5,
+        0,
+        2 * Math.PI
+    );
+    ctx.closePath();
+    ctx.clip();
+
+    let background = new Image();
+    background.onload = function (){
+        if (background.height <= background.width) {
+            ctx.drawImage(background, (background.width - background.height) / 2, 0, background.height, background.height, 0, 0, taille * 200, taille * 200);
+            console.log(background);
+        } else {
+            ctx.drawImage(background, 0, (background.height - background.width) / 2, background.width, background.width, 0, 0, taille * 200, taille * 200);
+        }
+        ctx.restore();
+
+        ctx.strokeStyle = couleur;
+        ctx.lineWidth = "10"
+        ctx.beginPath();
+        ctx.arc(canvas.width * 0.5, canvas.width * 0.5, (taille * 100) - 5, 0, 2 * Math.PI);
+        ctx.stroke()
+        ctx.closePath()
+
+        ctx.moveTo(-taille * 3, canvas.width * 0.5);
+        ctx.lineTo(canvas.width * 0.5, canvas.height);
+        ctx.moveTo(canvas.width * 0.5, canvas.height);
+        ctx.lineTo(canvas.width, (canvas.width * 0.5) + taille * 3);
+        ctx.stroke();
+
+        ajouterImageV2(id, canvas.toDataURL('image/png'), map);
+    }
+    background.src = urlImage;
+}
+
+var ajouterImageV2 = function (nom, url, map) {
+
+    return new Promise((resolve, reject) => {
+        map.loadImage(url, (error, image) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            map.addImage(nom, image);
+            resolve(image);
+
+        });
+    });
+
+
+}
+
 var getImageUrlId = async function () {
     let jsonPublique = await getJsonFile("monumentPublique")
     let jsonPriver = await getJsonFile(getCookie("token"))
@@ -171,7 +241,7 @@ var getImageUrlId = async function () {
     return res;
 }
 
-var addImages = function(map, images) {
+var addImages = function (map, images) {
     const addImage = (map, id, url) => {
         return new Promise((resolve, reject) => {
             map.loadImage(url, (error, image) => {
@@ -312,7 +382,7 @@ var onClickMonument = function (unClusteredPoint, map) {
     toggleSideBar(map, unClusteredPoint.features[0].properties);
 }
 
-var quoiAfficherSurLaMap = function(e, map) {
+var quoiAfficherSurLaMap = function (e, map) {
     switch (e.target.value) {
         case ('publique') :
             getJsonFile("monumentPublique").then(json => {
@@ -356,7 +426,7 @@ var quoiAfficherSurLaMap = function(e, map) {
     }
 }
 
-var afficherMonument = function(json, map) {
+var afficherMonument = function (json, map) {
     map.getSource('monuments').setData(json);
 }
 
@@ -421,9 +491,12 @@ var mapCharger = function (streetMap, sateliteMap) {
         }
     });
     getImageUrlId().then(data => {
-        addImages(streetMap, data).then(() => {
+        for (const assos of data) {
+            createPointeurOfAnImage(1, assos.url, "#" + Math.floor(Math.random() * 16777215).toString(16), assos.id, streetMap);
+        }
+        /*addImages(streetMap, data).then(() => {
             console.log("Image ajouter");
-        });
+        });*/
     });
 
     streetMap.addLayer(clusterLayer);
