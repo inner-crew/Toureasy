@@ -54,22 +54,9 @@ class Vue
 
     public function unMessage($vars): string
     {
-        $html = <<<END
-    <header>
-        <div class="menu-btn">
-            <div class="menu-btn__burger"></div>
-        </div>
-        <h1 id="name">Toureasy</h1>
-    </header>
-    <div class="container">
-    <div>
-            <ul id="menu">
-END;
-
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
 
         $html .= <<<END
-        </div>
         <div class="message">
             <h1>{$vars['message']}</h1>
             <div class="box">
@@ -82,31 +69,15 @@ END;
         return $html;
     }
 
-    private function homeHtml(array $v): string
+    private function homeHtml(array $vars): string
     {
-        $html = <<<END
-        <header>
-            <div class="menu-btn">
-                <div class="menu-btn__burger"></div>
-            </div>
-            <h1 id="name">Toureasy</h1>
-        </header>
-        
-        
-        
-        <div class="container">
-            <div>
-                <ul id="menu">
-END;
-
-        $html .= $this->insererMenu($v);
+        $html = $this->insererEnteteSite($vars);
 
         $html .= <<<END
-            </div>
             <div id="home">
-                <img id="logo-small" src='{$v['basepath']}/web/img/logo2.png'>
+                <img id="logo-small" src='{$vars['basepath']}/web/img/logo2.png'>
                 <div class="box">
-                    <button id="homeBouton" onclick="location.href='{$v['map']}'">Accéder à Toureasy</button>
+                    <button id="homeBouton" onclick="location.href='{$vars['map']}'">Accéder à Toureasy</button>
                 </div>
                 <p id="slogan">Découvrez des monuments du monde entier en un clique !</p>
             </div>
@@ -165,22 +136,10 @@ END;
         return $html;
     }
 
-    public function connexionHtml($v): string
+    public function connexionHtml($vars): string
     {
-        $html = <<<END
-<header>
-        <div class="menu-btn">
-            <div class="menu-btn__burger"></div>
-        </div>
-        <h1 id="name">Toureasy</h1>
-    </header>
-<div class="container">
-<div>
-            <ul id="menu">
-END;
-        $html .= $this->insererMenu($v);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-        </div>
     <div id="formConnexion">
         <h1>J'ai un code d'identification</h1>
         <form method="post">
@@ -202,23 +161,10 @@ END;
         return $html;
     }
 
-    private function pageProfil(Membre $m, Array $v): string
+    private function pageProfil(Membre $m, Array $vars): string
     {
-        $html = <<<END
-<header>
-        <div class="menu-btn">
-            <div class="menu-btn__burger"></div>
-        </div>
-        <h1 id="name">Toureasy</h1>
-</header>
-
-<div class="container">
-    <div>
-        <ul id="menu">
-END;
-        $html .= $this->insererMenu($v);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-    </div>
 <div id="formProfil">
     
     <form method="post">
@@ -315,22 +261,9 @@ END;
 
     public function monEspace($arrayListeUtilisateur, $arrayMonumentsPrives, $arrayMonumentsPublics, $vars) {
         $basepath = $vars['basepath'];
-        $html = <<<END
-<header>
-        <div class="menu-btn">
-            <div class="menu-btn__burger"></div>
-        </div>
-        <h1 id="name">Toureasy</h1>
-</header>
-
-<div class="container">
-    <div>
-        <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-    </div>
-<section class="sectionEspace">
+    <section class="sectionEspace">
     
     <div class="boxsmall">
     <h3 class="nomSection">Vos Listes</h3>
@@ -470,22 +403,9 @@ END;
 
     public function uneListeHtml(ListeMonument $liste, $monumentsDeCetteListe, $monumentsDeUtilisateur ,$vars): string
     {
-        $html = <<<END
-<header>
-    <div class="menu-btn">
-        <div class="menu-btn__burger"></div>
-    </div>
-    <h1 id="name">Toureasy</h1>
-</header>
-
-<div class="container">
-<div>
-        <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-    </div>
-<section class="titreListe">
+        <section class="titreListe">
             <h3 class="nomSection">{$liste->nom}</h3>
             <i class="desc">{$liste->description}</i>
         
@@ -554,19 +474,7 @@ END;
     }
 
     private function modifierUneListe(ListeMonument $liste, $vars): string {
-        $html = <<<END
-<header>
-    <div class="menu-btn">
-        <div class="menu-btn__burger"></div>
-    </div>
-    <h1 id="name">Toureasy</h1>
-</header>
-
-<div class="container">
-<div>
-        <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
                 <section class="titreListe">
                     <form method="post">
@@ -575,26 +483,14 @@ END;
                         <div id="center"><input id="lessMargin" type="submit"  value="Valider" /></div>
                     </form>
                 </section>
+        </div>
 END;
         return $html;
     }
 
     public function unMonumentHtml(Monument $monument, array $images, $vars): string {
-        $html = <<<END
-<header>
-    <div class="menu-btn">
-        <div class="menu-btn__burger"></div>
-    </div>
-    <h1 id="name">Toureasy</h1>
-</header>
-
-<div class="container">
-<div>
-        <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-    </div>
         <section class="infos">
             <h3 id="nom">{$monument->nomMonum}</h3>
             <p class="desc" id="descMonu">{$monument->descLongue}</p>
@@ -628,34 +524,22 @@ END;
 
     public function modifierUnMonument(Monument $monument, array $arrayImg, $vars): string
     {
-        $html = <<<END
-<header>
-    <div class="menu-btn">
-        <div class="menu-btn__burger"></div>
-    </div>
-    <h1 id="name">Toureasy</h1>
-</header>
-<div class="container">
-<div>
-        <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-    </div>
-<form method="post" enctype="multipart/form-data" id="add">
-    <input type="hidden" id="delete" name="delete"/>
-    <h3 id="modifNom">Nom du monument : <input name="nom" id='lessMargin' value="{$monument->nomMonum}" required></h3>
-END;
-            $html .= "<div class='wrapper' id='galerie'>";
-            foreach ($arrayImg as $img) {
-                $html .= <<<END
-<div class='cell'>
-    <div id="content">
-        <img src="{$vars['basepath']}/web/img/cross.png" class="cross"/>
-    </div>
-    <img id="{$img['numeroImage']}" src='{$vars['basepath']}/{$img['urlImage']}'>
-</div>
-END;
+        <form method="post" enctype="multipart/form-data" id="add">
+            <input type="hidden" id="delete" name="delete"/>
+            <h3 id="modifNom">Nom du monument : <input name="nom" id='lessMargin' value="{$monument->nomMonum}" required></h3>
+        END;
+                    $html .= "<div class='wrapper' id='galerie'>";
+                    foreach ($arrayImg as $img) {
+                        $html .= <<<END
+        <div class='cell'>
+            <div id="content">
+                <img src="{$vars['basepath']}/web/img/cross.png" class="cross"/>
+            </div>
+            <img id="{$img['numeroImage']}" src='{$vars['basepath']}/{$img['urlImage']}'>
+        </div>
+        END;
             }
             $html .= <<<END
 <div class="image-upload cell">
@@ -689,20 +573,8 @@ END;
 
     private function ajoutMonumentHtml($vars): string
     {
-        $html = <<<END
-<header>
-    <div class="menu-btn">
-        <div class="menu-btn__burger"></div>
-    </div>
-    <h1 id="name">Toureasy</h1>
-</header>
-<div class="container" id="lessLeft">
-    <div>
-        <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-    </div>
     <form method="post" enctype="multipart/form-data" id="add">
                 <h3>Nom du monument<span class="required"> *</span> : <input class="longInput" type="text" name="nom" required/></h3>
                 <div id="center">
@@ -761,20 +633,8 @@ END;
 
     public function ajoutListeHtml($vars): string
     {
-        $html = <<<END
-        <header>
-            <div class="menu-btn">
-                <div class="menu-btn__burger"></div>
-            </div>
-            <h1 id="name">Toureasy</h1>
-        </header>
-        <div class="container">
-            <div>
-                <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-            </div>
             <form method="post" enctype="multipart/form-data">
                 <h3 id="champ">Nom<span class="required">*</span></h3><input type="text" name="nom" id="champ" class="longInput" required/>
                 <h3 id="champ">Description<span class="required">*</span></h3><input type="text" id="champ" class="longInput" name="desc" required/>
@@ -787,21 +647,9 @@ END;
 
     public function pageDemandeAmi($vars): string
     {
-        $html = <<<END
-        <header>
-            <div class="menu-btn">
-                <div class="menu-btn__burger"></div>
-            </div>
-            <h1 id="name">Toureasy</h1>
-        </header>
-        <div class="container">
-            <div>
-                <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
 <h1 id="center">{$vars['username']} vous a envoyé une demande d'ami </h1>
-            </div>
             <div class="box"> 
                 <form method="post" enctype="multipart/form-data">
                     <input name="rep" type="submit" value="Accepter">
@@ -816,22 +664,9 @@ END;
 
     public function pageAmis($vars): string
     {
-        $html = <<<END
-        <header>
-            <div class="menu-btn">
-                <div class="menu-btn__burger"></div>
-            </div>
-            <h1 id="name">Toureasy</h1>
-        </header>
-        <div class="container">
-            <div>
-                <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-                <h1 id="center">Page Amis </h1>
-            </div>
-       
+       <h1 id="center">Page Amis </h1>    
        <div class="box">
 END;
         if(!isset($vars["lienAmis"])) {
@@ -875,10 +710,12 @@ END;
                 </tbody>
               </table>
         </section>
+    </div>
 END;
 
         } else {
             $html .= "<p id='message'>Vous n'avez pour l'instant aucun amis</p></br>";
+            $html .= "/div";
         }
          return $html;
     }
@@ -896,22 +733,8 @@ END;
 
     private function pageAmisNouveauLien($vars): string
     {
-        $html = <<<END
-    <header>
-        <div class="menu-btn">
-            <div class="menu-btn__burger"></div>
-        </div>
-        <h1 id="name">Toureasy</h1>
-    </header>
-    <div class="container">
-    <div>
-            <ul id="menu">
-END;
-
-        $html .= $this->insererMenu($vars);
-
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-        </div>
         <div>
             <h1>Lien d'invitation</h1>
             <p>Envoyez le lien ci-dessous à la personne que vous souhaitez ajouter à vos amis : </p>
@@ -927,8 +750,6 @@ END;
     <script> 
         new ClipboardJS('.lienAmis');
     </script>
-   
-
 END;
         return $html;
     }
@@ -969,6 +790,11 @@ END;
         return $html;
     }
 
+    /**
+     * Retourne un string avec l'entête, ne pas oublier de fermer la div container à la fin du contenu
+     * @param $vars
+     * @return string
+     */
     private function insererEnteteSite($vars): string {
         $html = <<<END
         <header>
@@ -978,50 +804,27 @@ END;
             <h1 id="name">Toureasy</h1>
         </header>
         <div class="container">
-        <div>
-            <ul id="menu">
+            <div>
+                <ul id="menu">
 END;
-            $html .= $this->insererMenu($vars);
-            $html .= <<<END
-        </div>
+                $html .= $this->insererMenu($vars);
+                $html .=  "</div>";
+
+                return $html;
     }
 
     private function pageContact($vars): string {
-        $html = <<<END
-        <header>
-            <div class="menu-btn">
-                <div class="menu-btn__burger"></div>
-            </div>
-            <h1 id="name">Toureasy</h1>
-        </header>
-        <div class="container">
-            <div>
-                <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
-        $html .= <<<END
-            </div>
+       $html = $this->insererEnteteSite($vars);
             
-        </div>
-END;
-        return $html;
+        //content here
+            
+       $html .=  "</div>";
+       return $html;
     }
 
     private function pageAbout($vars): string {
-        $html = <<<END
-        <header>
-            <div class="menu-btn">
-                <div class="menu-btn__burger"></div>
-            </div>
-            <h1 id="name">Toureasy</h1>
-        </header>
-        <div class="container">
-            <div>
-                <ul id="menu">
-END;
-        $html .= $this->insererMenu($vars);
+        $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-            </div>
             <h1 id="center">A propos</h1>
             <i id="center">Toureasy est le projet tutoré de 4 étudiants.</i>
             <div class="wrapperRows">
