@@ -122,6 +122,7 @@ CREATE TABLE `appartenanceliste` (
 CREATE TABLE `amis` (
  `amis1` INT UNSIGNED NOT NULL COMMENT 'on convient arbitrairement que amis1 est celui qui a l id le plus petit',
  `amis2` INT UNSIGNED NOT NULL ,
+ `dateCreation` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
  PRIMARY KEY (`amis1`, `amis2`)
 ) ENGINE = InnoDB;
 
@@ -311,7 +312,7 @@ BEGIN
 	END IF;
 	IF NEW.amis1 = NEW.amis2
 	THEN
-		signal sqlstate '45000' set message_text = 'On ne peut etre amis avec soit-meme (ce serait triste)';
+		signal sqlstate '45000' set message_text = 'On ne peut etre amis avec soit-meme';
 	END IF;
 	
 END |

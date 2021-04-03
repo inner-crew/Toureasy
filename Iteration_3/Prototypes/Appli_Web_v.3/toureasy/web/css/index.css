@@ -91,6 +91,44 @@ body {
     animation-timing-function: ease-in-out;
 }
 
+
+.lienAmis {
+    -background-color: #b1f6a3d9;
+    background-color: var(--gris);
+    border: none;
+    border-radius: 3px;
+    box-shadow: 6px 6px 20px 4px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    outline: none;
+    font-size: 0.8em;
+    padding: 5px;
+    transition: 0.2s;
+    margin: 10px;
+    margin-bottom: 30px;
+}
+
+[data-tooltip]:before {
+    position : absolute;
+    content : attr(data-tooltip);
+    opacity : 0;
+
+    /* customizable */
+    transition: all 0.15s ease;
+    padding: 10px;
+    color: #333;
+    border-radius: 10px;
+    box-shadow: 2px 2px 1px silver;
+}
+
+[data-tooltip]:hover:before {
+    opacity : 1;
+
+    /* customizable */
+    background: yellow;
+    margin-top: -50px;
+    margin-left: 20px;
+}
+
 @media only screen and (max-width: 992px) {
 
     #back {
@@ -144,7 +182,7 @@ body {
         margin: 10px;
     }
 
-    input, select {
+    input, select, .asinput {
         background-color: var(--blanc);
         border: none;
         border-radius: 3px;
@@ -829,7 +867,7 @@ body {
     }
 
     /**Connection*/
-    input, select {
+    input, select, .asinput {
         background-color: var(--blanc);
         border: none;
         border-radius: 3px;
@@ -954,6 +992,7 @@ body {
         transition: 0.2s;
         margin: 10px;
     }
+
 
     p {
         color: white;

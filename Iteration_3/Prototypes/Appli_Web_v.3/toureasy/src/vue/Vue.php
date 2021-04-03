@@ -43,6 +43,10 @@ class Vue
 
     const ABOUT = 15;
 
+    const AMIS = 16;
+
+    const AMISNOUVEAULIEN = 17;
+
     public function __construct($data)
     {
         $this->data = $data;
@@ -69,11 +73,9 @@ END;
         <div class="message">
             <h1>{$vars['message']}</h1>
             <div class="box">
-            <button onclick="window.location.href='{$vars['url']}'">Ok</button>
-</div>
-            
-        </div>
-        
+                <button onclick="window.location.href='{$vars['url']}'">Ok</button>
+            </div>          
+        </div>      
     </div>
 
 END;
@@ -811,12 +813,130 @@ END;
 
         return $html;
     }
+
+    public function pageAmis($vars): string
+    {
+        $html = <<<END
+        <header>
+            <div class="menu-btn">
+                <div class="menu-btn__burger"></div>
+            </div>
+            <h1 id="name">Toureasy</h1>
+        </header>
+        <div class="container">
+            <div>
+                <ul id="menu">
+END;
+        $html .= $this->insererMenu($vars);
+        $html .= <<<END
+                <h1 id="center">Page Amis </h1>
+            </div>
+       
+       <div class="box">
+END;
+        if(!isset($vars["lienAmis"])) {
+            $html .= <<<END
+            <form method="post" enctype="multipart/form-data">
+    
+               <input type="submit" value="Générer un lien pour inviter un amis">
+            </form>
+END;
+        } else {
+           $html .= '<p  class="asinput"> ' . $vars["lienAmis"] . '</p>';
+        }
+
+$html .= <<<END
+       </div>
+       
+
+       <div>
+            <h1 id="center">Vos Amis</h1>
+       </div>
+END;
+        $liste = $vars["listeAmis"];
+        if (sizeOf($liste)>0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Pseudo</th>
+                        <th>Date d'inscription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+END;
+            foreach($liste as $item){
+                $html .= $this->uneLigneListeAmis($item);
+            }
+            $html .= <<<END
+                </tbody>
+              </table>
+        </section>
+END;
+
+        } else {
+            $html .= "<p id='message'>Vous n'avez pour l'instant aucun amis</p></br>";
+        }
+         return $html;
+    }
+
+    private function uneLigneListeAmis($item): string
+    {
+        $html = <<<END
+                <tr>
+                    <td><p class="username">{$item["username"]}</p></td>
+                    <td><p class="inscription">{$item["dateInscription"]}</p></td>
+                </tr>
+END;
+        return $html;
+    }
+
+    private function pageAmisNouveauLien($vars): string
+    {
+        $html = <<<END
+    <header>
+        <div class="menu-btn">
+            <div class="menu-btn__burger"></div>
+        </div>
+        <h1 id="name">Toureasy</h1>
+    </header>
+    <div class="container">
+    <div>
+            <ul id="menu">
+END;
+
+        $html .= $this->insererMenu($vars);
+
+        $html .= <<<END
+        </div>
+        <div>
+            <h1>Lien d'invitation</h1>
+            <p>Envoyez le lien ci-dessous à la personne que vous souhaitez ajouter à vos amis : </p>
+            <div class="lienAmis" data-clipboard-text="{$vars["urlDemande"]}" data-tooltip="Cliquer pour copier dans le presse-papier">
+                <p id="url">{$vars["urlDemande"]}</p>
+            </div>
+            <div class="boxsmall">
+                <button onclick="window.location.href='{$vars['url']}'">Retourner à la page précèdente</button>
+            </div>          
+        </div>      
+    </div>
+    <script src="{$vars['basepath']}/web/js/lib/clipboard.js-master/dist/clipboard.min.js"></script>
+    <script> 
+        new ClipboardJS('.lienAmis');
+    </script>
+   
+
+END;
+        return $html;
+    }
+
     public function pageTest($vars): string
     {
         return <<<END
         <h1>TEST</h1>
-        <p>Amis::getAllAmisByIdMembre(2) : {$vars['r1']}</p>
-        <p>DemandeAmi::getDemandeurByIdDemande(1) : {$vars['r2']} </p>
 END;
     }
 
@@ -828,6 +948,7 @@ END;
     <li><a href='{$vars['menu']['espace']}'">Mon Espace</a></li>
     <li><a href='{$vars['menu']['profil']}'">Mon Profil</a></li>
     <li><a href='{$vars['menu']['ajout']}'">Ajouter un monument</a></li>
+    <li><a href='{$vars['menu']['amis']}'">Page amis</a></li>
     </br>
     <li><a href='{$vars['menu']['contact']}'">Nous Contacter</a></li>
     <li><a href='{$vars['menu']['about-us']}'">A propos</a></li>
@@ -846,6 +967,23 @@ END;
 END;
 
         return $html;
+    }
+
+    private function insererEnteteSite($vars): string {
+        $html = <<<END
+        <header>
+            <div class="menu-btn">
+                <div class="menu-btn__burger"></div>
+            </div>
+            <h1 id="name">Toureasy</h1>
+        </header>
+        <div class="container">
+        <div>
+            <ul id="menu">
+END;
+            $html .= $this->insererMenu($vars);
+            $html .= <<<END
+        </div>
     }
 
     private function pageContact($vars): string {
@@ -885,7 +1023,7 @@ END;
         $html .= <<<END
             </div>
             <h1 id="center">A propos</h1>
-            <i id="center">Toureasy est le projet tuteuré de 4 étudiants.</i>
+            <i id="center">Toureasy est le projet tutoré de 4 étudiants.</i>
             <div class="wrapperRows">
                 <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
 </p></div>
@@ -952,6 +1090,12 @@ END;
                 break;
             case Vue::ABOUT:
                 $content = $this->pageAbout($vars);
+                break;
+            case Vue::AMIS:
+                $content = $this->pageAmis($vars);
+                break;
+            case Vue::AMISNOUVEAULIEN:
+                $content = $this->pageAmisNouveauLien($vars);
                 break;
         }
 

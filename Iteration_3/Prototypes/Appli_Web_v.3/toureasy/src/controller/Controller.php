@@ -731,7 +731,7 @@ class Controller
 
 
         if(! $this->verifierUtilisateurConnecte()){
-            return $this->genererRedirectionPageConnexion($rs, $rq);
+            return $this->genererRedirectionPageConnexion($rs, $rq, $args);
         }
 
         try {
@@ -739,7 +739,7 @@ class Controller
             $demande = DemandeAmi::getDemandeByToken($args['token']);
         } catch (ModelNotFoundException $e){
             return $this->genererMessageAvecRedirection($rs, $rq, "La demande d'ami à laquelle vous essayez
-            d'accèder n'est pas valide",'home', $args);
+            d'accèder n'existe pas",'home', $args);
         }
 
         $membre = Membre::getMembreByToken($_COOKIE['token']);
@@ -749,43 +749,30 @@ class Controller
             cette demande d'ami, tentez plutôt de l'envoyer à quelqu'un d'autre",'home', $args);
         }
 
-        $amisDuDemandeur = Amis::getAllAmisByIdMembre($demandeur->idMembre);
-        try {
-            Amis::query()->where([["amis1", "=", $demandeur->idMembre],["amis2", "=", $membre->idMembre]])->firstOrFail();
-        } catch (ModelNotFoundException $e){
-            try {
-                Amis::query()->where([["amis2", "=", $demandeur->idMembre],["amis1", "=", $membre->idMembre]])->firstOrFail();
-            } catch (ModelNotFoundException $e){
-
-                if(!$demande->disponible) {
-                    return $this->genererMessageAvecRedirection($rs, $rq, "Cette demande n'est plus disponible,
-            elle a probablement déjà été utilisée par quelqu'un d'autre",'home', $args);
-                }
-
-                if(isset($demandeur['username'])){
-                    $username = $demandeur['username'];
-                } else {
-                    $username = "Un membre anonyme";
-                }
-
-                $htmlvars = [
-                    'username' => $username,
-                    'basepath' => $rq->getUri()->getBasePath(),
-                    'menu' => $this->getMenu($args)
-                ];
-
-                $rs->getBody()->write($v->render($htmlvars, Vue::DEMANDE_AMI));
-                return $rs;
-
-
-            }
+        $tabAmis = Amis::getAllAmisByIdMembre($demandeur->idMembre);
+        if(in_array($membre, $tabAmis)){
+            return $this->genererMessageAvecRedirection($rs, $rq, "Vous êtes déjà ami avec ce membre",'home', $args);
         }
 
+        if(!$demande->disponible) {
+            return $this->genererMessageAvecRedirection($rs, $rq, "Cette demande n'est plus disponible,
+            elle a probablement déjà été utilisée par quelqu'un d'autre",'home', $args);
+        }
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Vous êtres déjà ami avec machin",'home', $args);
+        if(isset($demandeur['username'])){
+            $username = $demandeur['username'];
+        } else {
+            $username = "Un membre anonyme";
+        }
 
+        $htmlvars = [
+            'username' => $username,
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args)
+        ];
 
-
+        $rs->getBody()->write($v->render($htmlvars, Vue::DEMANDE_AMI));
+        return $rs;
     }
 
     public function postDemandeAmi(Request $rq, Response $rs, array $args): Response
@@ -803,8 +790,17 @@ class Controller
             $receveur = Membre::getMembreByToken($_COOKIE['token']);
 
             $amis = new Amis();
-            $amis->amis1 = $demandeur->idMembre;
-            $amis->amis2 = $receveur->idMembre;
+            $id1 = $demandeur->idMembre;
+            $id2 = $receveur->idMembre;
+
+            if($id1 < $id2){
+                $amis->amis1 = $id1;
+                $amis->amis2 = $id2;
+            } else {
+                $amis->amis1 = $id2;
+                $amis->amis2 = $id1;
+            }
+
             $amis->save();
 
             $demandeAmi = DemandeAmi::getDemandeByToken($args['token']);
@@ -820,20 +816,98 @@ class Controller
         }
     }
 
+    public function creerListeAmis($tabAmis){
+        $tabAmisParam = [];
+
+        foreach($tabAmis as $amis){
+            $username = (isset($amis['username'])) ? $amis['username'] : "Anonyme";
+            $param = array("username" => $username,
+                "dateInscription" => $amis->dateInscription);
+
+            array_push($tabAmisParam, $param);
+
+        }
+        return $tabAmisParam;
+    }
+
+    public function displayAmis(Request $rq, Response $rs, array $args): Response
+    {
+        $v = new Vue(null);
+
+        if(! $this->verifierUtilisateurConnecte()){
+            return $this->genererRedirectionPageConnexion($rs, $rq, $args );
+        }
+        $idUser = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
+        $tabAmis = Amis::getAllAmisByIdMembre($idUser);
+        $tabAmisParam = $this->creerListeAmis($tabAmis);
+
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args),
+            'listeAmis' => $tabAmisParam,
+        ];
+
+        $rs->getBody()->write($v->render($htmlvars, Vue::AMIS));
+        return $rs;
+    }
+
+    public function postAmis(Request $rq, Response $rs, array $args): Response
+    {
+        $v = new Vue(null);
+
+        if(! $this->verifierUtilisateurConnecte()){
+            return $this->genererRedirectionPageConnexion($rs, $rq);
+        }
+        $tokenDemande = bin2hex(random_bytes(7));
+
+        $urlDemande = $_SERVER["HTTP_HOST"] . $this->c->router->pathFor("reception-demande-ami", ["token"=>$tokenDemande]);
+        echo '<script> console.log("'. $urlDemande .'"); </script>';
+
+
+        $demande = new DemandeAmi();
+        $demande->idDemandeur = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
+        $demande->disponible = 1;
+        $demande->token = $tokenDemande;
+        $demande->save();
+
+
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'message' => "hello",
+            'url' => $this->c->router->pathFor("amis", []),
+            'menu' => $this->getMenu($args),
+            'urlDemande' => $urlDemande,
+        ];
+
+        $rs->getBody()->write($v->render($htmlvars, Vue::AMISNOUVEAULIEN));
+        return $rs;
+
+    }
+
 
     public function displayTest(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
-        $req1 = Amis::getAllAmisByIdMembre(2);
-        $req2 = DemandeAmi::getDemandeurByIdDemande(1);
+        echo "<sqh1>";
 
+        $tab = Amis::getAllAmisByIdMembre(2);
+        foreach($tab as $t){
+            echo($t."\n\n");
+        }
+
+
+
+
+
+
+
+        echo "<qsd/h1>";
 
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'r1' => $req1,
-            'r2' => $req2,
         ];
+
         $rs->getBody()->write($v->render($htmlvars, Vue::TEST));
         return $rs;
     }
@@ -843,6 +917,7 @@ class Controller
         $urlAPropos = $this->c->router->pathFor('about-us');
         $urlConnexion = $this->c->router->pathFor('connexion');
         $urlMap = $this->c->router->pathFor('map');
+        $urlAmis = $this->c->router->pathFor('amis');
 
 
         $isConnected = $this->verifierUtilisateurConnecte();
@@ -857,13 +932,14 @@ class Controller
                 'map' => $urlMap,
                 'espace' => $urlEspace,
                 'ajout' => $urlAjouterMonument,
-                'profil' => $urlProfil
+                'profil' => $urlProfil,
+                'amis' => $urlAmis,
             ];
         } else {
             $menu = [
                 'contact' => $urlContact,
                 'about-us' => $urlAPropos,
-                'connexion' => $urlConnexion
+                'connexion' => $urlConnexion,
             ];
         }
         return $menu;
