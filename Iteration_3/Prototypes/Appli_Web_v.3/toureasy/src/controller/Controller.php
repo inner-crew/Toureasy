@@ -243,23 +243,28 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'menu' => $this->getMenu($args)
         ];
-        $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
 
-        $arrayListesMonuments = array();
-        foreach ($this->getListeDunUser($idMembre, false) as $uneListe) {
-            array_push($arrayListesMonuments, ["liste" => $uneListe, "assosiation" => AppartenanceListe::getMonumentByIdListe($uneListe->idListe)->toArray()]);
+        if ($this->verifierUtilisateurConnecte()) {
+            $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
+
+            $arrayListesMonuments = array();
+            foreach ($this->getListeDunUser($idMembre, false) as $uneListe) {
+                array_push($arrayListesMonuments, ["liste" => $uneListe, "assosiation" => AppartenanceListe::getMonumentByIdListe($uneListe->idListe)->toArray()]);
+            }
+            $res = array("Listes" => $arrayListesMonuments,
+                "monumentsPrives" => $this->getMonumentPriveDunUser($idMembre, false),
+                "monumentsPubliques" => $this->getMonumentPubliqueDunUser($idMembre, false)
+            );
+
+            $leJson = json_encode($res);
+            file_put_contents("./web/carteSetting/data/tmp/{$_COOKIE['token']}.json", $leJson);
+
+            $v = new Vue(null);
+            $rs->getBody()->write($v->render($htmlvars, Vue::MAP));
+            return $rs;
+        } else {
+            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
         }
-        $res = array("Listes" => $arrayListesMonuments,
-            "monumentsPrives" => $this->getMonumentPriveDunUser($idMembre, false),
-            "monumentsPubliques" => $this->getMonumentPubliqueDunUser($idMembre, false)
-        );
-
-        $leJson = json_encode($res);
-        file_put_contents("./web/carteSetting/data/tmp/{$_COOKIE['token']}.json", $leJson);
-
-        $v = new Vue(null);
-        $rs->getBody()->write($v->render($htmlvars, Vue::MAP));
-        return $rs;
     }
 
     public function displayAjouterMonument(Request $rq, Response $rs, array $args): Response
