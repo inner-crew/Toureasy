@@ -458,28 +458,30 @@ class Controller
                     }
                     return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument", $args);
                 }
-            }
-            if ($monument->estPrive == 0) {
-                $strJsonFileContents = file_get_contents("./web/carteSetting/data/monumentPublique.json");
-                $jsonMonuemnts = json_decode($strJsonFileContents, true);
+                if ($i === 0) {
+                    if ($monument->estPrive == 0) {
+                        $strJsonFileContents = file_get_contents("./web/carteSetting/data/monumentPublique.json");
+                        $jsonMonuemnts = json_decode($strJsonFileContents, true);
 
-                array_push($jsonMonuemnts['features'], array(
-                    "type" => "Feature",
-                    "geometry" => array(
-                        "type" => "Point",
-                        "coordinates" => array($monument->longitude, $monument->latitude)
-                    ),
-                    "properties" => array(
-                        "title" => $monument->nomMonum,
-                        "description" => $monument->descLongue,
-                        "urlImage" => $imageJson,
-                        "nomImage" => $nomFichierImage,
-                        "token" => $monument->token
-                    )
-                ));
+                        array_push($jsonMonuemnts['features'], array(
+                            "type" => "Feature",
+                            "geometry" => array(
+                                "type" => "Point",
+                                "coordinates" => array($monument->longitude, $monument->latitude)
+                            ),
+                            "properties" => array(
+                                "title" => $monument->nomMonum,
+                                "description" => $monument->descLongue,
+                                "urlImage" => $file_dest,
+                                "nomImage" => $nomFichierImage,
+                                "token" => $monument->token
+                            )
+                        ));
 
-                $nvJson = json_encode($jsonMonuemnts);
-                $bytes = file_put_contents("./web/carteSetting/data/monumentPublique.json", $nvJson);
+                        $nvJson = json_encode($jsonMonuemnts);
+                        $bytes = file_put_contents("./web/carteSetting/data/monumentPublique.json", $nvJson);
+                    }
+                }
             }
         } else {
             if ($contribution != null) {
