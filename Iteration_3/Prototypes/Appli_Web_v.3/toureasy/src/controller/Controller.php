@@ -241,7 +241,8 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu($args),
+            'map' => $this->c->router->pathFor('map')
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
@@ -266,6 +267,77 @@ class Controller
             return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
         }
     }
+
+    public function displayMapDetailMonument(Request $rq, Response $rs, array $args): Response {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args),
+            'back' => $this->c->router->pathFor('map'),
+            'modifierMonument' => $this->c->router->pathFor('mapModifierMonument', ["token" => $args['token']])
+        ];
+
+        if ($this->verifierUtilisateurConnecte()) {
+            $monument = Monument::getMonumentByToken($args['token']);
+            $images = Image::getImageUrlByIdMonument($monument->idMonument);
+
+            $htmlvars['seeOnMap'] = $this->c->router->pathFor('map') . "?monument=" . $monument->token;
+
+            $v = new Vue([$monument, $images]);
+            $rs->getBody()->write($v->render($htmlvars, Vue::MAP_MONUMENT));
+            return $rs;
+        } else {
+            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+        }
+    }
+
+    public function displayMapDetailListeMonument(Request $rq, Response $rs, array $args): Response {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args),
+            'back' => $this->c->router->pathFor('mapDetailListe', ['token' => $args['token']])
+        ];
+
+        if ($this->verifierUtilisateurConnecte()) {
+            $monument = Monument::getMonumentByToken($args['tokenM']);
+            $images = Image::getImageUrlByIdMonument($monument->idMonument);
+
+            $htmlvars['seeOnMap'] = $this->c->router->pathFor('map') . "?monument=" . $monument->token;
+
+            $v = new Vue([$monument, $images]);
+            $rs->getBody()->write($v->render($htmlvars, Vue::MAP_MONUMENT));
+            return $rs;
+        } else {
+            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+        }
+    }
+
+    public function displayMapDetailListe(Request $rq, Response $rs, array $args): Response {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu($args),
+            'back' => $this->c->router->pathFor('map')
+        ];
+
+        if ($this->verifierUtilisateurConnecte()) {
+            $liste = ListeMonument::getListeByToken($args['token']);
+            $listeMonumentsDeCetteListe = AppartenanceListe::getMonumentByIdListe($liste->idListe);
+            $tabMonumentsDeCetteListe = array();
+            foreach ($listeMonumentsDeCetteListe as $monument) {
+                $monument = Monument::getMonumentById($monument->idMonument);
+                $url = $this->c->router->pathFor('mapDetailListeMonument', ['token' => $liste->token,'tokenM' => $monument->token]);
+                array_push($tabMonumentsDeCetteListe, [$monument, $url]);
+            }
+
+            $htmlvars['seeOnMap'] = $this->c->router->pathFor('map') . "?liste=" . $liste->token;
+
+            $v = new Vue([$liste, $tabMonumentsDeCetteListe]);
+            $rs->getBody()->write($v->render($htmlvars, Vue::MAP_LISTE));
+            return $rs;
+        } else {
+            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+        }
+    }
+
 
     public function displayAjouterMonument(Request $rq, Response $rs, array $args): Response
     {
@@ -401,7 +473,8 @@ class Controller
                         "title" => $monument->nomMonum,
                         "description" => $monument->descLongue,
                         "urlImage" => $imageJson,
-                        "nomImage" => $nomFichierImage
+                        "nomImage" => $nomFichierImage,
+                        "token" => $monument->token
                     )
                 ));
 
@@ -586,6 +659,8 @@ class Controller
 
         if ($monument->estPrive) {
             return $this->postModifierMonumentPrive($rq, $rs, $args);
+        } else {
+
         }
     }
 

@@ -43,6 +43,31 @@ $app->get('/map[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayMap($rq,$rs,$args);
 })->setName('map');
 
+$app->get('/map/share/monument/{token}[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayMapDetailMonument($rq,$rs,$args);
+})->setName('mapDetailMonument');
+
+$app->get('/map/share/monument/{token}/modifier[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayModifierMonument($rq,$rs,$args);
+})->setName('mapModifierMonument');
+
+$app->post('/map/share/monument/{token}/modifier[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postModifierMonument($rq,$rs,$args);
+});
+
+$app->get('/map/share/liste/{token}[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayMapDetailListe($rq,$rs,$args);
+})->setName('mapDetailListe');
+
+$app->get('/map/share/liste/{token}/monument/{tokenM}', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayMapDetailListeMonument($rq,$rs,$args);
+})->setName('mapDetailListeMonument');
+
 
 
 $app->get('/mon-espace[/]', function(Request $rq, Response $rs, array $args) {

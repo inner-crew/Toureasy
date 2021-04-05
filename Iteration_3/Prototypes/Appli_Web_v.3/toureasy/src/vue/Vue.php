@@ -48,6 +48,11 @@ class Vue
 
     const AMISNOUVEAULIEN = 17;
 
+    const MAP_MONUMENT = 18;
+
+    const MAP_LISTE = 19;
+
+
     public function __construct($data)
     {
         $this->data = $data;
@@ -90,15 +95,16 @@ END;
     private function affichageMap(array $v): string
     {
         $html = <<<END
-    <script src="{$v['basepath']}/web/carteSetting/js/API_MapBox/main_mapbox-gl.js"></script>                                       <!--Le js principal de la l'api mapBox-->
-    <script type="text/javascript" src="{$v['basepath']}/web/carteSetting/js/API_MapBox/soleil_suncalc.min.js"></script>            <!--Le script pour calculer la pos du soleil pour faire le ciel-->
-    <script src="{$v['basepath']}/web/carteSetting/js/API_MapBox/doubleMap_mapbox-gl-compare.js"></script>                          <!-- le script qui fait fonctionner le swap entre les 2 maps-->
-    <script src="{$v['basepath']}/web/carteSetting/js/API_MapBox/barreDeRecherche_mapbox-gl-geocoder.min.js"></script>              <!--le script de la recherche de lieu (geocoder)-->
+    <input type="hidden" id="link" value="{$v['map']}">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"></script>                                       <!--Le js principal de la l'api mapBox-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.8.0/suncalc.min.js"></script>            <!--Le script pour calculer la pos du soleil pour faire le ciel-->
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>                          <!-- le script qui fait fonctionner le swap entre les 2 maps-->
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>              <!--le script de la recherche de lieu (geocoder)-->
 
-    <link href="{$v['basepath']}/web/carteSetting/css/main_mapbox-gl.css" rel="stylesheet"/>                                        <!--Le css principal de la l'api mapBox-->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css" rel="stylesheet"/>                                        <!--Le css principal de la l'api mapBox-->
     <link href="{$v['basepath']}/web/carteSetting/css/index.css" rel="stylesheet"/>                                                 <!--Le css principal de la page web-->
-    <link rel="stylesheet" href="{$v['basepath']}/web/carteSetting/css/doubleMap_mapbox-gl-compare.css" type="text/css"/>           <!--le css qui gère la transition des 2 maps-->
-    <link rel="stylesheet" href="{$v['basepath']}/web/carteSetting/css/barreDeRecherche_mapbox-gl-geocoder.css" type="text/css"/>   <!--css de la recherche de lieu-->
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css" type="text/css"/>           <!--le css qui gère la transition des 2 maps-->
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css"/>   <!--css de la recherche de lieu-->
         <header id="headerMap">
             <div id="menu-btn-map" class="menu-btn">
                 <div class="menu-btn__burger"></div>
@@ -530,6 +536,101 @@ END;
         return $html;
     }
 
+    public function detailMonumentMap(Monument $monument, array $images, $vars): string
+    {
+        $html = $this->insererEnteteSite($vars);
+        $html .= <<<END
+        <section class="infos">
+            <h3 id="nom">{$monument->nomMonum}</h3>
+            <p class="desc" id="descMonu">{$monument->descLongue}</p>
+END;
+        if (sizeof($images) > 0) {
+            $html .= "<div class='wrapper' id='galerie'>";
+            foreach ($images as $img) {
+                $html .= <<<END
+<div class='cell'>
+    <img src='{$vars['basepath']}/{$img['urlImage']}'>
+</div>
+END;
+            }
+            $html .= "</div>";
+        }
+
+        if ($monument->estPrive == 0) {
+            $html .= <<<END
+</section>
+        <div class="box"><button onclick="window.location.href='{$vars['modifierMonument']}'">Proposer une modification</button></div></br>
+        <div class="box"><button onclick="window.location.href='{$vars['seeOnMap']}'">Voir le monument sur la carte</button></div>
+<div id="back"><img onclick="back('{$vars['back']}')" src="{$vars['basepath']}/web/img/back.png"/></div></div>
+<script>
+    function back(chemin) {
+        window.location = chemin
+    }
+</script>
+END;
+        } else {
+            $html .= <<<END
+</section>
+<div class="box"><button onclick="window.location.href='{$vars['seeOnMap']}'">Voir le monument sur la carte</button></div>
+<div id="back"><img onclick="back('{$vars['back']}')" src="{$vars['basepath']}/web/img/back.png"/></div></div>
+<script>
+    function back(chemin) {
+        window.location = chemin
+    }
+</script>
+END;
+        }
+        return $html;
+    }
+
+    public function detailListeMap(ListeMonument $liste, $monumentsDeCetteListe,$vars): string
+    {
+        $html = $this->insererEnteteSite($vars);
+        $html .= <<<END
+        <section class="titreListe">
+            <h3 class="nomSection">{$liste->nom}</h3>
+            <i class="desc">{$liste->description}</i>
+        </section></br>
+END;
+        if (sizeOf($monumentsDeCetteListe) > 0) {
+            $html .= <<<END
+                
+        <section class="tableau">
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Lien de partage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+END;
+            for ($i = 0; $i < sizeOf($monumentsDeCetteListe); $i++) {
+                $html .= $this->uneLigneMonumentListe($monumentsDeCetteListe[$i][0], $monumentsDeCetteListe[$i][1]);
+            }
+            $html .= <<<END
+                </tbody>
+              </table>
+        </section>
+END;
+
+        } else {
+            $html .= "<p id='message'>Aucuns monuments dans cette liste</p></br>";
+        }
+
+        return $html .= <<<END
+<div class="box"><button onclick="window.location.href='{$vars['seeOnMap']}'">Voir la liste sur la carte</button></div>
+<div id="back"><img onclick="back('{$vars['back']}')" src="{$vars['basepath']}/web/img/back.png"/></div></div>
+</div>
+<script>
+    function back(chemin) {
+        window.location = chemin
+    }
+</script>
+END;
+    }
+
     public function modifierUnMonument(Monument $monument, array $arrayImg, $vars): string
     {
         $html = $this->insererEnteteSite($vars);
@@ -913,6 +1014,12 @@ END;
                 break;
             case Vue::AMISNOUVEAULIEN:
                 $content = $this->pageAmisNouveauLien($vars);
+                break;
+            case Vue::MAP_MONUMENT:
+                $content = $this->detailMonumentMap($this->data[0], $this->data[1], $vars);
+                break;
+            case Vue::MAP_LISTE:
+                $content = $this->detailListeMap($this->data[0], $this->data[1], $vars);
                 break;
         }
 

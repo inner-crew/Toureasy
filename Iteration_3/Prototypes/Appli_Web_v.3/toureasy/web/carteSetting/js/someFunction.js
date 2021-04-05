@@ -311,7 +311,8 @@ var convertirMonumentsEnFeature = function (jsonDeMonuments) {
                 "title": unMonument.nomMonum,
                 "description": unMonument.descLongue,
                 "urlImage": unMonument.urlImage,
-                "nomImage": unMonument.nomImage
+                "nomImage": unMonument.nomImage,
+                "token": unMonument.token
             }
         })
     });
@@ -423,10 +424,13 @@ var afficherMonument = function (json, map) {
 }
 
 var genererMonumentDescr = function (monument) {
+    let url = document.getElementById('link').value
+    url += "share/monument/" + monument.token + '/'
     let html = `
         <h1>${monument.title}</h1>
         <p>${monument.description}</p>
         <img src="../${monument.urlImage}" alt="${monument.nomImage}">
+        <div class="box"><button onclick="window.location.href='${url}'">Afficher détails</button></div>
     `
     return html;
 }
