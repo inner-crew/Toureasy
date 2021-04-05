@@ -136,8 +136,9 @@ var unMonumentLayer = {
     filter: ['!', ['has', 'point_count']],
     layout: {
         'icon-image': ["get", "nomImage"],
-        'icon-size': 0.15,
+        'icon-size': 0.2,
         'icon-allow-overlap': true,
+        'icon-anchor': 'bottom',
     },
 }
 
@@ -370,7 +371,7 @@ var onClickMonument = function (unClusteredPoint, map) {
         coordinates[0] += unClusteredPoint.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    toggleSideBar(map, unClusteredPoint.features[0].properties);
+    toggleSideBar(map, unClusteredPoint);
 }
 
 var quoiAfficherSurLaMap = function (e, map) {
@@ -430,6 +431,28 @@ var genererMonumentDescr = function (monument) {
     return html;
 }
 
+var toggleInteraction = function(map, bool) {
+    if (bool) {
+        map['dragPan'].disable();
+        map['boxZoom'].disable();
+        map['scrollZoom'].disable();
+        map['keyboard'].disable();
+        map['doubleClickZoom'].disable();
+        map['touchZoomRotate'].disable();
+        setTimeout(() => {
+            map.setMinZoom(14);
+        }, 2000)
+    } else {
+        map['dragPan'].enable();
+        map['boxZoom'].enable();
+        map['scrollZoom'].enable();
+        map['keyboard'].enable();
+        map['doubleClickZoom'].enable();
+        map['touchZoomRotate'].enable();
+        map.setMinZoom(3);
+    }
+}
+
 var toggleSideBar = function (map, leMonument) {
     let id = "left"
     var elem = document.getElementById(id);
@@ -439,29 +462,49 @@ var toggleSideBar = function (map, leMonument) {
     var padding = {};
 
     if (collapsed) {
-// Remove the 'collapsed' class from the class list of the element, this sets it back to the expanded state.
         classes.splice(classes.indexOf('collapsed'), 1);
 
-        padding[id] = 300; // In px, matches the width of the sidebars set in .sidebar CSS class
-        map.easeTo({
-            padding: padding,
-            duration: 1000 // In ms, CSS transition duration property for the sidebar matches this value
-        });
-        document.getElementById("descMonument").innerHTML = genererMonumentDescr(leMonument)
-    } else {
-        padding[id] = 0;
-// Add the 'collapsed' class to the class list of the element
-        classes.push('collapsed');
-
+        padding[id] = 300;
         map.easeTo({
             padding: padding,
             duration: 1000
         });
-        setTimeout(() => {
-            document.getElementById("descMonument").innerHTML = "<p>Monument vide</p>"
-        }, 1000);
+        document.getElementById("descMonument").innerHTML = genererMonumentDescr(leMonument.features[0].properties)
+        map.flyTo({
+            center: leMonument.features[0]._geometry.coordinates,
+            zoom: 17,
+            pitch: 65,
+            bearing: -180,
+            essential: true
+        });
+        toggleInteraction(map, true);
+    } else {
+        if (leMonument) {
+            document.getElementById("descMonument").innerHTML = genererMonumentDescr(leMonument.features[0].properties)
+            map.flyTo({
+                center: leMonument.features[0]._geometry.coordinates,
+                zoom: 16,
+                pitch: 65,
+                essential: true,
+            });
+        } else {
+            padding[id] = 0;
+            classes.push('collapsed');
+
+            map.easeTo({
+                padding: padding,
+                duration: 1000
+            });
+            map.flyTo({
+                center: map.getCenter(),
+                zoom: 13,
+                pitch: 45,
+                bearing: 0,
+                essential: true,
+            });
+            toggleInteraction(map, false);
+        }
     }
-    // Update the class list on the element
     elem.className = classes.join(' ');
 }
 
