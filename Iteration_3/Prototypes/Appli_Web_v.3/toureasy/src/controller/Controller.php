@@ -250,7 +250,7 @@ class Controller
         ];
 
         if ($this->verifierUtilisateurConnecte()) {
-            $idMembre = Membre::getMembreByToken($_COOKIE['token'])->first()->idMembre;
+            $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
 
             $arrayListesMonuments = array();
             foreach ($this->getListeDunUser($idMembre, false) as $uneListe) {
