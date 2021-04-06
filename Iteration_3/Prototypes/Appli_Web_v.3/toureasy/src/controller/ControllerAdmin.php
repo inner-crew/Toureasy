@@ -44,7 +44,7 @@ class ControllerAdmin
             return $rs;
         } else {
             $membre = Membre::getMembreByToken($_COOKIE['token'])->first();
-            return $this->genererMessageAvecRedirection($rs,$rq,"Vous n'êtes pas administrateur {$membre->role}", 'home', $args);
+            return $this->genererMessageAvecRedirection($rs,$rq,"Vous n'êtes pas administrateur", 'home', $args);
         }
     }
 
@@ -71,7 +71,7 @@ class ControllerAdmin
     {
         if (isset($_COOKIE['token'])) {
             try {
-                $membre = Membre::getMembreByToken($_COOKIE['token'])->first();
+                $membre = Membre::getMembreByToken($_COOKIE['token']);
                 if ($membre->role === 2 || $membre->role === 3) {
                     return true;
                 } else {
