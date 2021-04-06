@@ -18,6 +18,7 @@ loadingBar.prototype.increment = function () {
     }
 }
 
+
 var init = function () {
     var bounds = [
         [-180, -85],
@@ -135,7 +136,6 @@ default
 window.addEventListener("load", function () {
     init()
 })
-
 
 
 

@@ -1,5 +1,27 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVtaXRvczU3IiwiYSI6ImNramsxc3EwaTR2bW4ycm5xZXgwamQ3em0ifQ.LxF1l4i5VksFZHOzuJmqTA';
 var reader = new FileReader();
+var loadingPhase = new loadingBar();
+
+function loadingBar() {
+    this.step = 0;
+}
+
+loadingBar.prototype.increment = function () {
+    this.step++;
+    if (this.step === 2) {
+        console.log("Tout est chargé, ready.");
+        document.getElementById("loading").innerHTML = `<h1 id="loadingText">Terminé &#128405;`;
+        setTimeout(() => {
+            document.getElementById("loading").style += 'position: relative;' +
+                'animation-name: animPageLoading;\n' +
+                'animation-duration: 1s;\n' +
+                'animation-fill-mode: forwards;'
+        }, 1000);
+
+
+    }
+    console.log(this.step);
+}
 
 var premierFonction = function () {
     console.log("BlaBla");
@@ -524,6 +546,7 @@ var mapCharger = function (streetMap, sateliteMap) {
         for (const assos of data) {
             createPointeurOfAnImage(1, assos.url, "#" + Math.floor(Math.random() * 16777215).toString(16), assos.id, streetMap);
         }
+        loadingPhase.increment()
     });
 
     streetMap.addLayer(clusterLayer);
@@ -542,6 +565,7 @@ var mapCharger = function (streetMap, sateliteMap) {
     getJsonFile("monumentPublique").then(json => {
         afficherMonument(json, streetMap);
     });
+    loadingPhase.increment()
 }
 
 
@@ -558,5 +582,6 @@ export default {
     convertirMonumentsEnFeature: convertirMonumentsEnFeature,
     getCookie: getCookie,
     majSelectBoxDesListes: majSelectBoxDesListes,
-    mapCharger: mapCharger
+    mapCharger: mapCharger,
+    loadingPhase: loadingPhase
 }

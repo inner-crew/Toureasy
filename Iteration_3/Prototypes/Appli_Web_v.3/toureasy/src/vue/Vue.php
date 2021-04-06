@@ -105,6 +105,9 @@ END;
     <link href="{$v['basepath']}/web/carteSetting/css/index.css" rel="stylesheet"/>                                                 <!--Le css principal de la page web-->
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css" type="text/css"/>           <!--le css qui gère la transition des 2 maps-->
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css"/>   <!--css de la recherche de lieu-->
+    <div id="loading">
+        <h1 id="loadingText">Map en cours de chargement...</h1>
+    </div>
         <header id="headerMap">
             <div id="menu-btn-map" class="menu-btn">
                 <div class="menu-btn__burger"></div>
@@ -112,7 +115,6 @@ END;
             <div id="divNomSite" style="cursor: pointer;" onclick="window.location='{$v['menu']['home']}';">
                 <h1 id="nameMap">Toureasy</h1>       
             </div>
-            
         </header>
         
         
