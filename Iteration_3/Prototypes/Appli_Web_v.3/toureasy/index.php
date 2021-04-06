@@ -5,6 +5,7 @@ use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use toureasy\controller\Controller;
+use toureasy\controller\ControllerAdmin;
 use toureasy\database\Eloquent;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -63,9 +64,19 @@ $app->get('/map/share/liste/{token}[/]', function(Request $rq, Response $rs, arr
     return $c->displayMapDetailListe($rq,$rs,$args);
 })->setName('mapDetailListe');
 
-$app->get('/map/share/liste/{token}/monument/{tokenM}', function(Request $rq, Response $rs, array $args) {
+$app->get('/map/share/liste/{token}/monument/{tokenM}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayMapDetailListeMonument($rq,$rs,$args);
+})->setName('mapDetailListeMonument');
+
+$app->get('/map/share/liste/{token}/monument/{tokenM}/modifier[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayModifierMonument($rq,$rs,$args);
+})->setName('mapDetailListeMonument');
+
+$app->post('/map/share/liste/{token}/monument/{tokenM}/modifier[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->postModifierMonument($rq,$rs,$args);
 })->setName('mapDetailListeMonument');
 
 
@@ -194,6 +205,16 @@ $app->get('/test[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayTest($rq,$rs,$args);
 })->setName('test');
+
+$app->get('/admin[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new ControllerAdmin($this);
+    return $c->displayTableauAdmin($rq,$rs,$args);
+})->setName('admin');
+
+$app->get('/admin/detail/{token}[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new ControllerAdmin($this);
+    return $c->displayDetailMonument($rq,$rs,$args);
+})->setName('detailAdmin');
 
 
 
