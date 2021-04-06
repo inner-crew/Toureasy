@@ -1,5 +1,6 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVtaXRvczU3IiwiYSI6ImNramsxc3EwaTR2bW4ycm5xZXgwamQ3em0ifQ.LxF1l4i5VksFZHOzuJmqTA';
 var reader = new FileReader();
+const urlParams = new URLSearchParams(window.location.search);
 var loadingPhase = new loadingBar();
 
 function loadingBar() {
@@ -9,7 +10,7 @@ function loadingBar() {
 loadingBar.prototype.increment = function () {
     this.step++;
     if (this.step === 2) {
-        console.log("Tout est chargé, ready.");
+        console.log("Tout est chargé");
         document.getElementById("loading").innerHTML = `<h1 id="loadingText">Terminé &#128405;`;
         setTimeout(() => {
             document.getElementById("loading").style += 'position: relative;' +
@@ -20,8 +21,8 @@ loadingBar.prototype.increment = function () {
                 document.getElementById("loading").remove();
             }, 1000);
         }, 1000);
+        console.log("Ready !");
     }
-    console.log(this.step);
 }
 
 var premierFonction = function () {
@@ -211,7 +212,6 @@ var createPointeurOfAnImage = function (taille, urlImage, couleur, id, map) {
     background.onload = function () {
         if (background.height <= background.width) {
             ctx.drawImage(background, (background.width - background.height) / 2, 0, background.height, background.height, 0, 0, taille * 200, taille * 200);
-            console.log(background);
         } else {
             ctx.drawImage(background, 0, (background.height - background.width) / 2, background.width, background.width, 0, 0, taille * 200, taille * 200);
         }
@@ -361,11 +361,25 @@ var getCookie = function (cname) {
 
 var majSelectBoxDesListes = function () {
     let selectBox = document.getElementById("monumentAfficher");
-    selectBox.innerHTML = `<option value="publique" selected>Monuments certifiés</option>
+    if (urlParams.has('monument')) {
+        selectBox.innerHTML = `<option value="publique">Monuments certifiés</option>
+  <option value="mesMonuments" selected>Vos contribution</option>`
+    } else if (urlParams.has('liste')) {
+        selectBox.innerHTML = `<option value="publique">Monuments certifiés</option>
   <option value="mesMonuments">Vos contribution</option>`
+    } else {
+        selectBox.innerHTML = `<option value="publique" selected>Monuments certifiés</option>
+  <option value="mesMonuments">Vos contribution</option>`
+    }
     getJsonFile(getCookie("token")).then(json => {
+        let i = 0;
         json.Listes.forEach(uneListe => {
-            selectBox.innerHTML += `<option value="${uneListe.liste.idListe}">${uneListe.liste.nom}</option>`;
+            if (urlParams.has('liste') && urlParams.get('liste') === uneListe.liste.token && i===0) {
+                selectBox.innerHTML += `<option value="partager" selected>Partager : ${uneListe.liste.nom}</option>`;
+                i++;
+            } else {
+                selectBox.innerHTML += `<option value="${uneListe.liste.idListe}">${uneListe.liste.nom}</option>`;
+            }
         });
     });
 }
@@ -411,7 +425,19 @@ var quoiAfficherSurLaMap = function (e, map) {
                 let tmp2 = convertirMonumentsEnFeature(json.monumentsPubliques);
                 tmp2.features.forEach(unFeature => {
                     tmp.features.push(unFeature);
-                })
+                });
+                if (json.monumentPartager !== null) {
+                    let tmp3 = convertirMonumentsEnFeature(json.monumentPartager);
+                    tmp3.features.forEach(unFeature => {
+                        tmp.features.push(unFeature);
+                    });
+                }
+                afficherMonument(tmp, map);
+            });
+            break;
+        case("partager") :
+            getJsonFile(getCookie("token")).then(json => {
+                let tmp = convertirMonumentsEnFeature(json.monumentPartager);
                 afficherMonument(tmp, map);
             });
             break;
@@ -420,8 +446,10 @@ var quoiAfficherSurLaMap = function (e, map) {
             getJsonFile(getCookie("token")).then(json => {
                 var lesMonuments = [];
                 var listesDesIdMonuments = [];
+                let i = 0;
                 json.Listes.forEach(uneListe => {
-                    if (uneListe.liste.idListe.toString() === idDeLaListe.toString()) {
+                    if (uneListe.liste.idListe.toString() === idDeLaListe.toString() && i===0) {
+                        i++;
                         uneListe.assosiation.forEach(uneAssociation => {
                             listesDesIdMonuments.push(uneAssociation.idMonument);
                         });
@@ -563,9 +591,28 @@ var mapCharger = function (streetMap, sateliteMap) {
     document.getElementById("monumentAfficher").onchange = (e) => {
         quoiAfficherSurLaMap(e, streetMap);
     }
-    getJsonFile("monumentPublique").then(json => {
-        afficherMonument(json, streetMap);
-    });
+
+    let select = document.getElementById("monumentAfficher");
+    setTimeout(() => {
+        for (let option of select) {
+            if (option.selected === true) {
+                select.value = option.value
+                select.dispatchEvent(new Event('change'));
+            }
+        }
+    }, 1000)
+
+    if (urlParams.has('monument')) {
+        getJsonFile(getCookie("token")).then(data => {
+            streetMap.easeTo({
+                center: [data.monumentPartager[0].longitude, data.monumentPartager[0].latitude],
+                zoom: 16,
+                pitch: 45,
+                essential: true,
+                duration: 300
+            });
+        })
+    }
     loadingPhase.increment()
 }
 

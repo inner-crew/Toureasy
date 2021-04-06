@@ -238,7 +238,32 @@ class Controller
                 array_push($tabListes, [$liste, $url, $partage]);
             } else array_push($tabListes, $liste);
         }
+        if (isset($_GET['liste'])) {
+            array_push($tabListes, ListeMonument::getListeByToken($_GET['liste']));
+        }
         return $tabListes;
+    }
+
+    private function getMonumentUrl() {
+        if (isset($_GET['monument'])) {
+            return [Monument::getMonumentByToken($_GET['monument'])];
+        } else {
+            return null;
+        }
+    }
+
+    private function getMonumentDuneListe($tokenListe): array {
+        $liste = ListeMonument::getListeByToken($tokenListe);
+        $listeMonumentsDeCetteListe = AppartenanceListe::getMonumentByIdListe($liste->idListe);
+        $tabMonumentsDeCetteListe = array();
+        foreach ($listeMonumentsDeCetteListe as $monument) {
+            $image = Image::where('idMonument', '=', $monument->idMonument)->first();
+            $monument = Monument::getMonumentById($monument->idMonument);
+            $monument->urlImage = $image->urlImage;
+            $monument->nomImage = substr($image->urlImage, 8);
+            array_push($tabMonumentsDeCetteListe, $monument);
+        }
+        return $tabMonumentsDeCetteListe;
     }
 
     public function displayMap(Request $rq, Response $rs, array $args): Response
@@ -256,9 +281,16 @@ class Controller
             foreach ($this->getListeDunUser($idMembre, false) as $uneListe) {
                 array_push($arrayListesMonuments, ["liste" => $uneListe, "assosiation" => AppartenanceListe::getMonumentByIdListe($uneListe->idListe)->toArray()]);
             }
+            $monuments = null;
+            if (isset($_GET['monument'])) {
+                $monuments = $this->getMonumentUrl();
+            } else if (isset($_GET['liste'])) {
+                $monuments = $this->getMonumentDuneListe($_GET['liste']);
+            }
             $res = array("Listes" => $arrayListesMonuments,
                 "monumentsPrives" => $this->getMonumentPriveDunUser($idMembre, false),
-                "monumentsPubliques" => $this->getMonumentPubliqueDunUser($idMembre, false)
+                "monumentsPubliques" => $this->getMonumentPubliqueDunUser($idMembre, false),
+                "monumentPartager" => $monuments
             );
 
             $leJson = json_encode($res);
