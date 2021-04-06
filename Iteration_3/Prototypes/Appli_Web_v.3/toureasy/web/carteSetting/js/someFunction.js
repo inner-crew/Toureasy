@@ -443,9 +443,6 @@ var toggleInteraction = function(map, bool) {
         map['keyboard'].disable();
         map['doubleClickZoom'].disable();
         map['touchZoomRotate'].disable();
-        setTimeout(() => {
-            map.setMinZoom(14);
-        }, 2000)
     } else {
         map['dragPan'].enable();
         map['boxZoom'].enable();
@@ -453,7 +450,6 @@ var toggleInteraction = function(map, bool) {
         map['keyboard'].enable();
         map['doubleClickZoom'].enable();
         map['touchZoomRotate'].enable();
-        map.setMinZoom(3);
     }
 }
 
@@ -471,16 +467,14 @@ var toggleSideBar = function (map, leMonument) {
         padding[id] = 300;
         map.easeTo({
             padding: padding,
-            duration: 1000
-        });
-        document.getElementById("descMonument").innerHTML = genererMonumentDescr(leMonument.features[0].properties)
-        map.flyTo({
             center: leMonument.features[0]._geometry.coordinates,
             zoom: 17,
             pitch: 65,
             bearing: -180,
-            essential: true
+            essential: true,
+            duration: 1000
         });
+        document.getElementById("descMonument").innerHTML = genererMonumentDescr(leMonument.features[0].properties)
         toggleInteraction(map, true);
     } else {
         if (leMonument) {
@@ -497,14 +491,12 @@ var toggleSideBar = function (map, leMonument) {
 
             map.easeTo({
                 padding: padding,
-                duration: 1000
-            });
-            map.flyTo({
                 center: map.getCenter(),
-                zoom: 13,
+                zoom: 14,
                 pitch: 45,
                 bearing: 0,
                 essential: true,
+                duration: 1000
             });
             toggleInteraction(map, false);
         }
