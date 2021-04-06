@@ -15,10 +15,11 @@ loadingBar.prototype.increment = function () {
             document.getElementById("loading").style += 'position: relative;' +
                 'animation-name: animPageLoading;\n' +
                 'animation-duration: 1s;\n' +
-                'animation-fill-mode: forwards;'
+                'animation-fill-mode: forwards;';
+            setTimeout(() => {
+                document.getElementById("loading").remove();
+            }, 1000);
         }, 1000);
-
-
     }
     console.log(this.step);
 }
