@@ -283,7 +283,7 @@ class Controller
         if ($this->verifierUtilisateurConnecte()) {
             $monument = Monument::getMonumentByToken($args['token']);
             $images = Image::getImageUrlByIdMonument($monument->idMonument);
-            $membre = Membre::getMembreByToken($_COOKIE['token'])->first();
+            $membre = Membre::getMembreByToken($_COOKIE['token']);
 
             try {
                 $favori = Favoris::query()->where([['idMonument','=',$monument->idMonument],['idMembre', '=',$membre->idMembre]])->firstOrFail();
@@ -312,6 +312,7 @@ class Controller
         if ($this->verifierUtilisateurConnecte()) {
             $monument = Monument::getMonumentByToken($args['tokenM']);
             $images = Image::getImageUrlByIdMonument($monument->idMonument);
+            $membre = Membre::getMembreByToken($_COOKIE['token']);
 
             try {
                 $favori = Favoris::query()->where([['idMonument','=',$monument->idMonument],['idMembre', '=',$membre->idMembre]])->firstOrFail();
