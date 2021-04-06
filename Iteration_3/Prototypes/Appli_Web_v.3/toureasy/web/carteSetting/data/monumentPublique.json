@@ -1,5 +1,5 @@
-<<<<<<< Updated upstream
-{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":["6.960302","49.193893"]},"properties":{"title":"yzegzueifoz","description":"fedzfzergertytjytj","urlImage":"web\/img\/taken_2021_04_06_13_20_36.jpg","nomImage":"WIN_20210227_00_51_30_Pro.jpg","token":"296a3623c2"}}]}
-=======
-{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":["6.949","48.2835"]},"properties":{"title":"R\u00e9mi a tu\u00e9 mon monument","description":"","urlImage":"web\/img\/cross.png","nomImage":"cross.png","token":"a013d36ac2"}}]}
->>>>>>> Stashed changes
+{
+  "type": "FeatureCollection",
+  "features": [
+  ]
+}
