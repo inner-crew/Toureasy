@@ -4,6 +4,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoicmVtaXRvczU3IiwiYSI6ImNramsxc3EwaTR2bW4ycm5xZ
 var troisD;
 var beforeMap;
 var afterMap;
+const urlParams = new URLSearchParams(window.location.search);
 var loadingPhase = new loadingBar();
 
 function loadingBar() {
@@ -17,7 +18,6 @@ loadingBar.prototype.increment = function () {
         someFunction.mapCharger(beforeMap, afterMap);
     }
 }
-
 
 var init = function () {
     var bounds = [
@@ -51,6 +51,16 @@ default
         maxBounds: bounds
     });
     beforeMap.setRenderWorldCopies(false);
+
+    if (("geolocation" in navigator) && !(urlParams.has('monument'))) {
+        navigator.geolocation.getCurrentPosition(position => {
+            beforeMap.easeTo({
+                center: [position.coords.longitude, position.coords.latitude],
+                zoom: 13,
+                duration: 1000
+            });
+        });
+    }
 
     loadingPhase.increment();
 
@@ -136,7 +146,6 @@ default
 window.addEventListener("load", function () {
     init()
 })
-
 
 
 

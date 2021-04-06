@@ -1,6 +1,14 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicmVtaXRvczU3IiwiYSI6ImNramsxc3EwaTR2bW4ycm5xZXgwamQ3em0ifQ.LxF1l4i5VksFZHOzuJmqTA';
 var reader = new FileReader();
 const urlParams = new URLSearchParams(window.location.search);
+
+var acc = '';
+let petitsPoints = setInterval(function() {
+    document.getElementById('loadingText').innerText = 'Map en cours de chargement' + acc;
+    acc += '.';
+    if (acc === '....') acc = ""
+}, 200);
+
 var loadingPhase = new loadingBar();
 
 function loadingBar() {
@@ -11,7 +19,16 @@ loadingBar.prototype.increment = function () {
     this.step++;
     if (this.step === 2) {
         console.log("Tout est chargé");
-        document.getElementById("loading").innerHTML = `<h1 id="loadingText">Terminé &#128405;`;
+        document.getElementById("loadingText").style += 'position: relative;' +
+            'animation-name: animPageLoadingTitreMonteDescend;\n' +
+            'animation-duration: 0.5s;\n' +
+            'animation-timing-function: ease-in-out;'
+            'animation-fill-mode: forwards;';
+        setTimeout(() => {
+            clearInterval(petitsPoints);
+            document.getElementById("loadingText").innerHTML = 'Terminé &#128540;'
+        }, 250)
+
         setTimeout(() => {
             document.getElementById("loading").style += 'position: relative;' +
                 'animation-name: animPageLoading;\n' +

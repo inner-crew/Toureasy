@@ -106,7 +106,7 @@ END;
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css" type="text/css"/>           <!--le css qui gère la transition des 2 maps-->
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css"/>   <!--css de la recherche de lieu-->
     <div id="loading">
-        <h1 id="loadingText">Map en cours de chargement...</h1>
+        <h1 id="loadingText">Map en cours de chargement</h1>
     </div>
         <header id="headerMap">
             <div id="menu-btn-map" class="menu-btn">
