@@ -390,6 +390,9 @@ var majSelectBoxDesListes = function () {
     }
     getJsonFile(getCookie("token")).then(json => {
         let i = 0;
+        if (json.monumentsFavoris) {
+            selectBox.innerHTML += `<option value="favoris" selected>Vos favoris</option>`;
+        }
         json.Listes.forEach(uneListe => {
             if (urlParams.has('liste') && urlParams.get('liste') === uneListe.liste.token && i===0) {
                 selectBox.innerHTML += `<option value="partager" selected>Partager : ${uneListe.liste.nom}</option>`;
@@ -452,6 +455,11 @@ var quoiAfficherSurLaMap = function (e, map) {
                 afficherMonument(tmp, map);
             });
             break;
+        case('favoris'):
+            getJsonFile(getCookie("token")).then(json => {
+                let tmp = convertirMonumentsEnFeature(json.monumentsFavoris);
+                afficherMonument(tmp, map);
+            });
         case("partager") :
             getJsonFile(getCookie("token")).then(json => {
                 let tmp = convertirMonumentsEnFeature(json.monumentPartager);
