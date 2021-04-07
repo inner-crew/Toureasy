@@ -15,4 +15,8 @@ class Favoris extends Model
         return false;
     }
 
+    public function getFavorisDunUser($idMembre) {
+        Favoris::query()->where("idMembre", '=', $idMembre)->get();
+    }
+
 }

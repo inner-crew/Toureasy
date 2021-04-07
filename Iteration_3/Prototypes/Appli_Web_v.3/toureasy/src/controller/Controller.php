@@ -266,6 +266,20 @@ class Controller
         return $tabMonumentsDeCetteListe;
     }
 
+    private function getMonumentFavoriDunUser($idMembre): array {
+        $favoris = Favoris::getFavorisDunUser($idMembre);
+        var_dump($favoris);
+        $tabListeMonuement = array();
+        foreach ($favoris as $unFav) {
+            $monument = Monument::getMonumentById($unFav->idMonument);
+            $image = Image::where('idMonument', '=', $unFav->idMonument);
+            $monument->urlImage = $image->urlImage;
+            $monument->nomImage = substr($image->urlImage, 8);
+            array_push($tabListeMonuement, $monument);
+        }
+        return $tabListeMonuement;
+    }
+
     public function displayMap(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
@@ -290,7 +304,8 @@ class Controller
             $res = array("Listes" => $arrayListesMonuments,
                 "monumentsPrives" => $this->getMonumentPriveDunUser($idMembre, false),
                 "monumentsPubliques" => $this->getMonumentPubliqueDunUser($idMembre, false),
-                "monumentPartager" => $monuments
+                "monumentPartager" => $monuments,
+                "monumentsFavoris" => $this->getMonumentFavoriDunUser($idMembre)
             );
 
             $leJson = json_encode($res);

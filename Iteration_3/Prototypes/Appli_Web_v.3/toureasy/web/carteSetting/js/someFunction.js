@@ -497,7 +497,7 @@ var genererMonumentDescr = function (monument) {
     let html = `
         <h1>${monument.title}</h1>
         <p>${monument.description}</p>
-        <img src="../${monument.urlImage}" alt="${monument.nomImage}">
+        <img src="../${monument.urlImage}" alt="${monument.nomImage}"x>
         <div class="box"><button onclick="window.location.href='${url}'">Afficher détails</button></div>
     `
     return html;
