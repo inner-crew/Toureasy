@@ -47,4 +47,12 @@ class Membre extends Model
     {
         return false;
     }
+
+    public function monumentsFavoris() {
+        return $this->belongsToMany(Monument::class,
+            'favoris',
+            'idMembre',
+            'idMonument'
+        );
+    }
 }

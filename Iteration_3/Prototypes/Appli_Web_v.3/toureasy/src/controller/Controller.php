@@ -92,7 +92,7 @@ class Controller
             }
         }
 
-        setcookie('token', $token, time()+60*60*24*500, "/");
+        setcookie('token', $token, time() + 60 * 60 * 24 * 500, "/");
 
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
@@ -244,7 +244,8 @@ class Controller
         return $tabListes;
     }
 
-    private function getMonumentUrl() {
+    private function getMonumentUrl()
+    {
         if (isset($_GET['monument'])) {
             return [Monument::getMonumentByToken($_GET['monument'])];
         } else {
@@ -252,7 +253,8 @@ class Controller
         }
     }
 
-    private function getMonumentDuneListe($tokenListe): array {
+    private function getMonumentDuneListe($tokenListe): array
+    {
         $liste = ListeMonument::getListeByToken($tokenListe);
         $listeMonumentsDeCetteListe = AppartenanceListe::getMonumentByIdListe($liste->idListe);
         $tabMonumentsDeCetteListe = array();
@@ -266,13 +268,16 @@ class Controller
         return $tabMonumentsDeCetteListe;
     }
 
-    private function getMonumentFavoriDunUser($idMembre): array {
-        $favoris = Favoris::getFavorisDunUser($idMembre);
-        var_dump($favoris);
+    private function getMonumentFavoriDunUser($idMembre): array
+    {
+        $favoris = Membre::with('monumentsFavoris')->where('idMembre', '=', $idMembre)->get()->toArray();
         $tabListeMonuement = array();
-        foreach ($favoris as $unFav) {
-            $monument = Monument::getMonumentById($unFav->idMonument);
-            $image = Image::where('idMonument', '=', $unFav->idMonument);
+        //var_dump($favoris[0]['monuments_favoris']);
+        $tmp = $favoris[0]['monuments_favoris'];
+        foreach ($tmp as $unFav) {
+            var_dump($unFav);
+            $monument = Monument::getMonumentById($unFav['idMonument']);
+            $image = Image::where('idMonument', '=', $unFav['idMonument'])->first();
             $monument->urlImage = $image->urlImage;
             $monument->nomImage = substr($image->urlImage, 8);
             array_push($tabListeMonuement, $monument);
@@ -290,7 +295,6 @@ class Controller
 
         if ($this->verifierUtilisateurConnecte()) {
             $idMembre = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
-
             $arrayListesMonuments = array();
             foreach ($this->getListeDunUser($idMembre, false) as $uneListe) {
                 array_push($arrayListesMonuments, ["liste" => $uneListe, "assosiation" => AppartenanceListe::getMonumentByIdListe($uneListe->idListe)->toArray()]);
@@ -315,11 +319,12 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MAP));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
         }
     }
 
-    public function displayMapDetailMonument(Request $rq, Response $rs, array $args): Response {
+    public function displayMapDetailMonument(Request $rq, Response $rs, array $args): Response
+    {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'menu' => $this->getMenu($args),
@@ -332,12 +337,9 @@ class Controller
             $images = Image::getImageUrlByIdMonument($monument->idMonument);
             $membre = Membre::getMembreByToken($_COOKIE['token']);
 
-            try {
-                $favori = Favoris::query()->where([['idMonument','=',$monument->idMonument],['idMembre', '=',$membre->idMembre]])->firstOrFail();
-                $htmlvars['estFavori'] = true;
-            } catch (ModelNotFoundException $e) {
-                $htmlvars['estFavori'] = false;
-            }
+            $favori = $membre->monumentsFavoris->contains($monument->idMonument);
+            if ($favori) $htmlvars['estFavori'] = true;
+            else $htmlvars['estFavori'] = false;
 
             $htmlvars['seeOnMap'] = $this->c->router->pathFor('map') . "?monument=" . $monument->token;
 
@@ -345,11 +347,13 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MAP_MONUMENT));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
         }
     }
 
-    public function displayMapDetailListeMonument(Request $rq, Response $rs, array $args): Response {
+    public
+    function displayMapDetailListeMonument(Request $rq, Response $rs, array $args): Response
+    {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'menu' => $this->getMenu($args),
@@ -362,7 +366,7 @@ class Controller
             $membre = Membre::getMembreByToken($_COOKIE['token']);
 
             try {
-                $favori = Favoris::query()->where([['idMonument','=',$monument->idMonument],['idMembre', '=',$membre->idMembre]])->firstOrFail();
+                $favori = Favoris::query()->where([['idMonument', '=', $monument->idMonument], ['idMembre', '=', $membre->idMembre]])->firstOrFail();
                 $htmlvars['estFavori'] = true;
             } catch (ModelNotFoundException $e) {
                 $htmlvars['estFavori'] = false;
@@ -374,11 +378,13 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MAP_MONUMENT));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
         }
     }
 
-    public function displayMapDetailListe(Request $rq, Response $rs, array $args): Response {
+    public
+    function displayMapDetailListe(Request $rq, Response $rs, array $args): Response
+    {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'menu' => $this->getMenu($args),
@@ -391,7 +397,7 @@ class Controller
             $tabMonumentsDeCetteListe = array();
             foreach ($listeMonumentsDeCetteListe as $monument) {
                 $monument = Monument::getMonumentById($monument->idMonument);
-                $url = $this->c->router->pathFor('mapDetailListeMonument', ['token' => $liste->token,'tokenM' => $monument->token]);
+                $url = $this->c->router->pathFor('mapDetailListeMonument', ['token' => $liste->token, 'tokenM' => $monument->token]);
                 array_push($tabMonumentsDeCetteListe, [$monument, $url]);
             }
 
@@ -401,12 +407,13 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MAP_LISTE));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
         }
     }
 
 
-    public function displayAjouterMonument(Request $rq, Response $rs, array $args): Response
+    public
+    function displayAjouterMonument(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -423,7 +430,8 @@ class Controller
         return $rs;
     }
 
-    public function postAjouterMonument(Request $rq, Response $rs, array $args)
+    public
+    function postAjouterMonument(Request $rq, Response $rs, array $args)
     {
         $data = $rq->getParsedBody();
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
@@ -566,7 +574,8 @@ class Controller
         return $this->genererMessageAvecRedirection($rs, $rq, "Monument créé avec succès", "mes-listes", $args);
     }
 
-    public function displayAjouterListe(Request $rq, Response $rs, array $args): Response
+    public
+    function displayAjouterListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -582,7 +591,8 @@ class Controller
         }
     }
 
-    public function postAjouterListe(Request $rq, Response $rs, array $args): Response
+    public
+    function postAjouterListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -615,7 +625,8 @@ class Controller
         return $rs;
     }
 
-    public function displayDetailListe(Request $rq, Response $rs, array $args): Response
+    public
+    function displayDetailListe(Request $rq, Response $rs, array $args): Response
     {
         $liste = ListeMonument::getListeByToken($args['token']);
         $htmlvars = [
@@ -653,7 +664,8 @@ class Controller
         return $rs;
     }
 
-    public function displayModifierListe(Request $rq, Response $rs, array $args): Response
+    public
+    function displayModifierListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -667,7 +679,8 @@ class Controller
         return $rs;
     }
 
-    public function postModifierListe(Request $rq, Response $rs, array $args): Response
+    public
+    function postModifierListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -685,7 +698,8 @@ class Controller
         return $this->genererMessageAvecRedirection($rs, $rq, "Liste modifiée avec succès", "mes-listes", $args);
     }
 
-    public function displayDetailMonument(Request $rq, Response $rs, array $args): Response
+    public
+    function displayDetailMonument(Request $rq, Response $rs, array $args): Response
     {
         $monument = Monument::getMonumentByToken($args['token']);
         $images = Image::getImageUrlByIdMonument($monument->idMonument);
@@ -702,13 +716,14 @@ class Controller
         if ($this->verifierUtilisateurConnecte()) {
             $rs->getBody()->write($v->render($htmlvars, Vue::MONUMENT));
         } else {
-            return $this->genererRedirectionPageConnexion($rs, $rq,$args);
+            return $this->genererRedirectionPageConnexion($rs, $rq, $args);
         }
 
         return $rs;
     }
 
-    public function displayModifierMonument(Request $rq, Response $rs, array $args): Response
+    public
+    function displayModifierMonument(Request $rq, Response $rs, array $args): Response
     {
         $monument = Monument::getMonumentByToken($args['token']);
         $image = Image::getImageUrlByIdMonument($monument->idMonument);
@@ -722,7 +737,8 @@ class Controller
         return $rs;
     }
 
-    public function postModifierMonument(Request $rq, Response $rs, array $args): Response
+    public
+    function postModifierMonument(Request $rq, Response $rs, array $args): Response
     {
         $monument = null;
         if (isset($args['tokenM'])) {
@@ -735,11 +751,12 @@ class Controller
         if ($monument->estPrive) {
             return $this->postModifierMonumentPrive($rq, $rs, $args, $monument);
         } else {
-            return $this->postModifierMonumentPublic($rq,$rs,$args, $monument);
+            return $this->postModifierMonumentPublic($rq, $rs, $args, $monument);
         }
     }
 
-    public function postModifierMonumentPublic(Request $rq, Response $rs, array $args, Monument $m): Response
+    public
+    function postModifierMonumentPublic(Request $rq, Response $rs, array $args, Monument $m): Response
     {
         $data = $rq->getParsedBody();
 
@@ -799,19 +816,20 @@ class Controller
                         $image->urlImage = $file_dest;
                         $image->save();
                     } else {
-                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "modifierMonument",$args ,['token' => $args['token']]);
+                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "modifierMonument", $args, ['token' => $args['token']]);
                     }
                 } else {
-                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "modifierMonument",$args, ['token' => $args['token']]);
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "modifierMonument", $args, ['token' => $args['token']]);
                 }
             }
         }
         $monument->save();
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Monument modifié", "detail-monument",$args, ["token" => $args['token']]);
+        return $this->genererMessageAvecRedirection($rs, $rq, "Monument modifié", "detail-monument", $args, ["token" => $args['token']]);
     }
 
-    public function postModifierMonumentPrive(Request $rq, Response $rs, array $args): Response
+    public
+    function postModifierMonumentPrive(Request $rq, Response $rs, array $args): Response
     {
         $monument = Monument::getMonumentByToken($args['token'])->first();
         $data = $rq->getParsedBody();
@@ -859,19 +877,20 @@ class Controller
                         $image->urlImage = $file_dest;
                         $image->save();
                     } else {
-                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "modifierMonument",$args ,['token' => $args['token']]);
+                        return $this->genererMessageAvecRedirection($rs, $rq, 'Une erreur est survenue lors du téléchargement de l\'image', "modifierMonument", $args, ['token' => $args['token']]);
                     }
                 } else {
-                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "modifierMonument",$args, ['token' => $args['token']]);
+                    return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "modifierMonument", $args, ['token' => $args['token']]);
                 }
             }
         }
         $monument->save();
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Monument modifié", "detail-monument",$args, ["token" => $args['token']]);
+        return $this->genererMessageAvecRedirection($rs, $rq, "Monument modifié", "detail-monument", $args, ["token" => $args['token']]);
     }
 
-    public function postAjouterMonumentListe(Request $rq, Response $rs, array $args): Response
+    public
+    function postAjouterMonumentListe(Request $rq, Response $rs, array $args): Response
     {
         $data = $rq->getParsedBody();
         $idMonument = $data["monuments"];
@@ -884,10 +903,11 @@ class Controller
         $appartenanceListe->idMonument = $monument->idMonument;
         $appartenanceListe->save();
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Monument ajouté à la liste avec succès", 'detail-liste',$args, ['token' => $args['token']]);
+        return $this->genererMessageAvecRedirection($rs, $rq, "Monument ajouté à la liste avec succès", 'detail-liste', $args, ['token' => $args['token']]);
     }
 
-    private function verifierUtilisateurConnecte(): bool
+    private
+    function verifierUtilisateurConnecte(): bool
     {
         if (isset($_COOKIE['token'])) {
             try {
@@ -901,7 +921,8 @@ class Controller
         }
     }
 
-    private function genererRedirectionPageConnexion($rs, $rq, array $args)
+    private
+    function genererRedirectionPageConnexion($rs, $rq, array $args)
     {
         $v = new Vue(null);
         $htmlvars = [
@@ -914,7 +935,8 @@ class Controller
         return $rs;
     }
 
-    private function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection,array $args, $argsUrl = array())
+    private
+    function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection, array $args, $argsUrl = array())
     {
         $v = new Vue(null);
 
@@ -928,7 +950,8 @@ class Controller
         return $rs;
     }
 
-    public function displayContact(Request $rq, Response $rs, array $args): Response
+    public
+    function displayContact(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
         $htmlvars = [
@@ -939,7 +962,8 @@ class Controller
         return $rs;
     }
 
-    public function displayAboutUs(Request $rq, Response $rs, array $args): Response
+    public
+    function displayAboutUs(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
         $htmlvars = [
@@ -950,42 +974,42 @@ class Controller
         return $rs;
     }
 
-    public function displayDemandeAmi(Request $rq, Response $rs, array $args): Response
+    public
+    function displayDemandeAmi(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
 
-
-        if(! $this->verifierUtilisateurConnecte()){
+        if (!$this->verifierUtilisateurConnecte()) {
             return $this->genererRedirectionPageConnexion($rs, $rq, $args);
         }
 
         try {
             $demandeur = DemandeAmi::getDemandeurByTokenDemande($args['token']);
             $demande = DemandeAmi::getDemandeByToken($args['token']);
-        } catch (ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
             return $this->genererMessageAvecRedirection($rs, $rq, "La demande d'ami à laquelle vous essayez
-            d'accèder n'existe pas",'home', $args);
+            d'accèder n'existe pas", 'home', $args);
         }
 
         $membre = Membre::getMembreByToken($_COOKIE['token']);
 
-        if($_COOKIE['token'] == $demandeur->token){
+        if ($_COOKIE['token'] == $demandeur->token) {
             return $this->genererMessageAvecRedirection($rs, $rq, "Vous êtes à l'origine de
-            cette demande d'ami, tentez plutôt de l'envoyer à quelqu'un d'autre",'home', $args);
+            cette demande d'ami, tentez plutôt de l'envoyer à quelqu'un d'autre", 'home', $args);
         }
 
         $tabAmis = Amis::getAllAmisByIdMembre($demandeur->idMembre);
-        if(in_array($membre, $tabAmis)){
-            return $this->genererMessageAvecRedirection($rs, $rq, "Vous êtes déjà ami avec ce membre",'home', $args);
+        if (in_array($membre, $tabAmis)) {
+            return $this->genererMessageAvecRedirection($rs, $rq, "Vous êtes déjà ami avec ce membre", 'home', $args);
         }
 
-        if(!$demande->disponible) {
+        if (!$demande->disponible) {
             return $this->genererMessageAvecRedirection($rs, $rq, "Cette demande n'est plus disponible,
-            elle a probablement déjà été utilisée par quelqu'un d'autre",'home', $args);
+            elle a probablement déjà été utilisée par quelqu'un d'autre", 'home', $args);
         }
 
-        if(isset($demandeur['username'])){
+        if (isset($demandeur['username'])) {
             $username = $demandeur['username'];
         } else {
             $username = "Un membre anonyme";
@@ -1001,7 +1025,8 @@ class Controller
         return $rs;
     }
 
-    public function postDemandeAmi(Request $rq, Response $rs, array $args): Response
+    public
+    function postDemandeAmi(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -1011,7 +1036,7 @@ class Controller
         ];
 
         $data = $rq->getParsedBody();
-        if($data["rep"] == "Accepter"){
+        if ($data["rep"] == "Accepter") {
             $demandeur = DemandeAmi::getDemandeurByTokenDemande($args['token']);
             $receveur = Membre::getMembreByToken($_COOKIE['token']);
 
@@ -1019,7 +1044,7 @@ class Controller
             $id1 = $demandeur->idMembre;
             $id2 = $receveur->idMembre;
 
-            if($id1 < $id2){
+            if ($id1 < $id2) {
                 $amis->amis1 = $id1;
                 $amis->amis2 = $id2;
             } else {
@@ -1033,19 +1058,21 @@ class Controller
             $demandeAmi->disponible = 0;
             $demandeAmi->save();
 
-            return $this->genererMessageAvecRedirection($rs, $rq, "Le membre a bien été ajouté à vos amis",'home', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, "Le membre a bien été ajouté à vos amis", 'home', $args);
         } else {
-           // return $this->genererMessageAvecRedirection($rs, $rq, "La demande a été refusée",'home', $args);
-            return $this->genererMessageAvecRedirection($rs, $rq, "La demande a bien été refusée",'home', $args);
+            // return $this->genererMessageAvecRedirection($rs, $rq, "La demande a été refusée",'home', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, "La demande a bien été refusée", 'home', $args);
 
 
         }
     }
 
-    public function creerListeAmis($tabAmis){
+    public
+    function creerListeAmis($tabAmis)
+    {
         $tabAmisParam = [];
 
-        foreach($tabAmis as $amis){
+        foreach ($tabAmis as $amis) {
             $username = (isset($amis['username'])) ? $amis['username'] : "Anonyme";
             $param = array("username" => $username,
                 "dateInscription" => $amis->dateInscription);
@@ -1056,12 +1083,13 @@ class Controller
         return $tabAmisParam;
     }
 
-    public function displayAmis(Request $rq, Response $rs, array $args): Response
+    public
+    function displayAmis(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
-        if(! $this->verifierUtilisateurConnecte()){
-            return $this->genererRedirectionPageConnexion($rs, $rq, $args );
+        if (!$this->verifierUtilisateurConnecte()) {
+            return $this->genererRedirectionPageConnexion($rs, $rq, $args);
         }
         $idUser = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
         $tabAmis = Amis::getAllAmisByIdMembre($idUser);
@@ -1077,17 +1105,18 @@ class Controller
         return $rs;
     }
 
-    public function postAmis(Request $rq, Response $rs, array $args): Response
+    public
+    function postAmis(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
-        if(! $this->verifierUtilisateurConnecte()){
+        if (!$this->verifierUtilisateurConnecte()) {
             return $this->genererRedirectionPageConnexion($rs, $rq);
         }
         $tokenDemande = bin2hex(random_bytes(7));
 
-        $urlDemande = $_SERVER["HTTP_HOST"] . $this->c->router->pathFor("reception-demande-ami", ["token"=>$tokenDemande]);
-        echo '<script> console.log("'. $urlDemande .'"); </script>';
+        $urlDemande = $_SERVER["HTTP_HOST"] . $this->c->router->pathFor("reception-demande-ami", ["token" => $tokenDemande]);
+        echo '<script> console.log("' . $urlDemande . '"); </script>';
 
 
         $demande = new DemandeAmi();
@@ -1111,21 +1140,17 @@ class Controller
     }
 
 
-    public function displayTest(Request $rq, Response $rs, array $args): Response
+    public
+    function displayTest(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
         echo "<sqh1>";
 
         $tab = Amis::getAllAmisByIdMembre(2);
-        foreach($tab as $t){
-            echo($t."\n\n");
+        foreach ($tab as $t) {
+            echo($t . "\n\n");
         }
-
-
-
-
-
 
 
         echo "<qsd/h1>";
@@ -1138,7 +1163,9 @@ class Controller
         return $rs;
     }
 
-    private function getMenu() {
+    private
+    function getMenu()
+    {
         $urlContact = $this->c->router->pathFor('contact');
         $urlAPropos = $this->c->router->pathFor('about-us');
         $urlConnexion = $this->c->router->pathFor('connexion');
@@ -1161,7 +1188,7 @@ class Controller
                 'ajout' => $urlAjouterMonument,
                 'profil' => $urlProfil,
                 'amis' => $urlAmis,
-                'home' =>$urlHome,
+                'home' => $urlHome,
             ];
         } else {
             $menu = [

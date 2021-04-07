@@ -7,16 +7,22 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 $monument = \toureasy\models\Monument::getMonumentByToken($token);
 
-$membre = \toureasy\models\Membre::getMembreByToken($_COOKIE['token'])->first();
+$membre = \toureasy\models\Membre::getMembreByToken($_COOKIE['token']);
 
-if ($fav === "true") {
+/*if ($fav === "true") {
     $favori = new \toureasy\models\Favoris();
     $favori->idMonument = $monument->idMonument;
     $favori->idMembre = $membre->idMembre;
     $favori->save();
 } else {
-    $favori = \toureasy\models\Favoris::query()->where([['idMonument','=',$monument->idMonument],['idMembre','=',$membre->idMembre]])->first();
+    $favori = \toureasy\models\Favoris::query()->where([['idMonument','=',$monument->idMonument],['idMembre','=',$membre->idMembre]]);
     $favori->delete();
+}*/
+
+if ($fav === "true") {
+    $membre->monumentsFavoris()->attach([$monument->idMonument]);
+} else {
+    $membre->monumentsFavoris()->detach([$monument->idMonument]);
 }
 
 
