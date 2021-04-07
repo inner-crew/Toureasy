@@ -391,7 +391,7 @@ var majSelectBoxDesListes = function () {
     getJsonFile(getCookie("token")).then(json => {
         let i = 0;
         if (json.monumentsFavoris) {
-            selectBox.innerHTML += `<option value="favoris" selected>Vos favoris</option>`;
+            selectBox.innerHTML += `<option value="favoris">Vos favoris</option>`;
         }
         json.Listes.forEach(uneListe => {
             if (urlParams.has('liste') && urlParams.get('liste') === uneListe.liste.token && i===0) {
