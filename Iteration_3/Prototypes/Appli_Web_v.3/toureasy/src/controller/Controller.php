@@ -247,7 +247,11 @@ class Controller
     private function getMonumentUrl()
     {
         if (isset($_GET['monument'])) {
-            return [Monument::getMonumentByToken($_GET['monument'])];
+            $monument = Monument::getMonumentByToken($_GET['monument']);
+            $image = Image::where('idMonument', '=', $monument->idMonument)->first();
+            $monument->urlImage = $image->urlImage;
+            $monument->nomImage = substr($image->urlImage, 8);
+            return [$monument];
         } else {
             return null;
         }

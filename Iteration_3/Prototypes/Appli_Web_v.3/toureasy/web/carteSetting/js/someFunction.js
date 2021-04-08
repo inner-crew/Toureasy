@@ -253,7 +253,6 @@ var createPointeurOfAnImage = function (taille, urlImage, couleur, id, map) {
 }
 
 var ajouterImageV2 = function (nom, url, map) {
-
     return new Promise((resolve, reject) => {
         map.loadImage(url, (error, image) => {
             if (error) {
@@ -262,7 +261,6 @@ var ajouterImageV2 = function (nom, url, map) {
             }
             map.addImage(nom, image);
             resolve(image);
-
         });
     });
 
@@ -273,6 +271,19 @@ var getImageUrlId = async function () {
     let jsonPublique = await getJsonFile("monumentPublique")
     let jsonPriver = await getJsonFile(getCookie("token"))
     let res = [];
+    try {
+        if (jsonPriver.monumentPartager.length > 0) {
+            jsonPriver.monumentPartager.forEach(unMonumentPrive => {
+                res.push({url: ("../" + unMonumentPrive.urlImage), id: unMonumentPrive.nomImage})
+            });
+        }
+    } catch (e) {
+        console.log("Aucun monument partagé");
+    }
+
+    jsonPriver.monumentsPubliques.forEach(unMonumentPrive => {
+        res.push({url: ("../" + unMonumentPrive.urlImage), id: unMonumentPrive.nomImage})
+    });
     jsonPublique.features.forEach(unMonumentPublique => {
         res.push({url: ("../" + unMonumentPublique.properties.urlImage), id: unMonumentPublique.properties.nomImage})
     });
@@ -290,7 +301,11 @@ var addImages = function (map, images) {
                     reject(error);
                     return;
                 }
-                map.addImage(id, image);
+                try {
+                    map.addImage(id, image);
+                } catch (e) {
+                    console.log("Image duplication");
+                }
                 resolve(image);
 
             });
@@ -378,20 +393,20 @@ var getCookie = function (cname) {
 
 var majSelectBoxDesListes = function () {
     let selectBox = document.getElementById("monumentAfficher");
-    if (urlParams.has('monument')) {
+    if (urlParams.has('monument') || urlParams.has('liste')) {
         selectBox.innerHTML = `<option value="publique">Monuments certifiés</option>
-  <option value="mesMonuments" selected>Vos contribution</option>`
-    } else if (urlParams.has('liste')) {
-        selectBox.innerHTML = `<option value="publique">Monuments certifiés</option>
-  <option value="mesMonuments">Vos contribution</option>`
+                                <option value="mesMonuments">Vos contribution</option>`
     } else {
         selectBox.innerHTML = `<option value="publique" selected>Monuments certifiés</option>
-  <option value="mesMonuments">Vos contribution</option>`
+                                <option value="mesMonuments">Vos contribution</option>`
     }
     getJsonFile(getCookie("token")).then(json => {
         let i = 0;
-        if (json.monumentsFavoris) {
+        if (json.monumentsFavoris.length > 0) {
             selectBox.innerHTML += `<option value="favoris">Vos favoris</option>`;
+        }
+        if (urlParams.has('monument')) {
+            selectBox.innerHTML += `<option value="partager" selected>Partager : ${json.monumentPartager[0].nomMonum}</option>`;
         }
         json.Listes.forEach(uneListe => {
             if (urlParams.has('liste') && urlParams.get('liste') === uneListe.liste.token && i===0) {
@@ -446,12 +461,12 @@ var quoiAfficherSurLaMap = function (e, map) {
                 tmp2.features.forEach(unFeature => {
                     tmp.features.push(unFeature);
                 });
-                if (json.monumentPartager !== null) {
+                /*if (json.monumentPartager !== null) {
                     let tmp3 = convertirMonumentsEnFeature(json.monumentPartager);
                     tmp3.features.forEach(unFeature => {
                         tmp.features.push(unFeature);
                     });
-                }
+                }*/
                 afficherMonument(tmp, map);
             });
             break;
@@ -460,6 +475,7 @@ var quoiAfficherSurLaMap = function (e, map) {
                 let tmp = convertirMonumentsEnFeature(json.monumentsFavoris);
                 afficherMonument(tmp, map);
             });
+            break;
         case("partager") :
             getJsonFile(getCookie("token")).then(json => {
                 let tmp = convertirMonumentsEnFeature(json.monumentPartager);

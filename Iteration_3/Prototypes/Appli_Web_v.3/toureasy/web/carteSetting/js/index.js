@@ -27,12 +27,12 @@ var init = function () {
     troisD = false;
     document.getElementById('comparison-container').innerHTML = `<div id="before" class="map">
 <div id="left" class="sidebar flex-center left collapsed">
+<div id="fleche" class="sidebar-toggle rounded-rect left">
+&larr;
+</div>
 <div class="sidebar-content rounded-rect flex-center">
 <div id="descMonument">
 default
-</div>
-<div id="fleche" class="sidebar-toggle rounded-rect left">
-&larr;
 </div>
 </div>
 </div>
@@ -133,12 +133,20 @@ default
     beforeMap.on('sourcedata', (e) => {
         if (e.isSourceLoaded) {
             loadingPhase.increment();
+        } else {
+            setTimeout(() => {
+                if (e.isSourceLoaded) loadingPhase.increment();
+            }, 5000)
         }
     });
 
     afterMap.on('sourcedata', (e) => {
         if (e.isSourceLoaded) {
             loadingPhase.increment();
+        } else {
+            setTimeout(() => {
+                if (e.isSourceLoaded) loadingPhase.increment();
+            }, 5000)
         }
     });
 }
