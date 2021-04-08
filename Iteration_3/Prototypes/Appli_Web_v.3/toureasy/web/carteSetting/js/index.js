@@ -133,12 +133,20 @@ default
     beforeMap.on('sourcedata', (e) => {
         if (e.isSourceLoaded) {
             loadingPhase.increment();
+        } else {
+            setTimeout(() => {
+                if (e.isSourceLoaded) loadingPhase.increment();
+            }, 5000)
         }
     });
 
     afterMap.on('sourcedata', (e) => {
         if (e.isSourceLoaded) {
             loadingPhase.increment();
+        } else {
+            setTimeout(() => {
+                if (e.isSourceLoaded) loadingPhase.increment();
+            }, 5000)
         }
     });
 }

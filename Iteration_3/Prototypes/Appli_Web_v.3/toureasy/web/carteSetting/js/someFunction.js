@@ -271,11 +271,16 @@ var getImageUrlId = async function () {
     let jsonPublique = await getJsonFile("monumentPublique")
     let jsonPriver = await getJsonFile(getCookie("token"))
     let res = [];
-    if (jsonPriver.monumentPartager.length > 0) {
-        jsonPriver.monumentPartager.forEach(unMonumentPrive => {
-            res.push({url: ("../" + unMonumentPrive.urlImage), id: unMonumentPrive.nomImage})
-        });
+    try {
+        if (jsonPriver.monumentPartager.length > 0) {
+            jsonPriver.monumentPartager.forEach(unMonumentPrive => {
+                res.push({url: ("../" + unMonumentPrive.urlImage), id: unMonumentPrive.nomImage})
+            });
+        }
+    } catch (e) {
+        console.log("Aucun monument partagé");
     }
+
     jsonPriver.monumentsPubliques.forEach(unMonumentPrive => {
         res.push({url: ("../" + unMonumentPrive.urlImage), id: unMonumentPrive.nomImage})
     });
@@ -299,7 +304,7 @@ var addImages = function (map, images) {
                 try {
                     map.addImage(id, image);
                 } catch (e) {
-                    console.log("Image probleme peut etre normal jsp trop mdr");
+                    console.log("Image duplication");
                 }
                 resolve(image);
 
@@ -470,6 +475,7 @@ var quoiAfficherSurLaMap = function (e, map) {
                 let tmp = convertirMonumentsEnFeature(json.monumentsFavoris);
                 afficherMonument(tmp, map);
             });
+            break;
         case("partager") :
             getJsonFile(getCookie("token")).then(json => {
                 let tmp = convertirMonumentsEnFeature(json.monumentPartager);
