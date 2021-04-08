@@ -207,7 +207,7 @@ body {
 }
 
 #test {
-    position:fixed;
+    position:absolute;
     margin-right: 50px;
     right: 0;
 }
