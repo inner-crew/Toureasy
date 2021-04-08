@@ -492,7 +492,7 @@ class Controller
                 // stockage temporaire du fichier
                 $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
                 // ajout destination du fichier
-                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $i . $file_extension;
+                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . bin2hex(random_bytes(2)) . $file_extension;
                 // conditions de format du fichier
                 $extension_autorise = array('.jpg', '.png', '.JPG', '.PNG');
 
@@ -788,7 +788,7 @@ class Controller
                 // stockage temporaire du fichier
                 $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
                 // ajout destination du fichier
-                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $i . $file_extension;
+                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . bin2hex(random_bytes(2)) . $file_extension;
                 // conditions de format du fichier
                 $extension_autorise = array('.jpg', '.png', '.JPG', '.PNG');
 
@@ -796,8 +796,7 @@ class Controller
                 if (in_array($file_extension, $extension_autorise)) {
                     if (move_uploaded_file($file_tmp_name, $file_dest)) {
                         $image = new Image();
-
-                        $image->numeroImage = 0;
+                        $image->numeroImage = $i;
                         $image->idMonument = $monument->idMonument;
                         $image->urlImage = $file_dest;
                         $image->save();
@@ -846,7 +845,7 @@ class Controller
                 // stockage temporaire du fichier
                 $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
                 // ajout destination du fichier
-                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $i . $file_extension;
+                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . bin2hex(random_bytes(2)) . $file_extension;
                 // conditions de format du fichier
                 $extension_autorise = array('.jpg', '.png', '.JPG', '.PNG');
 
@@ -854,10 +853,7 @@ class Controller
                 if (in_array($file_extension, $extension_autorise)) {
                     if (move_uploaded_file($file_tmp_name, $file_dest)) {
                         $image = new Image();
-
-                        // TODO : changer l'attribution de numeroImage quand le trigger sera fait
-                        $image->numeroImage = 0;
-
+                        $image->numeroImage = $i;
                         $image->idMonument = $monument->idMonument;
                         $image->urlImage = $file_dest;
                         $image->save();
