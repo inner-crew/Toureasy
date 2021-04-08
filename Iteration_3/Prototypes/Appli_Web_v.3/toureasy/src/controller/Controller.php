@@ -838,7 +838,6 @@ class Controller
         }
 
         $debutIndex = Image::getPlusGrandIndex($idMonument)->numeroImage + 1;
-        var_dump($debutIndex);
 
         if (!empty($_FILES) && $_FILES['fichier']['name'][0] != "") {
             $total = count($_FILES['fichier']['name']);
