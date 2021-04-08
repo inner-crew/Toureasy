@@ -1112,6 +1112,7 @@ END;
     <head>
         <title>Toureasy</title>
         <link rel="stylesheet" href="{$vars['basepath']}/web/css/index.css">
+        <link rel="icon" type="image/png" href="{$vars['basepath']}/web/img/ico.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
     </head>
     <body>
