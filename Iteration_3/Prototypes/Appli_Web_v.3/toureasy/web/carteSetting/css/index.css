@@ -136,9 +136,10 @@ input:checked + .slider:before {
 .sidebar-content h1 {
     font-family: Arial, sans-serif;
     font-size: 30px;
-    color: red;
+    color: var(--rouge);
     text-align: center;
     margin-bottom: 5%;
+    line-height: initial;
 }
 
 .sidebar-content p {
