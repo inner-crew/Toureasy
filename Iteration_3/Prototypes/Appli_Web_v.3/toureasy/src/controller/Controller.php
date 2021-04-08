@@ -985,14 +985,14 @@ class Controller
             elle a probablement déjà été utilisée par quelqu'un d'autre", 'home', $args);
         }
 
-        if (isset($demandeur['prenom'])) {
-            $username = $demandeur['prenom'];
+        if (isset($demandeur['prenom']) && $demandeur['prenom'] != "") {
+            $prenom = $demandeur['prenom'];
         } else {
-            $username = "Un membre anonyme";
+            $prenom = "Un membre anonyme";
         }
 
         $htmlvars = [
-            'username' => $username,
+            'prenom' => $prenom,
             'basepath' => $rq->getUri()->getBasePath(),
             'menu' => $this->getMenu($args)
         ];
@@ -1047,7 +1047,7 @@ class Controller
         $tabAmisParam = [];
 
         foreach ($tabAmis as $amis) {
-            $username = (isset($amis['prenom'])) ? $amis['prenom'] : "Anonyme";
+            $username = (isset($amis['prenom']) && $amis['prenom'] != "") ? $amis['prenom'] : "Anonyme";
             $param = array("prenom" => $username,
                 "dateInscription" => $amis->dateInscription);
 
