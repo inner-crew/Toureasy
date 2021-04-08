@@ -367,12 +367,9 @@ class Controller
             $images = Image::getImageUrlByIdMonument($monument->idMonument);
             $membre = Membre::getMembreByToken($_COOKIE['token']);
 
-            try {
-                $favori = Favoris::query()->where([['idMonument', '=', $monument->idMonument], ['idMembre', '=', $membre->idMembre]])->firstOrFail();
-                $htmlvars['estFavori'] = true;
-            } catch (ModelNotFoundException $e) {
-                $htmlvars['estFavori'] = false;
-            }
+            $favori = $membre->monumentsFavoris->contains($monument->idMonument);
+            if ($favori) $htmlvars['estFavori'] = true;
+            else $htmlvars['estFavori'] = false;
 
             $htmlvars['seeOnMap'] = $this->c->router->pathFor('map') . "?monument=" . $monument->token;
 
