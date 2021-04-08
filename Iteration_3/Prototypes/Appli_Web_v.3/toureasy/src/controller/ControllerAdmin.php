@@ -166,7 +166,7 @@ class ControllerAdmin
         if (isset($_COOKIE['token'])) {
             try {
                 $membre = Membre::getMembreByToken($_COOKIE['token']);
-                if ($membre->role === 2 || $membre->role === 3) {
+                if ($membre->role >= 2 ) {
                     return true;
                 } else {
                     return false;
