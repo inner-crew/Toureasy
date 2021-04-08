@@ -279,7 +279,6 @@ class Controller
         //var_dump($favoris[0]['monuments_favoris']);
         $tmp = $favoris[0]['monuments_favoris'];
         foreach ($tmp as $unFav) {
-            var_dump($unFav);
             $monument = Monument::getMonumentById($unFav['idMonument']);
             $image = Image::where('idMonument', '=', $unFav['idMonument'])->first();
             $monument->urlImage = $image->urlImage;
