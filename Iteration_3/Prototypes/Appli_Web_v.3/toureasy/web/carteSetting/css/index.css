@@ -158,6 +158,9 @@ input:checked + .slider:before {
     width: 95%;
     height: 95%;
     padding: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-color: var(--vert) var(--gris);
 }
 
 .sidebar-toggle {
