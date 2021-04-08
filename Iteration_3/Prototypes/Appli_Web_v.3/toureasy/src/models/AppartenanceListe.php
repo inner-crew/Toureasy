@@ -22,4 +22,9 @@ class AppartenanceListe extends Model
         return AppartenanceListe::query()->where('idListe', '=', $id)->get();
     }
 
+    public static function getListeByIdMonument($id)
+    {
+        return AppartenanceListe::query()->where('idMonument', '=', $id)->get();
+    }
+
 }

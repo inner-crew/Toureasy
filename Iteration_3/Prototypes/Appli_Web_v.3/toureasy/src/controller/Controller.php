@@ -74,9 +74,9 @@ class Controller
         $token = filter_var($data['action'], FILTER_SANITIZE_STRING);
         $v = new Vue(null);
 
-        if ($token === "Obtenir un token") {
+        if ($token === "Obtenir un code") {
             $token = bin2hex(random_bytes(5));
-            $htmlvars['message'] = "Votre token est $token";
+            $htmlvars['message'] = "Votre code d'identification est $token";
             $membre = new Membre();
             $membre->token = $token;
             $membre->save();
@@ -85,7 +85,7 @@ class Controller
             try {
                 Membre::getMembreByToken($token);
             } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-                $htmlvars['message'] = "Le token indiqué est inexistant";
+                $htmlvars['message'] = "Le code d'identification indiqué est inexistant";
                 $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
                 $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
                 return $rs;
@@ -492,7 +492,7 @@ class Controller
                 // stockage temporaire du fichier
                 $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
                 // ajout destination du fichier
-                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $file_extension;
+                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $i . $file_extension;
                 // conditions de format du fichier
                 $extension_autorise = array('.jpg', '.png', '.JPG', '.PNG');
 
@@ -529,7 +529,7 @@ class Controller
                     return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez ajouter une image valide pour votre monument', "ajoutMonument", $args);
                 }
                 if ($i === 0) {
-                    if ($monument->estPrive == 0) {
+                    if ($monument->estPrive == 0 && $monument->estTemporaire == 0) {
                         $strJsonFileContents = file_get_contents("./web/carteSetting/data/monumentPublique.json");
                         $jsonMonuemnts = json_decode($strJsonFileContents, true);
 
@@ -760,7 +760,7 @@ class Controller
         $contribution = new Contribution();
         $contribution->monumentTemporaire = $monument->idMonument;
         $contribution->monumentAModifier = $m->idMonument;
-        $contribution->contributeur = Membre::getMembreByToken($_COOKIE['token'])->first()->idMembre;
+        $contribution->contributeur = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
         $contribution->estNouveauMonument = 0;
         $contribution->statutContribution = 'enAttenteDeTraitement';
         $contribution->save();
@@ -768,6 +768,8 @@ class Controller
         $arrayImageDelete = explode("-", $data['delete']);
 
         $idMonument = $monument->idMonument;
+
+        Image::copierImageMonumentPublicANouveau($idMonument, $m->idMonument);
 
         foreach ($arrayImageDelete as $idImage) {
             if ($idImage != "") {
@@ -786,7 +788,7 @@ class Controller
                 // stockage temporaire du fichier
                 $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
                 // ajout destination du fichier
-                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $file_extension;
+                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $i . $file_extension;
                 // conditions de format du fichier
                 $extension_autorise = array('.jpg', '.png', '.JPG', '.PNG');
 
@@ -795,9 +797,7 @@ class Controller
                     if (move_uploaded_file($file_tmp_name, $file_dest)) {
                         $image = new Image();
 
-                        // TODO : changer l'attribution de numeroImage quand le trigger sera fait
                         $image->numeroImage = 0;
-
                         $image->idMonument = $monument->idMonument;
                         $image->urlImage = $file_dest;
                         $image->save();
@@ -816,7 +816,7 @@ class Controller
 
     public function postModifierMonumentPrive(Request $rq, Response $rs, array $args): Response
     {
-        $monument = Monument::getMonumentByToken($args['token'])->first();
+        $monument = Monument::getMonumentByToken($args['token']);
         $data = $rq->getParsedBody();
 
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
@@ -846,7 +846,7 @@ class Controller
                 // stockage temporaire du fichier
                 $file_tmp_name = $_FILES['fichier']['tmp_name'][$i];
                 // ajout destination du fichier
-                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $file_extension;
+                $file_dest = "web/img/taken_" . date('Y_m_d_H_i_s') . $i . $file_extension;
                 // conditions de format du fichier
                 $extension_autorise = array('.jpg', '.png', '.JPG', '.PNG');
 

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     protected $table = 'image';
-    protected $primaryKey = ['numeroImage', 'idMonument'];
+    protected $primaryKey = 'idMonument';
     public $incrementing = false;
 
     public function usesTimestamps() : bool
@@ -18,6 +18,25 @@ class Image extends Model
 
     public static function getImageUrlByIdMonument($id) {
         return Image::query()->where('idMonument', '=', $id)->get()->toArray();
+    }
+
+    public static function copierImageMonumentPublicANouveau($idMonumentNouveau, $idMonumentOriginel) {
+        $images = Image::query()->where('idMonument','=',$idMonumentOriginel)->get();
+        foreach ($images as $i) {
+            $image = new Image();
+            $image->numeroImage = 0;
+            $image->idMonument = $idMonumentNouveau;
+            $image->urlImage = $i->urlImage;
+            $image->save();
+        }
+    }
+
+    public static function getImagesIdByIdMonument($id) {
+        return Image::query()->where('idMonument', '=', $id)->select('numeroImage')->get();
+    }
+
+    public static function getImagesByIdMonument($id) {
+        return Image::query()->where('idMonument', '=', $id)->get();
     }
 
     public static function supprimerImageById($idImage, $idMonument) {

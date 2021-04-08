@@ -81,8 +81,14 @@ END;
     <td><a href="$url">Voir</a></td>
     <td><a href="$originel">Voir</a></td>
     <td>$nouveauMonument</td>
-    <td><button>Valider</button></td>
-    <td><button>Refuser</button></td>
+    <td><form method="post">
+        <input type="hidden" name="nouveau" value="{$c['monumentTemporaire']}">
+        <input type="submit" name="valider" value="Valider"/>
+    </form></td>
+    <td><form method="post">
+        <input type="hidden" name="nouveau" value="{$c['monumentTemporaire']}">
+        <input type="submit" name="refuser" value="Refuser"/>
+    </form></td>
 </tr>
 END;
         }

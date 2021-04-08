@@ -22,6 +22,11 @@ class Contribution extends Model
         return Contribution::query()->where([['contributeur', '=', $id],['estNouveauMonument', '=', 1]])->get();
     }
 
+    public static function getContributionByIdMonument($id)
+    {
+        return Contribution::query()->where('monumentTemporaire', '=', $id)->first();
+    }
+
     public static function getMonumentsTemporaires() {
         $res = [];
         $contributions = Contribution::query()->where('statutContribution','=','enAttenteDeTraitement')->get()->toArray();

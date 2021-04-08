@@ -163,7 +163,7 @@ END;
             </p>
             <h1>C'est ma première fois</h1>
             <div class="box">
-                <input type="submit" name="action" value="Obtenir un token" />
+                <input type="submit" name="action" value="Obtenir un code" />
             </div>
         </form>
     </div>

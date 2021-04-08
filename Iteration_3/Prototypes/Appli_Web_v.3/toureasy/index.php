@@ -211,6 +211,11 @@ $app->get('/admin[/]', function(Request $rq, Response $rs, array $args) {
     return $c->displayTableauAdmin($rq,$rs,$args);
 })->setName('admin');
 
+$app->post('/admin[/]', function(Request $rq, Response $rs, array $args) {
+    $c = new ControllerAdmin($this);
+    return $c->postTableauAdmin($rq,$rs,$args);
+});
+
 $app->get('/admin/detail/{token}[/]', function(Request $rq, Response $rs, array $args) {
     $c = new ControllerAdmin($this);
     return $c->displayDetailMonument($rq,$rs,$args);

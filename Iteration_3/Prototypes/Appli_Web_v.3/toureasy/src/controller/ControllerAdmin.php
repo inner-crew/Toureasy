@@ -5,6 +5,7 @@ namespace toureasy\controller;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use toureasy\models\AppartenanceListe;
 use toureasy\models\Contribution;
 use toureasy\models\Image;
 use toureasy\models\Monument;
@@ -45,6 +46,99 @@ class ControllerAdmin
         } else {
             $membre = Membre::getMembreByToken($_COOKIE['token'])->first();
             return $this->genererMessageAvecRedirection($rs,$rq,"Vous n'êtes pas administrateur", 'home', $args);
+        }
+    }
+
+    public function postTableauAdmin(Request $rq, Response $rs, array $args): Response {
+        $data = $rq->getParsedBody();
+
+        $contribution = Contribution::getContributionByIdMonument($data['nouveau']);
+
+        if (isset($data['valider'])) {
+            $contribution->statutContribution = "acceptée";
+            $contribution->moderateurDemande = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
+            $contribution->save();
+
+            if (isset($contribution->monumentAModifier)) {
+                $nouveau = Monument::getMonumentById($data['nouveau']);
+                $originel = Monument::getMonumentById($contribution->monumentAModifier);
+
+                $images = Image::getImagesIdByIdMonument($originel->idMonument);
+                foreach ($images as $i) {
+                    Image::supprimerImageById($i['numeroImage'], $originel->idMonument);
+                }
+
+                $nouvellesImages = Image::getImagesByIdMonument($nouveau->idMonument);
+                foreach ($nouvellesImages as $i) {
+                    $i->idMonument = $originel->idMonument;
+                    $i->save();
+                }
+
+                $originel->descLongue = $nouveau->descLongue;
+                $originel->nomMonum = $nouveau->nomMonum;
+                $originel->save();
+
+                $strJsonFileContents = file_get_contents("./web/carteSetting/data/monumentPublique.json");
+                $jsonMonuemnts = json_decode($strJsonFileContents, true);
+                $nouveauJson = [];
+
+
+                $file_dest = Image::getImageUrlByIdMonument($originel->idMonument);
+                $file_dest = $file_dest[0]['urlImage'];
+
+                foreach ($jsonMonuemnts['features'] as $unMonument) {
+                    if ($unMonument['properties']['token'] === $originel->token) {
+                        $unMonument['properties']['title'] = $originel->nomMonum;
+                        $unMonument['properties']['description'] = $originel->descLongue;
+                        $unMonument['properties']['urlImage'] = $file_dest;
+                        $unMonument['properties']['nomImage'] = substr($file_dest, 8);
+                        array_push($nouveauJson,  $unMonument);
+                    } else {
+                        array_push($nouveauJson, $unMonument);
+                    }
+                }
+
+                $jsonMonuemnts['features'] = $nouveauJson;
+                $nvJson = json_encode($jsonMonuemnts);
+                $bytes = file_put_contents("./web/carteSetting/data/monumentPublique.json", $nvJson);
+
+            } else {
+                $monument = Monument::getMonumentById($data['nouveau']);
+                $monument->estTemporaire = 0;
+                $monument->save();
+
+                $strJsonFileContents = file_get_contents("./web/carteSetting/data/monumentPublique.json");
+                $jsonMonuemnts = json_decode($strJsonFileContents, true);
+
+                $file_dest = Image::getImageUrlByIdMonument($monument->idMonument);
+                $file_dest = $file_dest[0]['urlImage'];
+
+                array_push($jsonMonuemnts['features'], array(
+                    "type" => "Feature",
+                    "geometry" => array(
+                        "type" => "Point",
+                        "coordinates" => array($monument->longitude, $monument->latitude)
+                    ),
+                    "properties" => array(
+                        "title" => $monument->nomMonum,
+                        "description" => $monument->descLongue,
+                        "urlImage" => $file_dest,
+                        "nomImage" => substr($file_dest, 8),
+                        "token" => $monument->token
+                    )
+                ));
+
+                $nvJson = json_encode($jsonMonuemnts);
+                $bytes = file_put_contents("./web/carteSetting/data/monumentPublique.json", $nvJson);
+            }
+
+            return $this->genererMessageAvecRedirection($rs,$rq,"La contribution a été validée", 'admin', $args);
+        } else {
+            $contribution->statutContribution = "refusée";
+            $contribution->moderateurDemande = Membre::getMembreByToken($_COOKIE['token'])->idMembre;
+            $contribution->save();
+
+            return $this->genererMessageAvecRedirection($rs,$rq,"La contribution a été refusée", 'admin', $args);
         }
     }
 
