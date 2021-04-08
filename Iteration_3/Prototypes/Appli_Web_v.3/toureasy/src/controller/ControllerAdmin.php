@@ -209,7 +209,6 @@ class ControllerAdmin
     }
 
     private function getMenu() {
-        $urlContact = $this->c->router->pathFor('contact');
         $urlAPropos = $this->c->router->pathFor('about-us');
         $urlConnexion = $this->c->router->pathFor('connexion');
         $urlMap = $this->c->router->pathFor('map');
@@ -224,7 +223,6 @@ class ControllerAdmin
             $urlProfil = $this->c->router->pathFor('profil');
 
             $menu = [
-                'contact' => $urlContact,
                 'about-us' => $urlAPropos,
                 'map' => $urlMap,
                 'espace' => $urlEspace,
@@ -235,7 +233,6 @@ class ControllerAdmin
             ];
         } else {
             $menu = [
-                'contact' => $urlContact,
                 'about-us' => $urlAPropos,
                 'connexion' => $urlConnexion,
                 'home' => $urlHome,

@@ -116,7 +116,6 @@ END;
     <li><a href='{$vars['menu']['ajout']}'">Ajouter un monument</a></li>
     <li><a href='{$vars['menu']['amis']}'">Page amis</a></li>
     </br>
-    <li><a href='{$vars['menu']['contact']}'">Nous Contacter</a></li>
     <li><a href='{$vars['menu']['about-us']}'">A propos</a></li>
 END;
 
@@ -124,7 +123,6 @@ END;
             $html .= <<<END
     <li><a href='{$vars['menu']['connexion']}'">Connexion</a></li>
     </br>
-    <li><a href='{$vars['menu']['contact']}'">Nous Contacter</a></li>
     <li><a href='{$vars['menu']['about-us']}'">A propos</a></li>
 END;
         }
