@@ -654,7 +654,7 @@ END;
         return $html;
     }
 
-    public function detailListeMap(ListeMonument $liste, $monumentsDeCetteListe,$vars): string
+    public function detailListeMap(ListeMonument $liste, $monumentsDeCetteListe, $vars): string
     {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
@@ -1014,14 +1014,10 @@ END;
             <h1 id="center">A propos</h1>
             <i id="center">Toureasy est le projet tutoré de 4 étudiants.</i>
             <div class="wrapperRows">
-                <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
-</p></div>
-                <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
-</p></div>
-                <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
-</p></div>
-                <div class="cellRow"><img src="{$vars['basepath']}/web/img/avatar.png"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada neque et varius vestibulum. Aenean sit amet quam sit amet nisl tincidunt gravida at vitae nisl. Praesent convallis, libero et posuere volutpat, neque orci feugiat massa, tempus vulputate lectus eros a tortor. Sed porta nec neque id vehicula. Maecenas pulvinar odio id porta imperdiet. Vestibulum eu justo et ante laoreet lobortis vel vitae justo. Etiam quis justo rutrum, ullamcorper dolor ornare, rhoncus quam. Vestibulum at sem in mauris dictum vulputate eu ut sapien. Nam sed mi a tortor aliquam aliquam.
-</p></div>
+                <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Silvio.png"><p>Silvio Brancati</p></div>
+                <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Remrem.png"><p>Rémi Zapp</p></div>
+                <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Nicolixxx.png"><p>Nicolas Frache</p></div>
+                <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Jock.png"><p>Arthur Moitrier</p></div>
             </div> 
         </div>
 END;

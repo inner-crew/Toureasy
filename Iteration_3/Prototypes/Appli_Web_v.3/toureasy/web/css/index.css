@@ -939,6 +939,10 @@ body {
         z-index: 100;
     }
 
+    .pp{
+        size: 400px;
+    }
+
 }
 
 
@@ -1566,6 +1570,11 @@ body {
 
     #select {
         width: 80%;
+    }
+
+    .pp{
+        width: 400px;
+        height: auto;
     }
 
 
