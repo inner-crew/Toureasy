@@ -157,14 +157,6 @@ $app->post('/profil[/]', function(Request $rq, Response $rs, array $args) {
     return $c->postProfil($rq,$rs,$args);
 });
 
-
-
-// page de contact
-$app->get('/contact[/]', function(Request $rq, Response $rs, array $args) {
-    $c = new Controller($this);
-    return $c->displayContact($rq,$rs,$args);
-})->setName('contact');
-
 // page 'à propos' de Toureasy
 $app->get('/about-us[/]', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);

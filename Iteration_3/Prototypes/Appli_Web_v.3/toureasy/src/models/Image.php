@@ -38,6 +38,10 @@ class Image extends Model
         return Image::query()->where('idMonument', '=', $id)->select('numeroImage')->get();
     }
 
+    public static function getPlusGrandIndex($id) {
+        return Image::query()->where('idMonument','=', $id)->orderBy('numeroImage','DESC')->select('numeroImage')->first();
+    }
+
     public static function getImagesByIdMonument($id) {
         return Image::query()->where('idMonument', '=', $id)->get();
     }

@@ -40,8 +40,6 @@ class Vue
 
     const MODIFIER_LISTE = 13;
 
-    const CONTACT = 14;
-
     const ABOUT = 15;
 
     const AMIS = 16;
@@ -967,7 +965,6 @@ END;
     <li><a href='{$vars['menu']['ajout']}'">Ajouter un monument</a></li>
     <li><a href='{$vars['menu']['amis']}'">Page amis</a></li>
     </br>
-    <li><a href='{$vars['menu']['contact']}'">Nous Contacter</a></li>
     <li><a href='{$vars['menu']['about-us']}'">A propos</a></li>
 END;
 
@@ -975,7 +972,6 @@ END;
             $html .= <<<END
     <li><a href='{$vars['menu']['connexion']}'">Connexion</a></li>
     </br>
-    <li><a href='{$vars['menu']['contact']}'">Nous Contacter</a></li>
     <li><a href='{$vars['menu']['about-us']}'">A propos</a></li>
 END;
         }
@@ -1012,21 +1008,11 @@ END;
         return $html;
     }
 
-    private function pageContact($vars): string
-    {
-        $html = $this->insererEnteteSite($vars);
-
-        //content here
-
-        $html .= "</div>";
-        return $html;
-    }
-
     private function pageAbout($vars): string
     {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-            <h1 id="center">A propos</h1>
+            <h2 id="center">A propos</h2>
             <i id="center">Toureasy est le projet tutoré de 4 étudiants.</i>
             <div class="wrapperRows">
                 <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Silvio.png"><p>Silvio Brancati</p></div>
@@ -1034,6 +1020,9 @@ END;
                 <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Nicolixxx.png"><p>Nicolas Frache</p></div>
                 <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Jock.png"><p>Arthur Moitrier</p></div>
             </div> 
+            <div>
+                <h3 id="center">Contactez nous à cette adresse : Toureasy.contact@gmail.com</h3>
+            </div>
         </div>
 END;
         return $html;
@@ -1084,9 +1073,6 @@ END;
                 break;
             case Vue::DEMANDE_AMI:
                 $content = $this->pageDemandeAmi($vars);
-                break;
-            case Vue::CONTACT:
-                $content = $this->pageContact($vars);
                 break;
             case Vue::ABOUT:
                 $content = $this->pageAbout($vars);
