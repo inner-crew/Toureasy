@@ -22,12 +22,15 @@ class Image extends Model
 
     public static function copierImageMonumentPublicANouveau($idMonumentNouveau, $idMonumentOriginel) {
         $images = Image::query()->where('idMonument','=',$idMonumentOriginel)->get();
+        $dernierId = Image::query()->where('idMonument','=', $idMonumentNouveau)->orderBy('numeroImage','DESC')->select('numeroImage')->first();
+        $dernierId++;
         foreach ($images as $i) {
             $image = new Image();
-            $image->numeroImage = 0;
+            $image->numeroImage = $dernierId;;
             $image->idMonument = $idMonumentNouveau;
             $image->urlImage = $i->urlImage;
             $image->save();
+            $dernierId++;
         }
     }
 
