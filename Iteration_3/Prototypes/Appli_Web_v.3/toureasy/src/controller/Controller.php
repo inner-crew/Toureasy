@@ -600,6 +600,7 @@ class Controller
         $v = new Vue(null);
 
         $data = $rq->getParsedBody();
+
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
         $description = filter_var($data['desc'], FILTER_SANITIZE_STRING);
         $id = Membre::getMembreByToken($_COOKIE['token']);
@@ -879,17 +880,23 @@ class Controller
     public function postAjouterMonumentListe(Request $rq, Response $rs, array $args): Response
     {
         $data = $rq->getParsedBody();
-        $idMonument = $data["monuments"];
 
-        $appartenanceListe = new AppartenanceListe();
-        $liste = ListeMonument::getListeByToken($args['token']);
-        $monument = Monument::getMonumentById($idMonument);
+        if ($data["monuments"] !== '') {
+            $idMonument = $data["monuments"];
 
-        $appartenanceListe->idListe = $liste->idListe;
-        $appartenanceListe->idMonument = $monument->idMonument;
-        $appartenanceListe->save();
+            $appartenanceListe = new AppartenanceListe();
+            $liste = ListeMonument::getListeByToken($args['token']);
+            $monument = Monument::getMonumentById($idMonument);
 
-        return $this->genererMessageAvecRedirection($rs, $rq, "Monument ajouté à la liste avec succès", 'detail-liste', $args, ['token' => $args['token']]);
+            $appartenanceListe->idListe = $liste->idListe;
+            $appartenanceListe->idMonument = $monument->idMonument;
+            $appartenanceListe->save();
+
+            return $this->genererMessageAvecRedirection($rs, $rq, "Monument ajouté à la liste avec succès", 'detail-liste', $args, ['token' => $args['token']]);
+        } else {
+            return $this->genererMessageAvecRedirection($rs, $rq, "Sélectionnez un monument dans la liste déroulante pour l'ajouter", 'detail-liste', $args, ['token' => $args['token']]);
+        }
+
     }
 
     private function verifierUtilisateurConnecte(): bool
