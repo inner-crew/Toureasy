@@ -195,7 +195,7 @@ class Controller
             if ($monument->estPrive == '0') {
                 if ($avoirUrl) {
                     $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
-                    $partage = $this->c->router->pathFor('mapDetailMonument', ['token' => $monument->token]);
+                    $partage = $_SERVER["HTTP_HOST"] . $this->c->router->pathFor('mapDetailMonument', ['token' => $monument->token]);
                     array_push($arrayMonumentsPublics, [$monument, $url, $partage]);
                 } else {
                     $monument->urlImage = $image->urlImage;
@@ -216,7 +216,7 @@ class Controller
             $image = Image::where('idMonument', '=', $monument->idMonument)->first();
             if ($avoirUrl) {
                 $url = $this->c->router->pathFor('detail-monument', ['token' => $monument->token]);
-                $partage = $this->c->router->pathFor('mapDetailMonument', ['token' => $monument->token]);
+                $partage = $_SERVER["HTTP_HOST"] . $this->c->router->pathFor('mapDetailMonument', ['token' => $monument->token]);
                 array_push($arrayMonumentsPrives, [$monument, $url, $partage]);
             } else {
                 $monument->urlImage = $image->urlImage;
@@ -234,7 +234,7 @@ class Controller
         foreach ($listeDesListesUtilisateur as $liste) {
             if ($avoirUrl) {
                 $url = $this->c->router->pathFor('detail-liste', ['token' => $liste->token]);
-                $partage = $this->c->router->pathFor('mapDetailListe', ['token' => $liste->token]);
+                $partage = $_SERVER["HTTP_HOST"] . $this->c->router->pathFor('mapDetailListe', ['token' => $liste->token]);
                 array_push($tabListes, [$liste, $url, $partage]);
             } else array_push($tabListes, $liste);
         }

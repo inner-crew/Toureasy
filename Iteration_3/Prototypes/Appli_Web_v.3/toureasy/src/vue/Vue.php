@@ -389,6 +389,13 @@ END;
             $html .= "<p>Vous n'avez pas encore créé de monument publics</p></div></section>";
         }
 
+        $html .= <<<END
+<script src="{$vars['basepath']}/web/js/lib/clipboard.js-master/dist/clipboard.min.js"></script>
+    <script> 
+        new ClipboardJS('.lienAmis');
+    </script>
+END;
+
         return $html;
 
     }
@@ -399,7 +406,11 @@ END;
                 <tr>
                     <td><a href="$url">$liste->nom</a></td>
                     <td><p class="nom">$liste->dateCreation</p></td>
-                    <td><a href="$urlPartage">Lien de partage</a></td>
+                    <td>
+                        <div class="lienAmis" data-clipboard-text="{$urlPartage}" data-tooltip="Cliquer pour copier dans le presse-papier">
+                            <p id="url">Lien de partage</p>
+                        </div>
+                    </td>
                 </tr>
 END;
         return $html;
@@ -410,7 +421,11 @@ END;
         $html = <<<END
                 <tr>
                     <td><a href="$url">$monument->nomMonum</a></td>
-                    <td><a href="$urlPartage">Lien de partage</a></td>
+                    <td>
+                        <div class="lienAmis" data-clipboard-text="{$urlPartage}" data-tooltip="Cliquer pour copier dans le presse-papier">
+                            <p id="url">Lien de partage</p>
+                        </div>
+                    </td>
                 </tr>
 END;
         return $html;
