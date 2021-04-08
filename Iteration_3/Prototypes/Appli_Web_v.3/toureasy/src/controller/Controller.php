@@ -351,8 +351,7 @@ class Controller
         }
     }
 
-    public
-    function displayMapDetailListeMonument(Request $rq, Response $rs, array $args): Response
+    public function displayMapDetailListeMonument(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -382,8 +381,7 @@ class Controller
         }
     }
 
-    public
-    function displayMapDetailListe(Request $rq, Response $rs, array $args): Response
+    public function displayMapDetailListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -411,9 +409,7 @@ class Controller
         }
     }
 
-
-    public
-    function displayAjouterMonument(Request $rq, Response $rs, array $args): Response
+    public function displayAjouterMonument(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -430,8 +426,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function postAjouterMonument(Request $rq, Response $rs, array $args)
+    public function postAjouterMonument(Request $rq, Response $rs, array $args)
     {
         $data = $rq->getParsedBody();
         $nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
@@ -505,7 +500,7 @@ class Controller
                 if (in_array($file_extension, $extension_autorise)) {
                     if (move_uploaded_file($file_tmp_name, $file_dest)) {
                         $image = new Image();
-                        $image->numeroImage = 0;
+                        $image->numeroImage = $i;
                         $image->idMonument = $monument->idMonument;
                         $image->urlImage = $file_dest;
                         $image->save();
@@ -574,8 +569,7 @@ class Controller
         return $this->genererMessageAvecRedirection($rs, $rq, "Monument créé avec succès", "mes-listes", $args);
     }
 
-    public
-    function displayAjouterListe(Request $rq, Response $rs, array $args): Response
+    public function displayAjouterListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -591,8 +585,7 @@ class Controller
         }
     }
 
-    public
-    function postAjouterListe(Request $rq, Response $rs, array $args): Response
+    public  function postAjouterListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -625,8 +618,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function displayDetailListe(Request $rq, Response $rs, array $args): Response
+    public function displayDetailListe(Request $rq, Response $rs, array $args): Response
     {
         $liste = ListeMonument::getListeByToken($args['token']);
         $htmlvars = [
@@ -664,8 +656,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function displayModifierListe(Request $rq, Response $rs, array $args): Response
+    public function displayModifierListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -679,8 +670,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function postModifierListe(Request $rq, Response $rs, array $args): Response
+    public function postModifierListe(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -698,8 +688,7 @@ class Controller
         return $this->genererMessageAvecRedirection($rs, $rq, "Liste modifiée avec succès", "mes-listes", $args);
     }
 
-    public
-    function displayDetailMonument(Request $rq, Response $rs, array $args): Response
+    public function displayDetailMonument(Request $rq, Response $rs, array $args): Response
     {
         $monument = Monument::getMonumentByToken($args['token']);
         $images = Image::getImageUrlByIdMonument($monument->idMonument);
@@ -722,8 +711,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function displayModifierMonument(Request $rq, Response $rs, array $args): Response
+    public function displayModifierMonument(Request $rq, Response $rs, array $args): Response
     {
         $monument = Monument::getMonumentByToken($args['token']);
         $image = Image::getImageUrlByIdMonument($monument->idMonument);
@@ -737,8 +725,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function postModifierMonument(Request $rq, Response $rs, array $args): Response
+    public function postModifierMonument(Request $rq, Response $rs, array $args): Response
     {
         $monument = null;
         if (isset($args['tokenM'])) {
@@ -755,8 +742,7 @@ class Controller
         }
     }
 
-    public
-    function postModifierMonumentPublic(Request $rq, Response $rs, array $args, Monument $m): Response
+    public function postModifierMonumentPublic(Request $rq, Response $rs, array $args, Monument $m): Response
     {
         $data = $rq->getParsedBody();
 
@@ -828,8 +814,7 @@ class Controller
         return $this->genererMessageAvecRedirection($rs, $rq, "Monument modifié", "detail-monument", $args, ["token" => $args['token']]);
     }
 
-    public
-    function postModifierMonumentPrive(Request $rq, Response $rs, array $args): Response
+    public function postModifierMonumentPrive(Request $rq, Response $rs, array $args): Response
     {
         $monument = Monument::getMonumentByToken($args['token'])->first();
         $data = $rq->getParsedBody();
@@ -889,8 +874,7 @@ class Controller
         return $this->genererMessageAvecRedirection($rs, $rq, "Monument modifié", "detail-monument", $args, ["token" => $args['token']]);
     }
 
-    public
-    function postAjouterMonumentListe(Request $rq, Response $rs, array $args): Response
+    public function postAjouterMonumentListe(Request $rq, Response $rs, array $args): Response
     {
         $data = $rq->getParsedBody();
         $idMonument = $data["monuments"];
@@ -906,8 +890,7 @@ class Controller
         return $this->genererMessageAvecRedirection($rs, $rq, "Monument ajouté à la liste avec succès", 'detail-liste', $args, ['token' => $args['token']]);
     }
 
-    private
-    function verifierUtilisateurConnecte(): bool
+    private function verifierUtilisateurConnecte(): bool
     {
         if (isset($_COOKIE['token'])) {
             try {
@@ -921,8 +904,7 @@ class Controller
         }
     }
 
-    private
-    function genererRedirectionPageConnexion($rs, $rq, array $args)
+    private function genererRedirectionPageConnexion($rs, $rq, array $args)
     {
         $v = new Vue(null);
         $htmlvars = [
@@ -935,8 +917,7 @@ class Controller
         return $rs;
     }
 
-    private
-    function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection, array $args, $argsUrl = array())
+    private function genererMessageAvecRedirection($rs, $rq, $message, $nameRedirection, array $args, $argsUrl = array())
     {
         $v = new Vue(null);
 
@@ -950,8 +931,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function displayContact(Request $rq, Response $rs, array $args): Response
+    public function displayContact(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
         $htmlvars = [
@@ -962,8 +942,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function displayAboutUs(Request $rq, Response $rs, array $args): Response
+    public function displayAboutUs(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
         $htmlvars = [
@@ -974,8 +953,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function displayDemandeAmi(Request $rq, Response $rs, array $args): Response
+    public function displayDemandeAmi(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
@@ -1025,8 +1003,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function postDemandeAmi(Request $rq, Response $rs, array $args): Response
+    public function postDemandeAmi(Request $rq, Response $rs, array $args): Response
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
@@ -1067,8 +1044,7 @@ class Controller
         }
     }
 
-    public
-    function creerListeAmis($tabAmis)
+    public function creerListeAmis($tabAmis)
     {
         $tabAmisParam = [];
 
@@ -1083,8 +1059,7 @@ class Controller
         return $tabAmisParam;
     }
 
-    public
-    function displayAmis(Request $rq, Response $rs, array $args): Response
+    public function displayAmis(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
@@ -1105,8 +1080,7 @@ class Controller
         return $rs;
     }
 
-    public
-    function postAmis(Request $rq, Response $rs, array $args): Response
+    public function postAmis(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
@@ -1140,8 +1114,7 @@ class Controller
     }
 
 
-    public
-    function displayTest(Request $rq, Response $rs, array $args): Response
+    public function displayTest(Request $rq, Response $rs, array $args): Response
     {
         $v = new Vue(null);
 
@@ -1163,8 +1136,7 @@ class Controller
         return $rs;
     }
 
-    private
-    function getMenu()
+    private function getMenu()
     {
         $urlContact = $this->c->router->pathFor('contact');
         $urlAPropos = $this->c->router->pathFor('about-us');

@@ -895,7 +895,7 @@ END;
 
         } else {
             $html .= "<p id='message'>Vous n'avez pour l'instant aucun amis</p></br>";
-            $html .= "/div";
+            $html .= "</div>";
         }
         return $html;
     }
@@ -917,7 +917,7 @@ END;
         $html .= <<<END
         <div>
             <h1>Lien d'invitation</h1>
-            <p>Envoyez le lien ci-dessous à la personne que vous souhaitez ajouter à vos amis : </p>
+            <p>Envoyez le lien ci-dessous à la personne que vous souhaitez ajouter à vos amis (cliquez sur le lien pour le copier) : </p>
             <div class="lienAmis" data-clipboard-text="{$vars["urlDemande"]}" data-tooltip="Cliquer pour copier dans le presse-papier">
                 <p id="url">{$vars["urlDemande"]}</p>
             </div>
