@@ -1047,12 +1047,11 @@ class Controller
         $tabAmisParam = [];
 
         foreach ($tabAmis as $amis) {
-            $username = (isset($amis['prenom']) && $amis['prenom'] != "") ? $amis['prenom'] : "Anonyme";
-            $param = array("prenom" => $username,
+            $prenom = (isset($amis['prenom']) && $amis['prenom'] != "") ? $amis['prenom'] : "Anonyme";
+            $param = array("prenom" => $prenom,
                 "dateInscription" => $amis->dateInscription);
 
             array_push($tabAmisParam, $param);
-
         }
         return $tabAmisParam;
     }
