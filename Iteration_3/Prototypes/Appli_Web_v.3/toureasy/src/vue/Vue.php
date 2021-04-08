@@ -842,7 +842,7 @@ END;
     {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-<h1 id="center">{$vars['username']} vous a envoyé une demande d'ami </h1>
+<h1 id="center">{$vars['prenom']} vous a envoyé une demande d'ami </h1>
             <div class="box"> 
                 <form method="post" enctype="multipart/form-data">
                     <input name="rep" type="submit" value="Accepter">
@@ -889,7 +889,7 @@ END;
             <table class="content-table">
                 <thead>
                     <tr>
-                        <th>Pseudo</th>
+                        <th>Prenom</th>
                         <th>Date d'inscription</th>
                     </tr>
                 </thead>
@@ -917,7 +917,7 @@ END;
     {
         $html = <<<END
                 <tr>
-                    <td><p class="username">{$item["username"]}</p></td>
+                    <td><p class="username">{$item["prenom"]}</p></td>
                     <td><p class="inscription">{$item["dateInscription"]}</p></td>
                 </tr>
 END;

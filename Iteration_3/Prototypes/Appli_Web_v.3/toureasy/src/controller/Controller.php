@@ -982,14 +982,14 @@ class Controller
             elle a probablement déjà été utilisée par quelqu'un d'autre", 'home', $args);
         }
 
-        if (isset($demandeur['username'])) {
-            $username = $demandeur['username'];
+        if (isset($demandeur['prenom']) && $demandeur['prenom'] != "") {
+            $prenom = $demandeur['prenom'];
         } else {
-            $username = "Un membre anonyme";
+            $prenom = "Un membre anonyme";
         }
 
         $htmlvars = [
-            'username' => $username,
+            'prenom' => $prenom,
             'basepath' => $rq->getUri()->getBasePath(),
             'menu' => $this->getMenu($args)
         ];
@@ -1044,12 +1044,11 @@ class Controller
         $tabAmisParam = [];
 
         foreach ($tabAmis as $amis) {
-            $username = (isset($amis['username'])) ? $amis['username'] : "Anonyme";
-            $param = array("username" => $username,
+            $prenom = (isset($amis['prenom']) && $amis['prenom'] != "") ? $amis['prenom'] : "Anonyme";
+            $param = array("prenom" => $prenom,
                 "dateInscription" => $amis->dateInscription);
 
             array_push($tabAmisParam, $param);
-
         }
         return $tabAmisParam;
     }
@@ -1107,7 +1106,6 @@ class Controller
         return $rs;
 
     }
-
 
     public function displayTest(Request $rq, Response $rs, array $args): Response
     {
