@@ -40,6 +40,8 @@ class Vue
 
     const MODIFIER_LISTE = 13;
 
+    const ERREUR_SERVEUR = 14;
+
     const ABOUT = 15;
 
     const AMIS = 16;
@@ -1026,6 +1028,18 @@ END;
         return $html;
     }
 
+    private function displayErreurServeur($vars): string {
+        return <<<END
+
+  <div class="message">
+    <h2 id="center">Le serveur est actuellement indisponible</h2>
+    <p id="center">Merci de vous reconnecter plus tard</p>        
+  </div>      
+</div>
+END;
+
+    }
+
     public function render(array $vars, int $typeAffichage): string
     {
         $content = null;
@@ -1086,6 +1100,9 @@ END;
                 break;
             case Vue::MAP_LISTE:
                 $content = $this->detailListeMap($this->data[0], $this->data[1], $vars);
+                break;
+            case Vue::ERREUR_SERVEUR:
+                $content = $this->displayErreurServeur($vars);
                 break;
         }
 

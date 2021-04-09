@@ -3,6 +3,7 @@
 namespace toureasy\controller;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use toureasy\models\Amis;
@@ -34,20 +35,30 @@ class Controller
         // url redirigeant vers la page de navigation sur la carte
         $urlAccederMap = $this->c->router->pathFor('map');
 
-        if (!$this->verifierUtilisateurConnecte()) {
-            $urlAccederMap = $urlConnexion;
-        }
-
         // ajoute ces variables à htmlvars afin de les transférer à la vue
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'map' => $urlAccederMap,
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
 
-        $v = new Vue(null);
-        $rs->getBody()->write($v->render($htmlvars, Vue::HOME));
-        return $rs;
+        $estConnecte = $this->verifierEtatServeurEtUtilisateurConnecte();
+
+        if ($estConnecte !== 404) {
+            if ($estConnecte === 1) {
+                $urlAccederMap = $urlConnexion;
+            }
+
+            // ajoute ces variables à htmlvars afin de les transférer à la vue
+            $htmlvars['map'] = $urlAccederMap;
+
+            $v = new Vue(null);
+            $rs->getBody()->write($v->render($htmlvars, Vue::HOME));
+            return $rs;
+        } else {
+            $v = new Vue(null);
+            $rs->getBody()->write($v->render($htmlvars, Vue::ERREUR_SERVEUR));
+            return $rs;
+        }
     }
 
     public function displayConnexion(Request $rq, Response $rs, array $args): Response
@@ -59,6 +70,21 @@ class Controller
         $v = new Vue(null);
         $rs->getBody()->write($v->render($htmlvars, Vue::CONNEXION));
         return $rs;
+    }
+
+    private function verifierEtatServeurEtUtilisateurConnecte(): int {
+        if (isset($_COOKIE['token'])) {
+            try {
+                $membre = Membre::getMembreByToken($_COOKIE['token']);
+                return 1;
+            } catch (ModelNotFoundException $e) {
+                return 0;
+            } catch (QueryException $e) {
+                return 404;
+            }
+        } else {
+            return false;
+        }
     }
 
     public function postConnexion(Request $rq, Response $rs, array $args)
@@ -77,15 +103,27 @@ class Controller
         if ($token === "Obtenir un code") {
             $token = bin2hex(random_bytes(5));
             $htmlvars['message'] = "Votre code d'identification est $token";
-            $membre = new Membre();
-            $membre->token = $token;
-            $membre->save();
+            try {
+                $membre = new Membre();
+                $membre->token = $token;
+                $membre->save();
+            } catch (QueryException $e) {
+                $htmlvars['message'] = "Le serveur est actuellement indisponible";
+                $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
+                $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+                return $rs;
+            }
         } else {
             $token = filter_var($data['token'], FILTER_SANITIZE_STRING);
             try {
                 Membre::getMembreByToken($token);
-            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            } catch (ModelNotFoundException $e) {
                 $htmlvars['message'] = "Le code d'identification indiqué est inexistant";
+                $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
+                $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
+                return $rs;
+            } catch (QueryException $e) {
+                $htmlvars['message'] = "Le serveur est actuellement indisponible";
                 $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
                 $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
                 return $rs;
@@ -902,7 +940,7 @@ class Controller
             try {
                 $membre = Membre::getMembreByToken($_COOKIE['token']);
                 return true;
-            } catch (ModelNotFoundException $e) {
+            } catch (ModelNotFoundException | QueryException $e) {
                 return false;
             }
         } else {
