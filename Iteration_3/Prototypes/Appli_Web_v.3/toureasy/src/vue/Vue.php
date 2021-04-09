@@ -448,7 +448,6 @@ END;
                 <thead>
                     <tr>
                         <th>Nom</th>
-                        <th>Lien de partage</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -496,7 +495,6 @@ END;
             
                 <tr>
                     <td><a href="$url">$monument->nomMonum</a></td>
-                    <td></td>
                 </tr>
 END;
         return $html;
