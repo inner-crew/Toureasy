@@ -777,7 +777,7 @@ END;
 <input type="radio" id="private" name="visibilite" value="private">
 <label for="huey">Privé</label>
 <input type="radio" id="public" name="visibilite" value="public" checked>
-<label for="dewey">Publique</label>
+<label for="dewey">Public</label>
 END;
 
         } else {
