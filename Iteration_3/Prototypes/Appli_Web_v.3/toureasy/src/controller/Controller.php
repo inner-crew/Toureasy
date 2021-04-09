@@ -44,7 +44,7 @@ class Controller
         $estConnecte = $this->verifierEtatServeurEtUtilisateurConnecte();
 
         if ($estConnecte !== 404) {
-            if ($estConnecte === 1) {
+            if ($estConnecte === 0) {
                 $urlAccederMap = $urlConnexion;
             }
 
@@ -65,7 +65,7 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
         $v = new Vue(null);
         $rs->getBody()->write($v->render($htmlvars, Vue::CONNEXION));
@@ -93,7 +93,7 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'url' => $this->c->router->pathFor('map', []),
             'message' => "Connexion réussie",
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
 
         ];
         $data = $rq->getParsedBody();
@@ -143,7 +143,7 @@ class Controller
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'map' => $urlMap,
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
 
         if (!$this->verifierUtilisateurConnecte()) {
@@ -163,7 +163,7 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Succès",
             'url' => $this->c->router->pathFor('profil'),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
 
         $data = $rq->getParsedBody();
@@ -208,7 +208,7 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'createListe' => $this->c->router->pathFor('create-liste', []),
             'createMonument' => $this->c->router->pathFor('ajoutMonument', []),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
 
         if (!$this->verifierUtilisateurConnecte()) {
@@ -330,7 +330,7 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'map' => $this->c->router->pathFor('map')
         ];
 
@@ -368,7 +368,7 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'back' => $this->c->router->pathFor('map'),
             'modifierMonument' => $this->c->router->pathFor('mapModifierMonument', ["token" => $args['token']]),
         ];
@@ -396,7 +396,7 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'back' => $this->c->router->pathFor('mapDetailListe', ['token' => $args['token']])
         ];
 
@@ -423,7 +423,7 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'back' => $this->c->router->pathFor('map')
         ];
 
@@ -451,7 +451,7 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'publique' => isset($_GET['publique'])
         ];
         $v = new Vue(null);
@@ -611,7 +611,7 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
         $v = new Vue(null);
 
@@ -629,7 +629,7 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Succès",
             'url' => $this->c->router->pathFor('mes-listes'),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
 
         $v = new Vue(null);
@@ -663,7 +663,7 @@ class Controller
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'modifierListe' => $this->c->router->pathFor('modifierListe', ["token" => $args['token']]),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'back' => $this->c->router->pathFor('mes-listes')
         ];
 
@@ -699,7 +699,7 @@ class Controller
     {
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
 
         $liste = ListeMonument::getListeByToken($args['token']);
@@ -737,7 +737,7 @@ class Controller
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             "modifierMonument" => $this->c->router->pathFor('modifierMonument', ["token" => $args['token']]),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'back' => $this->c->router->pathFor('mes-listes')
         ];
 
@@ -756,7 +756,7 @@ class Controller
         $image = Image::getImageUrlByIdMonument($monument->idMonument);
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
         $v = new Vue([$monument, $image]);
 
@@ -955,7 +955,7 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Vous devez vous connecter pour accéder à cette page",
             'url' => $this->c->router->pathFor('connexion', []),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
@@ -969,7 +969,7 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => $message,
             'url' => $this->c->router->pathFor($nameRedirection, $argsUrl),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
         return $rs;
@@ -980,7 +980,7 @@ class Controller
         $v = new Vue(null);
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::ABOUT));
         return $rs;
@@ -1029,7 +1029,7 @@ class Controller
         $htmlvars = [
             'prenom' => $prenom,
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
 
         $rs->getBody()->write($v->render($htmlvars, Vue::DEMANDE_AMI));
@@ -1042,7 +1042,7 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Succès",
             'url' => $this->c->router->pathFor('profil'),
-            'menu' => $this->getMenu($args)
+            'menu' => $this->getMenu()
         ];
 
         $data = $rq->getParsedBody();
@@ -1104,7 +1104,7 @@ class Controller
 
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'listeAmis' => $tabAmisParam,
         ];
 
@@ -1136,7 +1136,7 @@ class Controller
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "hello",
             'url' => $this->c->router->pathFor("amis", []),
-            'menu' => $this->getMenu($args),
+            'menu' => $this->getMenu(),
             'urlDemande' => $urlDemande,
         ];
 
