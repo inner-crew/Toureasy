@@ -1015,14 +1015,15 @@ END;
             <h2 id="center">A propos</h2>
             <i id="center">Toureasy est le projet tutoré de 4 étudiants.</i>
             <div class="wrapperRows">
-                <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Silvio.png"><p>Silvio Brancati</p></div>
-                <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Remrem.png"><p>Rémi Zapp</p></div>
-                <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Nicolixxx.png"><p>Nicolas Frache</p></div>
-                <div class="cellRow"><img class="pp" src="{$vars['basepath']}/web/img/Jock.png"><p>Arthur Moitrier</p></div>
+                <div class="cellRow"><img class="pp" id="sb" src="{$vars['basepath']}/web/img/Silvio.png"><p>Silvio Brancati</p></div>
+                <div class="cellRow"><img class="pp" id="rz" src="{$vars['basepath']}/web/img/Remrem.png"><p>Rémi Zapp</p></div>
+                <div class="cellRow"><img class="pp" id="nf" src="{$vars['basepath']}/web/img/Nicolixxx.png"><p>Nicolas Frache</p></div>
+                <div class="cellRow"><img class="pp" id="am" src="{$vars['basepath']}/web/img/Jock.png"><p>Arthur Moitrier</p></div>
             </div> 
             <div>
                 <h3 id="center">Contactez nous à cette adresse : Toureasy.contact@gmail.com</h3>
             </div>
+            <script src="{$vars['basepath']}/web/js/about.js"></script>
         </div>
 END;
         return $html;
