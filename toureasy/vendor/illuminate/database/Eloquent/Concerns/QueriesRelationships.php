@@ -223,7 +223,7 @@ trait QueriesRelationships
                         };
                     }
 
-                    $query->where($this->query->from.'.'.$relation->getMorphType(), '=', (new $type)->getMorphClass())
+                    $query->where($this->qualifyColumn($relation->getMorphType()), '=', (new $type)->getMorphClass())
                                 ->whereHas($belongsTo, $callback, $operator, $count);
                 });
             }
@@ -349,6 +349,72 @@ trait QueriesRelationships
     }
 
     /**
+     * Add a basic where clause to a relationship query.
+     *
+     * @param  string  $relation
+     * @param  \Closure|string|array|\Illuminate\Database\Query\Expression  $column
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function whereRelation($relation, $column, $operator = null, $value = null)
+    {
+        return $this->whereHas($relation, function ($query) use ($column, $operator, $value) {
+            $query->where($column, $operator, $value);
+        });
+    }
+
+    /**
+     * Add an "or where" clause to a relationship query.
+     *
+     * @param  string  $relation
+     * @param  \Closure|string|array|\Illuminate\Database\Query\Expression  $column
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function orWhereRelation($relation, $column, $operator = null, $value = null)
+    {
+        return $this->orWhereHas($relation, function ($query) use ($column, $operator, $value) {
+            $query->where($column, $operator, $value);
+        });
+    }
+
+    /**
+     * Add a polymorphic relationship condition to the query with a where clause.
+     *
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
+     * @param  string|array $types
+     * @param  \Closure|string|array|\Illuminate\Database\Query\Expression  $column
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function whereMorphRelation($relation, $types, $column, $operator = null, $value = null)
+    {
+        return $this->whereHasMorph($relation, $types, function ($query) use ($column, $operator, $value) {
+            $query->where($column, $operator, $value);
+        });
+    }
+
+    /**
+     * Add a polymorphic relationship condition to the query with an "or where" clause.
+     *
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
+     * @param  string|array $types
+     * @param  \Closure|string|array|\Illuminate\Database\Query\Expression  $column
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function orWhereMorphRelation($relation, $types, $column, $operator = null, $value = null)
+    {
+        return $this->orWhereHasMorph($relation, $types, function ($query) use ($column, $operator, $value) {
+            $query->where($column, $operator, $value);
+        });
+    }
+
+    /**
      * Add subselect queries to include an aggregate value for a relationship.
      *
      * @param  mixed  $relations
@@ -387,9 +453,11 @@ trait QueriesRelationships
                                             ? "{$relation->getRelationCountHash(false)}.$column"
                                             : $column;
 
-                $expression = sprintf('%s(%s)', $function, $this->getQuery()->getGrammar()->wrap(
+                $wrappedColumn = $this->getQuery()->getGrammar()->wrap(
                     $column === '*' ? $column : $relation->getRelated()->qualifyColumn($hashedColumn)
-                ));
+                );
+
+                $expression = $function === 'exists' ? $wrappedColumn : sprintf('%s(%s)', $function, $wrappedColumn);
             } else {
                 $expression = $column;
             }
@@ -423,10 +491,17 @@ trait QueriesRelationships
                 preg_replace('/[^[:alnum:][:space:]_]/u', '', "$name $function $column")
             );
 
-            $this->selectSub(
-                $function ? $query : $query->limit(1),
-                $alias
-            );
+            if ($function === 'exists') {
+                $this->selectRaw(
+                    sprintf('exists(%s) as %s', $query->toSql(), $this->getQuery()->grammar->wrap($alias)),
+                    $query->getBindings()
+                )->withCasts([$alias => 'bool']);
+            } else {
+                $this->selectSub(
+                    $function ? $query : $query->limit(1),
+                    $alias
+                );
+            }
         }
 
         return $this;
@@ -489,6 +564,17 @@ trait QueriesRelationships
     public function withAvg($relation, $column)
     {
         return $this->withAggregate($relation, $column, 'avg');
+    }
+
+    /**
+     * Add subselect queries to include the existence of related models.
+     *
+     * @param  string|array  $relation
+     * @return $this
+     */
+    public function withExists($relation)
+    {
+        return $this->withAggregate($relation, '*', 'exists');
     }
 
     /**

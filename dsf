@@ -1,0 +1,110 @@
+[33mcommit 1329c56f03edcc696085a39a75d2d617b993e38d[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Silvio <70536371+Silvio-Br@users.noreply.github.com>
+Date:   Wed Sep 1 21:19:52 2021 +0200
+
+    Add files via upload
+
+[1mdiff --git a/toureasy/web/img/taken_2021_04_22_16_54_08694b.jpg b/toureasy/web/img/taken_2021_04_22_16_54_08694b.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..661e613[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_04_22_16_54_08694b.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_04_22_17_00_39a237.jpg b/toureasy/web/img/taken_2021_04_22_17_00_39a237.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..07326f4[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_04_22_17_00_39a237.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_04_22_17_11_409a91.jpg b/toureasy/web/img/taken_2021_04_22_17_11_409a91.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ac50128[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_04_22_17_11_409a91.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_04_22_17_48_46f247.jpg b/toureasy/web/img/taken_2021_04_22_17_48_46f247.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..07326f4[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_04_22_17_48_46f247.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_04_23_16_13_0004cf.jpg b/toureasy/web/img/taken_2021_04_23_16_13_0004cf.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..221fd0f[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_04_23_16_13_0004cf.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_04_23_16_28_47c8f1.jpg b/toureasy/web/img/taken_2021_04_23_16_28_47c8f1.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3e24852[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_04_23_16_28_47c8f1.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_04_23_16_56_06e5f7.jpg b/toureasy/web/img/taken_2021_04_23_16_56_06e5f7.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ecbf9f2[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_04_23_16_56_06e5f7.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_28_17_25_412622.jpg b/toureasy/web/img/taken_2021_05_28_17_25_412622.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8a8ab51[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_28_17_25_412622.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_28_17_31_5343b5.jpg b/toureasy/web/img/taken_2021_05_28_17_31_5343b5.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c5d42e5[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_28_17_31_5343b5.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_28_19_12_0992ea.jpg b/toureasy/web/img/taken_2021_05_28_19_12_0992ea.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..13e14f7[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_28_19_12_0992ea.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_08_57_02793a.jpg b/toureasy/web/img/taken_2021_05_29_08_57_02793a.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0dc7268[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_08_57_02793a.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_09_15_006ef1.jpg b/toureasy/web/img/taken_2021_05_29_09_15_006ef1.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..77afc2c[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_09_15_006ef1.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_09_15_00f919.jpg b/toureasy/web/img/taken_2021_05_29_09_15_00f919.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4ab1371[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_09_15_00f919.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_09_18_47d30c.jpg b/toureasy/web/img/taken_2021_05_29_09_18_47d30c.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3d99f32[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_09_18_47d30c.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_09_35_57583f.jpg b/toureasy/web/img/taken_2021_05_29_09_35_57583f.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..aefd24d[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_09_35_57583f.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_09_42_041b78.jpg b/toureasy/web/img/taken_2021_05_29_09_42_041b78.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ddf10fd[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_09_42_041b78.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_13_29_101621.jpg b/toureasy/web/img/taken_2021_05_29_13_29_101621.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d74235e[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_13_29_101621.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_13_29_10c843.jpg b/toureasy/web/img/taken_2021_05_29_13_29_10c843.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3fe3ba3[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_13_29_10c843.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_29_16_21_49d1bf.jpg b/toureasy/web/img/taken_2021_05_29_16_21_49d1bf.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3c61af0[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_29_16_21_49d1bf.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_30_15_16_58577f.jpg b/toureasy/web/img/taken_2021_05_30_15_16_58577f.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1aef65c[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_30_15_16_58577f.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_30_15_17_455ae2.jpg b/toureasy/web/img/taken_2021_05_30_15_17_455ae2.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f638d50[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_30_15_17_455ae2.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_30_15_23_060fe6.jpg b/toureasy/web/img/taken_2021_05_30_15_23_060fe6.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..9ea459a[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_30_15_23_060fe6.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_05_30_15_26_365533.jpg b/toureasy/web/img/taken_2021_05_30_15_26_365533.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8b3efb2[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_05_30_15_26_365533.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_06_26_15_03_547985.jpg b/toureasy/web/img/taken_2021_06_26_15_03_547985.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4f9d1ab[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_06_26_15_03_547985.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_06_26_15_17_32f888.jpg b/toureasy/web/img/taken_2021_06_26_15_17_32f888.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..964f134[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_06_26_15_17_32f888.jpg differ
+[1mdiff --git a/toureasy/web/img/taken_2021_06_26_15_31_151f66.jpg b/toureasy/web/img/taken_2021_06_26_15_31_151f66.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..30d93fb[m
+Binary files /dev/null and b/toureasy/web/img/taken_2021_06_26_15_31_151f66.jpg differ

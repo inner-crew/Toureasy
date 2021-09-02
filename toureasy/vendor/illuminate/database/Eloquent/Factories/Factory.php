@@ -5,17 +5,20 @@ namespace Illuminate\Database\Eloquent\Factories;
 use Closure;
 use Faker\Generator;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
+use Illuminate\Support\Traits\Macroable;
 use Throwable;
 
 abstract class Factory
 {
-    use ForwardsCalls;
+    use ForwardsCalls, Macroable {
+        __call as macroCall;
+    }
 
     /**
      * The name of the factory's corresponding model.
@@ -203,14 +206,14 @@ abstract class Factory
      * Create a collection of models and persist them to the database.
      *
      * @param  iterable  $records
-     * @return \Illuminate\Database\Eloquent\Collection|mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function createMany(iterable $records)
     {
         return new EloquentCollection(
-            array_map(function ($record) {
+            collect($records)->map(function ($record) {
                 return $this->state($record)->create();
-            }, $records)
+            })
         );
     }
 
@@ -219,7 +222,7 @@ abstract class Factory
      *
      * @param  array  $attributes
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
     public function create($attributes = [], ?Model $parent = null)
     {
@@ -306,7 +309,7 @@ abstract class Factory
      *
      * @param  array  $attributes
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
     public function make($attributes = [], ?Model $parent = null)
     {
@@ -747,6 +750,10 @@ abstract class Factory
      */
     public function __call($method, $parameters)
     {
+        if (static::hasMacro($method)) {
+            return $this->macroCall($method, $parameters);
+        }
+
         if (! Str::startsWith($method, ['for', 'has'])) {
             static::throwBadMethodCallException($method);
         }
