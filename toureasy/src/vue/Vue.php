@@ -817,6 +817,8 @@ END;
         }
 
         $html .= <<<END
+<div class="ml-10 mt-5 my-auto flex">
+<h3 class="text-3xl font-extrabold text-gray-900 my-auto" id="nom">{$monument->nomMonum}</h3>
     <label for="checkbox">
       <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
         <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
@@ -864,11 +866,11 @@ END;
   </div>
 </div>
 </div>
-            <h3 id="nom">{$monument->nomMonum}</h3>
-            <p class="desc" id="descMonu">{$monument->descLongue}</p>
+</div>            
+            <p class="desc ml-10" id="descMonu">{$monument->descLongue}</p>
 END;
         if (sizeof($images) > 0) {
-            $html .= "<div class='wrapper' id='galerie'>";
+            $html .= "<div class='wrapper ml-10' id='galerie'>";
             foreach ($images as $img) {
                 $html .= <<<END
 <div class='cell'>
@@ -882,9 +884,17 @@ END;
         if ($monument->estPrive == 0) {
             $html .= <<<END
 </section>
-        <div class="box"><button onclick="window.location.href='{$vars['modifierMonument']}'">Proposer une modification</button></div></br>
-        <div class="box"><button onclick="window.location.href='{$vars['seeOnMap']}'">Voir le monument sur la carte</button></div>
-<div id="back"><img onclick="back('{$vars['back']}')" src="{$vars['basepath']}/web/img/back.png"/></div></div>
+<div class="flex pb-10">
+<button onclick="window.location.href='{$vars['modifierMonument']}'" name="action" value="OK" class="ml-10 mt-5 group relative  flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+Proposer une modification
+</button>
+
+<button onclick="window.location.href='{$vars['seeOnMap']}'" name="action" value="OK" class="ml-5 mt-5 group relative  flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+Voir le monument sur la carte
+</button>
+
+</div>
+
 <script>
     function back(chemin) {
         window.location = chemin
