@@ -882,7 +882,7 @@ END;
         if ($monument->estPrive == 0) {
             $html .= <<<END
 </section>
-<div class="flex pb-10">
+<div class="flex pb-10 mr-10">
 <button onclick="window.location.href='{$vars['modifierMonument']}'" name="action" value="OK" class="ml-10 mt-5 group relative  flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
 Proposer une modification
 </button>
