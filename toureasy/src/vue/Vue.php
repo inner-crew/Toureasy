@@ -872,7 +872,7 @@ END;
             foreach ($images as $img) {
                 $html .= <<<END
 <div class='cell'>
-    <img src='{$vars['basepath']}/{$img['urlImage']}'>
+    <img class="md-10" src='{$vars['basepath']}/{$img['urlImage']}'>
 </div>
 END;
             }
