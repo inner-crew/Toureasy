@@ -2214,6 +2214,10 @@ svg #main-circ {
     margin-left: 1rem;
   }
 
+  .lg\:mr-3 {
+    margin-right: 0.75rem;
+  }
+
   .lg\:flex {
     display: flex;
   }
@@ -2254,6 +2258,11 @@ svg #main-circ {
   .lg\:px-24 {
     padding-left: 6rem;
     padding-right: 6rem;
+  }
+
+  .lg\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 

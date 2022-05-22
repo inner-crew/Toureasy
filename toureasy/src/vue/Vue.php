@@ -1352,25 +1352,25 @@ module.exports = {
                     </p>
                 </li>
                 <li class="block relative">
-                    <a href='{$vars['menu']['map']}' class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 bg-green-500 text-white" @click.prevent="showChildren=!showChildren">
+                    <a href='{$vars['menu']['map']}' class="flex items-center h-10 leading-10 px-2 lg:px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 bg-green-500 text-white" @click.prevent="showChildren=!showChildren">
                         <span class="lg:mr-3 text-xl"> <i class="mdi mdi-map"></i> </span>
                         <span class="hidden lg:flex">Map</span>
                     </a>
                 </li>
                 <li class="block relative">
-                    <a href='{$vars['menu']['espace']}' class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100">
+                    <a href='{$vars['menu']['espace']}' class="flex items-center h-10 leading-10 px-2 lg:px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100">
                         <span class="lg:mr-3 text-xl"> <i class="mdi mdi-widgets-outline"></i> </span>
                         <span class="hidden lg:flex">Mon espace</span>
                     </a>
                 </li>
                 <li class="block relative">
-                    <a href='{$vars['menu']['ajout']}' class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100" @click.prevent="showChildren=!showChildren">
+                    <a href='{$vars['menu']['ajout']}' class="flex items-center h-10 leading-10 px-2 lg:px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100" @click.prevent="showChildren=!showChildren">
                         <span class="lg:mr-3 text-xl"> <i class="mdi mdi-view-grid-plus"></i> </span>
                         <span class="hidden lg:flex">Ajouter un monument</span>
                     </a>
                 </li>
                 <li class="block relative">
-                    <a href='{$vars['menu']['about-us']}' class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100" @click.prevent="showChildren=!showChildren">
+                    <a href='{$vars['menu']['about-us']}' class="flex items-center h-10 leading-10 px-2 lg:px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100" @click.prevent="showChildren=!showChildren">
                         <span class="lg:mr-3 text-xl"> <i class="mdi mdi-information"></i> </span>
                         <span class="hidden lg:flex">À propos</span>
                     </a>
