@@ -125,7 +125,6 @@ END;
   <input id="3dSwitch" type="checkbox">
   <span class="slider"></span>
 </label>
-<p id="txt3D">3D On/Off</p>
 <!--<input type= "image" id="btn" src="{$v['basepath']}/web/carteSetting/data/images/mark.png" width="100px" height="200px"/>-->
 <select id="monumentAfficher">
   
@@ -762,11 +761,11 @@ END;
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
         <section class="infos">
-            <h3 id="nom">{$monument->nomMonum}</h3>
-            <p class="desc" id="descMonu">{$monument->descLongue}</p>
+        <h1 class="mt-6 ml-10  text-3xl font-extrabold text-gray-900 ">{$monument->nomMonum}</h1>
+            <p class="desc ml-10 mt-5" id="descMonu">{$monument->descLongue}</p>
 END;
         if (sizeof($images) > 0) {
-            $html .= "<div class='wrapper' id='galerie'>";
+            $html .= "<div class='wrapper ml-10 mr-10' id='galerie'>";
             foreach ($images as $img) {
                 $html .= <<<END
 <div class='cell'>
@@ -780,8 +779,11 @@ END;
 
         $html .= <<<END
 </section>
-        <div class="box"><button onclick="window.location.href='{$vars['modifierMonument']}'">Modifier</button></div>
-<div id="back"><img onclick="back('{$vars['back']}')" src="{$vars['basepath']}/web/img/back.png"/></div></div>
+        <div class="box pb-10">
+        <button onclick="window.location.href='{$vars['modifierMonument']}'" class=" ml-10 mt-5 group relative  flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+Modifier
+</button>
+        </div></div>
 <script>
     function back(chemin) {
         window.location = chemin
@@ -804,6 +806,8 @@ END;
 <div id="main-content">
   <div>
   <form method="post" id="Form">
+  <div class="ml-10 mt-5 my-auto flex">
+<h3 class="text-3xl font-extrabold text-gray-900 my-auto" id="nom">{$monument->nomMonum}</h3>
 END;
 
         if ($vars['estFavori']) {
@@ -817,8 +821,6 @@ END;
         }
 
         $html .= <<<END
-<div class="ml-10 mt-5 my-auto flex">
-<h3 class="text-3xl font-extrabold text-gray-900 my-auto" id="nom">{$monument->nomMonum}</h3>
     <label for="checkbox">
       <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
         <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
@@ -969,41 +971,71 @@ END;
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
         <form method="post" enctype="multipart/form-data" id="add">
-            <input type="hidden" id="delete" name="delete"/>
-            <h3 id="modifNom">Nom du monument : <input name="nom" id='lessMargin' value="{$monument->nomMonum}" required></h3>
+        
+        <div class="  py-6 flex flex-col justify-center sm:py-12">
+        <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+        <div class="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
+          <div class=" mx-auto">
+            <div class="flex my-5 items-center space-x-5">
+              <div class="block  font-semibold text-xl self-start text-gray-700">
+                <h1 class="leading-relaxed">Modifier un monument</h1>
+              </div>
+            </div>
+            <div class="divide-y divide-gray-200">
+              <div class="my-5 py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                <div class="flex flex-col">
+                  <label class="leading-loose">Nom du monument</label>
+                  <input type="text" name="nom" value="{$monument->nomMonum}" required class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" placeholder="Nom du monument">
+                </div>
+                <div class="my-5 flex flex-col">
+                  <label class="leading-loose">Description</label>
+                  
+                  <div>
+                        <div id="menuEditor">
+                            <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
+                            <iframe class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" style="background: #FFFFFF" name="frm" id="frm"></iframe>
+                            <input type="hidden" name="descr" value="{$monument->descLongue}"/>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="lat"/><input type="hidden" name="long"/>
+                
+              
+
+        <input type="hidden" id="delete" name="delete"/>
         END;
         $html .= "<div class='wrapper' id='galerie'>";
         foreach ($arrayImg as $img) {
             $html .= <<<END
         <div class='cell'>
             <div id="content">
-                <img src="{$vars['basepath']}/web/img/cross.png" class="cross"/>
+                <img src="{$vars['basepath']}/web/img/cross.png" class="cross absolute"/>
             </div>
             <img id="{$img['numeroImage']}" src='{$vars['basepath']}/{$img['urlImage']}'>
         </div>
         END;
         }
         $html .= <<<END
-<div class="image-upload cell">
-  <label for="file-input">
-    <img src="{$vars['basepath']}/web/img/addImage.png"/>
-  </label>
-  <input id="file-input" type="file" multiple="multiple" name="fichier[]"/>
-</div>
-</div>
-END;
-        $html .= <<<END
-                <br>
-                <h3>Description</h3>
-                <div id="menuEditor" >
-                    <textarea name="desc" id="area" cols="60" rows="10" style="display:none"></textarea>
-                    <iframe style="background: #FFFFFF" name="frm" id="frm"></iframe>
-                    <input type="hidden" name="descr" value="{$monument->descLongue}"/>
+
                 </div>
-               
-            <div id="center" class="box">
-        <input type="button" onclick="submitForm()" value="Valider">
-    </div>
+                <div class="flex items-center space-x-4">
+                  <div class="flex flex-col">
+                    <div id='galerie'>
+                    <div class="image-upload cell" id="addImages">
+                        <input id="file-input" type="file" multiple="multiple" name="fichier[]"/>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+                <div class="pt-4 flex items-center space-x-4">
+                  <input type="button" name="action" onclick="submitForm()" value="Valider" class="mt-3 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                    </input>
+              </div>
+          </div>
+        </div>
+        </div>
+        </div>
 </form>
 <script src="{$vars['basepath']}/web/js/textEditor.js"></script>
 <script src="{$vars['basepath']}/web/js/modifierMonument.js"></script>
@@ -1156,14 +1188,24 @@ END;
     {
         $html = $this->insererEnteteSite($vars);
         $html .= <<<END
-<h1 id="center">{$vars['prenom']} vous a envoyé une demande d'ami </h1>
-            <div class="box"> 
-                <form method="post" enctype="multipart/form-data">
-                    <input name="rep" type="submit" value="Accepter">
-                    <input name="rep" type="submit" value="Refuser" >
-               </form>
+
+<div>
+            <div class="w-full absolute flex items-center justify-center bg-modal">
+                <div class="bg-white rounded shadow p-8 m-4 max-w-xs  text-center">
+                    <div class="mb-8">
+                        <h1 id="center">{$vars['prenom']} vous a envoyé une demande d'ami </h1>
+                    </div>
+                    <div class="flex justify-center">
+                    <form method="post" enctype="multipart/form-data">
+                        <input name="rep" type="submit" value="Accepter" class="flex-no-shrink text-white py-2 px-4 bg-green-700 rounded bg-teal hover:bg-green-500"></input>
+                         <input name="rep" type="submit" value="Refuser" class="flex-no-shrink text-white py-2 px-4 bg-green-700 rounded bg-teal hover:bg-green-500"></input>
+                         </form>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+    </div>
 END;
 
         return $html;
@@ -1196,7 +1238,7 @@ END;
         $liste = $vars["listeAmis"];
         if (sizeOf($liste) > 0) {
             $html .= <<<END
-        <div class="flex items-center">
+        <div class="flex mt-5 items-center">
 	<div class="col-span-12">
 		<div class="overflow-auto lg:overflow-visible ">
 			<table class="ml-10 table text-black-400 border-separate space-y-6 text-sm">
@@ -1322,25 +1364,25 @@ module.exports = {
                 <li class="block relative">
                     <a href='{$vars['menu']['espace']}' class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100">
                         <span class="mr-3 text-xl"> <i class="mdi mdi-widgets-outline"></i> </span>
-                        <span>Mon espace</span>
+                        <span class="hidden lg:flex">Mon espace</span>
                     </a>
                 </li>
                 <li class="block relative">
                     <a href='{$vars['menu']['ajout']}' class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100" @click.prevent="showChildren=!showChildren">
                         <span class="mr-3 text-xl"> <i class="mdi mdi-view-grid-plus"></i> </span>
-                        <span>Ajouter un monument</span>
+                        <span class="hidden lg:flex">Ajouter un monument</span>
                     </a>
                 </li>
                 <li class="block relative">
                     <a href='{$vars['menu']['about-us']}' class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100" @click.prevent="showChildren=!showChildren">
                         <span class="mr-3 text-xl"> <i class="mdi mdi-information"></i> </span>
-                        <span>À propos</span>
+                        <span class="hidden lg:flex">À propos</span>
                     </a>
                 </li>
                 <li class="block absolute right-0" x-data="{showChildren:false}" @click.away="showChildren=false">
                     <a href="#" class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 hover:bg-gray-100" @click.prevent="showChildren=!showChildren">
                         <span class="mr-3 text-xl"> <i class="mdi mdi-account-cog"></i> </span>
-                        <span>Mon profil</span>
+                        <span class="hidden lg:flex">Mon profil</span>
                         <span class="ml-2"> <i class="mdi mdi-chevron-down"></i> </span>
                     </a>
                     <div class="bg-white shadow-md rounded border border-gray-300 text-sm absolute top-auto left-0 min-w-full w-56 z-30 mt-1" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none;">

@@ -27,7 +27,7 @@ class ControllerAdmin
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Vous devez vous connecter pour accéder à cette page",
-            'url' => $this->c->router->pathFor('connexion', []),
+            'url' => $this->c->router->pathFor('home', []),
             'menu' => $this->getMenu($args)
         ];
 
@@ -157,7 +157,7 @@ class ControllerAdmin
             $rs->getBody()->write($v->render($htmlvars, VueAdmin::DETAIL_MONUMENT));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq,'Veuillez vous connecter pour accéder à la Map Toureasy', 'home', $args);
         }
     }
 
@@ -210,7 +210,7 @@ class ControllerAdmin
 
     private function getMenu() {
         $urlAPropos = $this->c->router->pathFor('about-us');
-        $urlConnexion = $this->c->router->pathFor('connexion');
+        $urlConnexion = $this->c->router->pathFor('home');
         $urlMap = $this->c->router->pathFor('map');
         $urlAmis = $this->c->router->pathFor('amis');
         $urlHome = $this->c->router->pathFor('home');
