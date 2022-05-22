@@ -11,7 +11,7 @@ var arrayFiles = []
 
 function setGrid() {
     document.getElementById('galerie').className = "wrapper";
-    document.getElementById('smallImageUpload').style.width = '100%';
+    document.getElementById('smallImageUpload').style.display = 'none';
 }
 
 function readURL(input) {

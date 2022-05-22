@@ -522,7 +522,12 @@ var genererMonumentDescr = function (monument) {
         <h1>${monument.title}</h1>
         <p>${monument.description}</p>
         <img src="../${monument.urlImage}" alt="${monument.nomImage}"x>
-        <div class="box"><button onclick="window.location.href='${url}'">Afficher détails</button></div>
+        <div class="box mt-5">
+            <button class="w-full shadow bg-green-700 hover:bg-green-500 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+            onclick="window.location.href='${url}'">
+            Afficher détails
+            </button>
+        </div>
     `
     return html;
 }

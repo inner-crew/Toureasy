@@ -15,23 +15,13 @@ $app = new App($c);
 
 Eloquent::start(__DIR__ . '/src/conf/conf.ini');
 
-
-
 // page d'accueil de Toureasy
 $app->get('/', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
-    return $c->displayHome($rq,$rs,$args);
+    return $c->displayConnexion($rq,$rs,$args);
 })->setName('home');
 
-
-
-// page de connexion de Toureasy
-$app->get('/connexion[/]', function(Request $rq, Response $rs, array $args) {
-    $c = new Controller($this);
-    return $c->displayConnexion($rq,$rs,$args);
-})->setName('connexion');
-
-$app->post('/connexion[/]', function(Request $rq, Response $rs, array $args) {
+$app->post('/', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->postConnexion($rq,$rs,$args);
 });

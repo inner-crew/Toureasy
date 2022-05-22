@@ -31,7 +31,7 @@ class Controller
     public function displayHome(Request $rq, Response $rs, array $args): Response
     {
         // url redirigeant vers la page de connexion
-        $urlConnexion = $this->c->router->pathFor('connexion');
+        $urlConnexion = $this->c->router->pathFor('home');
         // url redirigeant vers la page de navigation sur la carte
         $urlAccederMap = $this->c->router->pathFor('map');
 
@@ -45,7 +45,7 @@ class Controller
 
         if ($estConnecte !== 404) {
             if ($estConnecte === 0) {
-                $urlAccederMap = $urlConnexion;
+                return $this->displayMap($rq,$rs,$args);
             }
 
             // ajoute ces variables à htmlvars afin de les transférer à la vue
@@ -63,11 +63,18 @@ class Controller
 
     public function displayConnexion(Request $rq, Response $rs, array $args): Response
     {
+        $urlAbout = $this->c->router->pathFor('about-us');
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
-            'menu' => $this->getMenu()
+            'menu' => $this->getMenu(),
+            'about' => $urlAbout
         ];
         $v = new Vue(null);
+
+        if ($this->verifierUtilisateurConnecte()) {
+            return $this->displayMonEspace($rq, $rs, $args);
+        }
+
         $rs->getBody()->write($v->render($htmlvars, Vue::CONNEXION));
         return $rs;
     }
@@ -109,7 +116,7 @@ class Controller
                 $membre->save();
             } catch (QueryException $e) {
                 $htmlvars['message'] = "Le serveur est actuellement indisponible";
-                $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
+                $htmlvars['url'] = $this->c->router->pathFor('home', []);
                 $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
                 return $rs;
             }
@@ -119,12 +126,12 @@ class Controller
                 Membre::getMembreByToken($token);
             } catch (ModelNotFoundException $e) {
                 $htmlvars['message'] = "Le code d'identification indiqué est inexistant";
-                $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
+                $htmlvars['url'] = $this->c->router->pathFor('home', []);
                 $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
                 return $rs;
             } catch (QueryException $e) {
                 $htmlvars['message'] = "Le serveur est actuellement indisponible";
-                $htmlvars['url'] = $this->c->router->pathFor('connexion', []);
+                $htmlvars['url'] = $this->c->router->pathFor('home', []);
                 $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
                 return $rs;
             }
@@ -360,7 +367,7 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MAP));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'home', $args);
         }
     }
 
@@ -388,7 +395,7 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MAP_MONUMENT));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'home', $args);
         }
     }
 
@@ -415,7 +422,7 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MAP_MONUMENT));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'home', $args);
         }
     }
 
@@ -443,7 +450,7 @@ class Controller
             $rs->getBody()->write($v->render($htmlvars, Vue::MAP_LISTE));
             return $rs;
         } else {
-            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'connexion', $args);
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'home', $args);
         }
     }
 
@@ -954,7 +961,7 @@ class Controller
         $htmlvars = [
             'basepath' => $rq->getUri()->getBasePath(),
             'message' => "Vous devez vous connecter pour accéder à cette page",
-            'url' => $this->c->router->pathFor('connexion', []),
+            'url' => $this->c->router->pathFor('home', []),
             'menu' => $this->getMenu()
         ];
         $rs->getBody()->write($v->render($htmlvars, Vue::MESSAGE));
@@ -1170,18 +1177,19 @@ class Controller
     private function getMenu()
     {
         $urlAPropos = $this->c->router->pathFor('about-us');
-        $urlConnexion = $this->c->router->pathFor('connexion');
+        $urlConnexion = $this->c->router->pathFor('home');
         $urlMap = $this->c->router->pathFor('map');
         $urlAmis = $this->c->router->pathFor('amis');
         $urlHome = $this->c->router->pathFor('home');
 
         $isConnected = $this->verifierUtilisateurConnecte();
         $menu = [];
+
+        $urlAjouterMonument = $this->c->router->pathFor('ajoutMonument');
+        $urlProfil = $this->c->router->pathFor('profil');
+
         if ($isConnected) {
             $urlEspace = $this->c->router->pathFor('mes-listes', ['token' => $_COOKIE['token']]);
-            $urlAjouterMonument = $this->c->router->pathFor('ajoutMonument');
-            $urlProfil = $this->c->router->pathFor('profil');
-
             $menu = [
                 'about-us' => $urlAPropos,
                 'map' => $urlMap,
@@ -1194,10 +1202,15 @@ class Controller
         } else {
             $menu = [
                 'about-us' => $urlAPropos,
-                'connexion' => $urlConnexion,
+                'map' => $urlMap,
+                'espace' => "",
+                'ajout' => $urlAjouterMonument,
+                'profil' => $urlProfil,
+                'amis' => $urlAmis,
                 'home' => $urlHome,
             ];
         }
+
         return $menu;
     }
 
