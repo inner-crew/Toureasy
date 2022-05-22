@@ -1354,7 +1354,7 @@ module.exports = {
                 <li class="block relative">
                     <a href='{$vars['menu']['map']}' class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 bg-green-500 text-white" @click.prevent="showChildren=!showChildren">
                         <span class="mr-3 text-xl"> <i class="mdi mdi-map"></i> </span>
-                        <span>Map</span>
+                        <span class="hidden lg:flex">Map</span>
                     </a>
                 </li>
                 <li class="block relative">
@@ -1579,7 +1579,7 @@ END;
 <form id="contact-me" action="mailto:Toureasy.contact@gmail.com" class="w-full mx-auto max-w-3xl bg-white shadow p-8 text-gray-700 ">
 
 
-    <h2 class="w-full my-2 text-3xl font-bold leading-tight">Nous contacter</h2>
+    <h2 class="w-full hidden flex my-2 text-3xl font-bold leading-tight">Nous contacter</h2>
     <div class="">
         <button class="w-full shadow bg-green-700 hover:bg-green-500 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
             type="submit">
