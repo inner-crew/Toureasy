@@ -1018,7 +1018,7 @@ END;
                   <div class="flex flex-col">
                     <div id='galerie'>
                     <div class="image-upload cell" id="addImages">
-                        <input id="file-input" type="file" multiple="multiple" name="fichier[]"/>
+                        <input id="file-input" type="file" multiple="multiple" name="fichier[]" class="w-full"/>
                     </div>
                   </div>
                 </div>
@@ -1090,7 +1090,7 @@ END;
   <label for="file-input">
     
   </label>
-  <input id="file-input" type="file" multiple="multiple" name="fichier[]"/>
+  <input id="file-input" type="file" multiple="multiple" name="fichier[]" class="w-full"/>
 </div>
   
               </div>
