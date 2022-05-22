@@ -1088,7 +1088,7 @@ END;
                 <div id='galerie'>
                 <div class="image-upload cell" id="addImages">
   <label for="file-input">
-    <img id="smallImageUpload" src="{$vars['basepath']}/web/img/addImage.png"/>
+    
   </label>
   <input id="file-input" type="file" multiple="multiple" name="fichier[]"/>
 </div>
