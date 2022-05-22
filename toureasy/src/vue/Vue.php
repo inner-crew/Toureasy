@@ -1347,7 +1347,7 @@ module.exports = {
         <div class="-mx-1">
             <ul class="flex w-full flex-wrap items-center h-10">
             <li class="block relative">
-                    <p class="flex items-center h-10 leading-10 px-4 rounded no-underline hover:no-underline transition-colors duration-100 mx-1">
+                    <p class="flex items-center h-10 leading-10 px-2 lg:px-4 rounded no-underline hover:no-underline transition-colors duration-100 mx-1">
                         <span class="text-2xl text-green-500 font-dark font-extrabold ">Toureasy</span>
                     </p>
                 </li>
