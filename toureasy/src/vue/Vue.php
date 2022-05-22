@@ -797,7 +797,7 @@ END;
 <p id="msg"></p>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="{$vars['basepath']}/web/js/favoris.js"></script>
-        <section class="infos">
+        <section class="infos mr-10">
         <div id="test">
 <div id="main-content">
   <div>
