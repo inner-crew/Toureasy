@@ -4,3 +4,5 @@
 .idea/
 
 *.json
+/toureasy/node_modules/
+/toureasy/vendor/
