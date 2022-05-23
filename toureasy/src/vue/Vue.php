@@ -259,7 +259,7 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(3px); -
     </div>
     <div class="absolute bottom-10 right-10">
     <!-- component -->
-<a href='{$vars["about"]}' class="flex flex-col max-w-xs text-white bg-gray-800 p-6 h-32 rounded-lg relative">
+<a href='{$vars["about"]}' class="hidden lg:flex flex-col max-w-xs text-white bg-gray-800 p-6 h-32 rounded-lg relative">
   <div class="">
     <h3 class="text-xl font-bold pb-2">Nous contacter</h3>
     <p class="text-sm">Vous voulez en savoir plus sur Toureasy ? Vous pouvez nous contacter !</p>
