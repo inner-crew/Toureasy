@@ -52,6 +52,8 @@ class Vue
 
     const MAP_LISTE = 19;
 
+    const MENU = 20;
+
 
     public function __construct($data)
     {
@@ -1361,9 +1363,11 @@ module.exports = {
         <div class="-mx-1">
             <ul class="flex w-full flex-wrap items-center h-10">
             <li class="block relative">
-                    <p class="flex items-center h-10 leading-10 px-2 lg:px-4 rounded no-underline hover:no-underline transition-colors duration-100 mx-1">
-                        <span class="text-2xl text-green-500 font-dark font-extrabold ">Toureasy</span>
-                    </p>
+                    <a href='{$vars['menu']['menu']}'>
+                        <p class="flex items-center h-10 leading-10 px-2 lg:px-4 rounded no-underline hover:no-underline transition-colors duration-100 mx-1">
+                            <span class="text-2xl text-green-500 font-dark font-extrabold ">Toureasy</span>
+                        </p>
+                    </a>
                 </li>
                 <li class="block relative">
                     <a href='{$vars['menu']['map']}' class="flex items-center h-10 leading-10 px-2 lg:px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 bg-green-500 text-white" @click.prevent="showChildren=!showChildren">
@@ -1640,6 +1644,29 @@ END;
         return $html;
     }
 
+    private function menuHtml(array $vars)
+    {
+        $html = $this->insererEnteteSite($vars);
+        $html .= <<<END
+    <div class="h-screen w-screen flex items-center bg-gray-50 overflow-auto">
+        <div class="absolute bottom-0 w-screen">
+         <img src="{$vars['basepath']}/web/img/background.png" class="w-screen hidden lg:flex">
+</div>
+        
+        <div class="container flex flex-col md:flex-row items-center justify-between px-5 text-gray-700">
+            <div class="w-full lg:w-1/2 mx-8 relative">
+                <div class="text-7xl text-green-500 font-dark font-extrabold mb-8">Toureasy</div>
+                <p class="text-2xl md:text-3xl font-light leading-normal mb-8 absolute">
+                    Découvrez les monuments près de chez vous !
+                </p>
+            </div>
+</div>
+    </div>
+
+END;
+        return $html;
+    }
+
     private function displayErreurServeur($vars): string {
         return <<<END
 
@@ -1712,6 +1739,9 @@ END;
                 break;
             case Vue::MAP_LISTE:
                 $content = $this->detailListeMap($this->data[0], $this->data[1], $vars);
+                break;
+            case Vue::MENU:
+                $content = $this->menuHtml($vars);
                 break;
             case Vue::ERREUR_SERVEUR:
                 $content = $this->displayErreurServeur($vars);

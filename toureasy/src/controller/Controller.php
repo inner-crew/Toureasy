@@ -1191,6 +1191,7 @@ class Controller
 
         if ($isConnected) {
             $urlEspace = $this->c->router->pathFor('mes-listes', ['token' => $_COOKIE['token']]);
+            $urlMenu = $this->c->router->pathFor('menu');
             $menu = [
                 'about-us' => $urlAPropos,
                 'map' => $urlMap,
@@ -1198,6 +1199,7 @@ class Controller
                 'ajout' => $urlAjouterMonument,
                 'profil' => $urlProfil,
                 'amis' => $urlAmis,
+                'menu' => $urlMenu,
                 'home' => $urlHome,
             ];
         } else {
@@ -1213,6 +1215,23 @@ class Controller
         }
 
         return $menu;
+    }
+
+    public function displayMenu(Request $rq, Response $rs, array $args)
+    {
+        $htmlvars = [
+            'basepath' => $rq->getUri()->getBasePath(),
+            'menu' => $this->getMenu(),
+            'back' => $this->c->router->pathFor('map')
+        ];
+
+        if ($this->verifierUtilisateurConnecte()) {
+            $v = new Vue(null);
+            $rs->getBody()->write($v->render($htmlvars, Vue::MENU));
+            return $rs;
+        } else {
+            return $this->genererMessageAvecRedirection($rs, $rq, 'Veuillez vous connecter pour accéder à la Map Toureasy', 'home', $args);
+        }
     }
 
 }

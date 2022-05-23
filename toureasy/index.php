@@ -15,7 +15,7 @@ $app = new App($c);
 
 Eloquent::start(__DIR__ . '/src/conf/conf.ini');
 
-// page d'accueil de Toureasy
+// page d'accueil de Toureasy hors connexion
 $app->get('/', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->displayConnexion($rq,$rs,$args);
@@ -25,6 +25,13 @@ $app->post('/', function(Request $rq, Response $rs, array $args) {
     $c = new Controller($this);
     return $c->postConnexion($rq,$rs,$args);
 });
+
+
+// page d'accueil de Toureasy connecté
+$app->get('/menu', function(Request $rq, Response $rs, array $args) {
+    $c = new Controller($this);
+    return $c->displayMenu($rq,$rs,$args);
+})->setName('menu');
 
 
 
