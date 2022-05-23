@@ -3,7 +3,7 @@
 
 Une application dont le cœur de métier est de permettre à des férus d'histoire de géolocaliser des monuments sur une carte interactive dont les touristes se servent pour organiser leur visites et se repérer parmi les monuments
 
-Accéder à Toureasy : [cliquer-ici](https://toureasy.fr)
+Accéder à Toureasy : [cliquer-ici](http://toureasy.fr:8000)
 
 # Créateurs
 
