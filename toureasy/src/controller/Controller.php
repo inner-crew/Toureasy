@@ -930,6 +930,7 @@ class Controller
             $liste = ListeMonument::getListeByToken($args['token']);
             $monument = Monument::getMonumentById($idMonument);
 
+            $appartenanceListe->numeroDansListe = $liste->count() + 1;
             $appartenanceListe->idListe = $liste->idListe;
             $appartenanceListe->idMonument = $monument->idMonument;
             $appartenanceListe->save();
